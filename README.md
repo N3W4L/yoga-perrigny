@@ -1,6 +1,8 @@
-# Chemins d’Éveil — maquette
+# Chemins d’Éveil
 
-Maquette statique du site de l’association **Chemins d’Éveil** (yoga à Perrigny, 39570). Elle remplace, à terme, [yoga-perrigny.com](https://yoga-perrigny.com).
+Site statique de l’association **Chemins d’Éveil** (yoga à Perrigny, 39570). Il remplace, à terme, [yoga-perrigny.com](https://yoga-perrigny.com).
+
+L’adresse publiée est `https://n3w4l.github.io/yoga-perrigny/`. L’ancienne adresse `/souffle/` renvoie vers cette page.
 
 Page unique en français, sans traceur, sans formulaire côté serveur. Le contact se fait par courriel.
 
@@ -48,7 +50,7 @@ Tout se règle dans `src/config.ts`. Passer une valeur à `false`, puis relancer
 | `showReinscriptions` | Retire le bloc réinscriptions. La page HTML et le PDF ne disent pas la même chose : les deux textes sont montrés, sans trancher. |
 | `showStage` | Retire la soirée et le stage des 4-6 décembre 2026, y compris le lien du menu et la ligne d’actualité. |
 
-**Après le 6 décembre 2026**, mettre `showStage` à `false`. Le composant est `src/components/Stage.astro`.
+**Après le 6 décembre 2026**, mettre `showStage` à `false`. Le stage est dans la page d’accueil, `src/pages/index.astro`.
 
 Les passages encore inconnus (président, RNA, hébergeur, bios, photos manquantes, crédits) sont écrits en italique entre crochets, par exemple `[à compléter]`. Ils ne sont pas inventés.
 
