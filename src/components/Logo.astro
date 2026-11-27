@@ -1,0 +1,12 @@
+---
+import raw from '../assets/logo-yoga.svg?raw';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+const svg = raw.replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+---
+
+<span class:list={['brand-mark', className]} set:html={svg} />

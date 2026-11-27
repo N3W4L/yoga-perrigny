@@ -1,0 +1,613 @@
+---
+import { Picture } from 'astro:assets';
+import portrait from '../assets/portrait-anne-marie-meudre.png';
+import hall from '../assets/salle-2025.jpg';
+import exterior from '../assets/salle-exterieur.jpg';
+import Gate from '../components/Gate.astro';
+import Logo from '../components/Logo.astro';
+import { flags } from '../config';
+import { association, days, itinerary, pdfs } from '../data/site';
+import Base from '../layouts/Base.astro';
+import '../styles/souffle.css';
+
+const mailto = `mailto:${association.email}`;
+const voices = [
+  {
+    name: 'Claudette',
+    lines: [
+      'C’est incroyable ce qu’elle nous fait faire.',
+      'Pendant les exercices, on sent que ça travaille dans le corps. Après la séance, je suis bien détendue.',
+      'En cours de yoga adapté on pratique sur chaise ou debout avec un appui.',
+      'La prof est formidable. Elle connaît nos limites et prend en compte les difficultés de chacun-e.',
+      'En plus on est content de se retrouver. On forme un bon groupe et c’est très important.',
+    ],
+  },
+  {
+    name: 'Geneviève',
+    lines: ['Je suis mieux en partant qu’en arrivant.', 'Notre prof est attentive à chacun-e.'],
+  },
+  {
+    name: 'Claude, élève depuis un an',
+    lines: [
+      'J’apprécie cette discipline qui m’apporte respiration et relaxation intérieures.',
+      'Notre animatrice véritable maître yogi est très investie, passionnée.',
+    ],
+  },
+  {
+    name: 'Jacqueline, 18 ans de pratique à Chemins d’Éveil',
+    lines: [
+      'Un espace-temps, rien que pour soi où la bienveillance est d’actualité et les bénéfices psychiques et physiques sont nombreux.',
+      'Des séances toujours différentes au fil des ans et adaptées avec des professeures de qualité.',
+    ],
+  },
+  {
+    name: 'Sylvie',
+    lines: ['Nouvelle expérience pour moi, avec un groupe de personnes sympas.'],
+  },
+];
+---
+
+<Base
+  title="Cours de yoga à Perrigny — Chemins d’Éveil"
+  description="Cours de yoga à Perrigny. Association Chemins d’Éveil, salle de sports, 76 rue du moulin, 39570 Perrigny."
+>
+  <div class="souffle">
+    <header class="s-nav" data-header>
+      <a class="s-mark" href="#accueil" aria-label="Yoga Perrigny, accueil"><Logo /></a>
+      <nav class="s-links" aria-label="Sections">
+        <a href="#seances" data-nav-link>Séances</a>
+        <a href="#tarifs" data-nav-link>Tarifs</a>
+        {flags.showStage && <a href="#stage" data-nav-link>Stage</a>}
+        <a href="#professeurs" data-nav-link>Professeurs</a>
+        <a href="#lieu" data-nav-link>Lieu</a>
+      </nav>
+      <a class="s-write" href={mailto}>Écrire</a>
+      <details class="s-menu" data-menu>
+        <summary>
+          <span class="open-label">Menu</span>
+          <span class="close-label">Fermer</span>
+        </summary>
+        <div class="s-panel">
+          <nav aria-label="Sections">
+            <a href="#seances" data-nav-link>Séances</a>
+            <a href="#tarifs" data-nav-link>Tarifs</a>
+            {flags.showStage && <a href="#stage" data-nav-link>Stage</a>}
+            <a href="#professeurs" data-nav-link>Professeurs</a>
+            <a href="#lieu" data-nav-link>Lieu</a>
+          </nav>
+          <a class="sbtn" href={mailto}>Nous écrire</a>
+        </div>
+      </details>
+    </header>
+
+    <main id="contenu">
+      <div class="journey" data-stations={flags.showStage ? '8' : '7'}>
+        <div class="tunnel">
+          <div class="camera">
+          <div class="world">
+      <section class="plane s-hero" data-station="0" id="accueil" aria-labelledby="souffle-title">
+        <div class="orb" aria-hidden="true">
+          <svg viewBox="0 0 800 800">
+            <g class="ring ring-1"><ellipse cx="400" cy="400" rx="360" ry="328" /></g>
+            <g class="ring ring-2"><ellipse cx="400" cy="400" rx="286" ry="308" transform="rotate(16 400 400)" /></g>
+            <g class="ring ring-3"><ellipse cx="400" cy="400" rx="198" ry="180" /></g>
+            <g class="ring ring-4"><ellipse cx="400" cy="400" rx="108" ry="122" transform="rotate(-12 400 400)" /></g>
+            <circle class="core" cx="400" cy="400" r="3.5" />
+          </svg>
+        </div>
+        <div class="s-hero-copy">
+          <p class="s-kicker">Perrigny · Jura</p>
+          <h1 id="souffle-title">Chemins<br /><em>d’Éveil</em></h1>
+          <p class="lede">
+            Yoga à Perrigny, dans le Jura. L’association propose des cours et des stages, pour pratiquer à tout âge, sans recherche de performance.
+          </p>
+          <div class="s-actions">
+            <a class="sbtn" href="#seances">Voir les séances</a>
+            <a class="sbtn-ghost" href={mailto}>Nous écrire</a>
+          </div>
+        </div>
+        <p class="s-hero-foot">
+          <span>{association.street} · {association.postal}</span>
+          <a class="s-scroll" href="#club">Défiler <i></i></a>
+        </p>
+      </section>
+      <Gate i={0} />
+
+      <section class="plane sheet sheet-rise" data-station="1" id="club" aria-labelledby="club-title">
+        <div class="s-wrap club-grid">
+          <div>
+          <p class="chap">01 — L’association</p>
+          <h2 id="club-title">Le club</h2>
+          <div class="prose">
+            <p>
+              Le Yoga, se pratiquait, à l’origine, pour atteindre la clarté du mental, le calme et apaiser les pensées.
+            </p>
+            <p>
+              Aujourd’hui, l’enseignement reste ancré aux éléments originels mais s’est imprégné de la culture occidentale pour être accessible au plus grand nombre.
+            </p>
+            <p>
+              Participent, ainsi, aux cours des jeunes, des moins jeunes, des personnes très avancées en âge (plus de 90 ans), avec des compétences physiques et personnelles variées. Parmi ces adhérents, des débutants, des pratiquants depuis 10, 15 voire 30 ans en toute simplicité. Les personnes les plus en difficultés bénéficient de séances spécifiques de « yoga adapté ». Activité encouragée par notre maire Christiane Maugain. Merci à elle.
+            </p>
+            <p>
+              <a href={pdfs.article}>Article de présentation 2025 <span class="sr-only">(PDF)</span></a>
+            </p>
+          </div>
+          <details class="fold">
+            <summary>Phrases de l’article 2025 à confirmer</summary>
+            <div class="fold-body">
+              <p class="pending">
+                [À confirmer pour 2026-2027 : « 96 personnes y sont inscrites » et « L’association peut encore accueillir quelques personnes ». La formulation « 6 cours les lundi, mardi et mercredi soir » n’est pas affichée : le formulaire 2026-2027 retient 6 séances, dont le yoga adapté le mardi après-midi.]
+              </p>
+            </div>
+          </details>
+          </div>
+          <figure class="frame-photo">
+            <Picture
+              src={hall}
+              formats={['avif', 'webp']}
+              fallbackFormat="jpeg"
+              widths={[480, 768, 1024]}
+              sizes="(min-width: 62rem) 34rem, 100vw"
+              alt="Cours de yoga dans la salle de sports de Perrigny : un groupe en fente, les bras levés, sur un sol vert. Photo du 20 novembre 2025."
+              quality={70}
+            />
+            <figcaption>
+              Salle de sports, 20 novembre 2025.
+              <span class="pending">[crédit photo à compléter]</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <Gate i={1} />
+      <section class="plane sheet" data-station="2" id="seances" aria-labelledby="seances-title">
+        <div class="s-wrap">
+          <p class="chap">02 — La semaine</p>
+          <h2 id="seances-title">Les <em>séances</em></h2>
+          <p class="pull">L’association vous propose 6 séances de yoga par semaine.</p>
+          <p class="prose">Reprise les 15, 16 ou 17 septembre 2026 (selon jour de cours).</p>
+          {
+            flags.showStage && flags.showActualites && (
+              <p class="prose">
+                <a href="#stage">4–6 décembre · Passages, au seuil de l’hiver</a>
+              </p>
+            )
+          }
+          <ol class="week">
+            {
+              days.map((day) => (
+                <li class="day-group">
+                  <h3>{day.label}</h3>
+                  <ul>
+                    {day.sessions.map((session) => (
+                      <li class:list={[session.type === 'Yoga adapté' && 'adapted']}>
+                        <span class="hours">{session.time}</span>
+                        <span class="who">
+                          {session.teacher} · {session.type}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))
+            }
+          </ol>
+
+          <details class="fold">
+            <summary>Yoga adapté</summary>
+            <div class="fold-body">
+              <p>
+                « Chemins d’Eveil » met en place de « yoga adapté » proposant des postures, en douceur, accessibles et adaptées aux personnes avec difficulté de mouvement (membres, dos…) du fait de l’âge, d’accident ou de maladie.
+              </p>
+              <p>
+                Les séances ont lieu à la salle des sports de Perrigny, en après-midi, en petit groupe. La salle est équipée d’un ascenseur.
+              </p>
+              <p>
+                Pour toute info, contacter {association.phonePerson},
+                <a href={`tel:${association.phoneTel}`}>{association.phoneDisplay}</a>,
+                <a href={`mailto:${association.phoneEmail}`}>{association.phoneEmail}</a>,
+                ou chez vous sur rendez-vous.
+              </p>
+            </div>
+          </details>
+
+          <figure class="feature-quote">
+            <p>
+              « Le yoga, c’est comme le goût des fraises, on ne peut pas l’expliquer. Et en plus, à Perrigny, c’est avec de la chantilly ! »
+            </p>
+            <figcaption>Marie-Annick</figcaption>
+          </figure>
+
+          <details class="fold">
+            <summary>Les élèves ont la parole</summary>
+            <div class="fold-body">
+              {
+                voices.map((voice) => (
+                  <figure class="voice">
+                    {voice.lines.map((line) => (
+                      <p>« {line} »</p>
+                    ))}
+                    <figcaption>{voice.name}</figcaption>
+                  </figure>
+                ))
+              }
+            </div>
+          </details>
+
+          <details class="fold">
+            <summary>Interruptions, octobre 2026 – janvier 2027</summary>
+            <div class="fold-body">
+              <p class="pending">
+                [La page Actualités annonçait « jusqu’en juin 2027 ». Le document disponible couvre jusqu’en janvier 2027.]
+              </p>
+              <p><strong>Vacances d’automne.</strong> Il n’y aura pas de séance de yoga :</p>
+              <ul>
+                <li>Avec Françoise : à préciser</li>
+                <li>Avec Sandrine : mardi 20 et mercredi 21 octobre</li>
+                <li>Avec Anne-Marie : mercredis 21 et 28 octobre</li>
+              </ul>
+              <p><strong>Jours fériés.</strong></p>
+              <ul>
+                <li>Avec Anne-Marie : mercredi 11 novembre (férié)</li>
+                <li>Avec Sandrine : mercredi 11 novembre (férié)</li>
+              </ul>
+              <p><strong>Vacances de Noël.</strong></p>
+              <ul>
+                <li>Avec Françoise : à préciser</li>
+                <li>Avec Anne-Marie : pas de séance pendant les vacances scolaires</li>
+                <li>Avec Sandrine : les mardi 29 et mercredi 30 décembre</li>
+              </ul>
+              <p>Les animatrices</p>
+              <p><a href={pdfs.absences}>Télécharger le calendrier <span class="sr-only">(PDF)</span></a></p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <Gate i={2} />
+      <section class="plane sheet" data-station="3" id="tarifs" aria-labelledby="tarifs-title">
+        <div class="s-wrap">
+          <p class="chap">03 — 2026-2027</p>
+          <h2 id="tarifs-title">Tarifs</h2>
+          <p>Les professeures s’engagent à assurer 30 séances. Inscription par fiche et par chèque.</p>
+          <ul class:list={['prices', !flags.showTarifReduit && 'cols-3']}>
+            <li>
+              <span class="label">Adhésion</span>
+              <strong>30 €</strong>
+              <span class="fine">Chèque à l’ordre de l’association Chemins d’Éveil.</span>
+            </li>
+            <li>
+              <span class="label">Yoga classique</span>
+              <strong>175 €</strong>
+              <span class="fine">À l’ordre de la professeure, en plus de l’adhésion. Année 2026/2027.</span>
+            </li>
+            {
+              flags.showTarifReduit && (
+                <li>
+                  <span class="label">Tarif réduit</span>
+                  <strong>85 €</strong>
+                  <span class="fine">
+                    Les personnes à faibles revenus peuvent bénéficier de ce tarif réduit.
+                    <span class="pending"> [Page Inscriptions ; absent du formulaire PDF.]</span>
+                  </span>
+                </li>
+              )
+            }
+            <li>
+              <span class="label">Yoga adapté</span>
+              <strong>185 €</strong>
+              <span class="fine">
+                À l’ordre de chemins d’Eveil (adhésion + inscription). Pour le tarif réduit, voir avec le président.
+                <span class="pending"> [Nom du président : à compléter]</span>
+              </span>
+            </li>
+          </ul>
+
+          <h3 class="chap chap-space">Venir la première fois</h3>
+          <ol class="points">
+            <li>
+              <b>01</b>
+              <span>Possibilité de participer à une séance avant l’inscription définitive (prévenir avant, au cas où le cours serait complet).</span>
+            </li>
+            <li>
+              <b>02</b>
+              <span>Tapis et support pour l’assise sont à disposition dans la salle.</span>
+            </li>
+            <li>
+              <b>03</b>
+              <span>Apporter une serviette à disposer sur le tapis, ainsi qu’une couverture.</span>
+            </li>
+            <li>
+              <b>04</b>
+              <span>
+                Tenue souple, dans laquelle vous êtes à l’aise.
+                <span class="pending"> [Autre accessoire : à compléter]</span>
+              </span>
+            </li>
+          </ol>
+
+          <div class="prose">
+            <p>
+              Adresser la fiche remplie et le règlement à l’enseignante. L’inscription est effective après réception de la fiche, du règlement et d’un e-mail à
+              <a href={mailto}>{association.email}</a>. Les inscriptions sont enregistrées dans l’ordre de réception. Le nombre d’élèves est limité par séance.
+            </p>
+            <p class="cta-row">
+              <a class="sbtn" href={pdfs.inscription}>Télécharger le formulaire</a>
+            </p>
+          </div>
+
+          {
+            flags.showReinscriptions && (
+              <details class="fold">
+                <summary>Réinscriptions</summary>
+                <div class="fold-body">
+                  <p>Page du site : « A faire avant le 1er septembre, soit par courrier, soit lors d’une séance, avec la fiche et le règlement par chèque ».</p>
+                  <p>Formulaire PDF : « à redonner au plus tard à la première séance ».</p>
+                  <p class="pending">[Les deux formulations divergent. Règle à retenir : à arbitrer.]</p>
+                </div>
+              </details>
+            )
+          }
+
+          <details class="fold" id="envoi">
+            <summary>Renseignements et envoi des fiches</summary>
+            <div class="fold-body">
+              <ul class="envoi">
+                <li>
+                  <strong>Anne-Marie Meudre</strong><br />
+                  285, rue du puits à sel, 39570 Perrigny<br />
+                  <a href="tel:+33786820545">07 86 82 05 45</a>
+                </li>
+                <li>
+                  <strong>Sandrine Peyronel</strong><br />
+                  <a href={mailto}>{association.email}</a><br />
+                  <span class="pending">[Téléphone : à compléter]</span>
+                </li>
+                <li>
+                  <strong>Odile Sappez</strong><br />
+                  3, rue du petit Bourg, 39570 Montaigu<br />
+                  <a href="tel:+33623951237">06 23 95 12 37</a>
+                </li>
+                <li>
+                  <strong>Françoise Bataillard</strong><br />
+                  130 rue du presbytère, 39570 Revigny<br />
+                  <a href="tel:+33626256588">06 26 25 65 88</a>
+                </li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      {
+        flags.showStage && (
+          <>
+          <Gate i={3} />
+          <section class="plane night" data-station="4" id="stage" aria-labelledby="stage-title">
+            <div class="night-orb" aria-hidden="true">
+              <svg viewBox="0 0 800 800">
+                <g class="ring ring-2"><ellipse cx="400" cy="400" rx="300" ry="270" /></g>
+                <g class="ring ring-4"><ellipse cx="400" cy="400" rx="180" ry="200" /></g>
+              </svg>
+            </div>
+            <div class="s-wrap">
+              <p class="chap">04 — 4 au 6 décembre 2026</p>
+              <h2 id="stage-title"><em>Passages</em></h2>
+              <p class="pull">Au seuil de l’hiver, un voyage intérieur.</p>
+              <p>
+                Une invitation à ralentir, à écouter ce qui bat au cœur de soi. Postures lentes, souffle, yoga nidra, méditation. Les réservations se font auprès des professeures. 22 participants.
+              </p>
+              <div class="stage-facts">
+                <article>
+                  <h3>Soirée mantras · vendredi 4</h3>
+                  <p class="sum">25 €</p>
+                  <p>18h30 – 21h30. Chants du monde et mantras, ouverte à tous. Non-adhérents. Chèque à l’ordre de « S. Schatz-Botti et F. Botti ».</p>
+                </article>
+                <article>
+                  <h3>Stage · samedi 5 et dimanche 6</h3>
+                  <p class="sum">80 €</p>
+                  <p>Les deux jours, 9h00–17h00 puis 9h00–12h00. 60 € le samedi seul. Non-adhérents. Chèque à l’ordre de « Association Chemins d’Éveil ».</p>
+                </article>
+                <article>
+                  <h3>Où</h3>
+                  <p><a href="#lieu">Salle de sports de Perrigny</a></p>
+                  <p class="pending">[Tarifs adhérents : à compléter]</p>
+                  <p>Date limite indiquée sur la plaquette : mercredi 25 novembre 2026.</p>
+                </article>
+              </div>
+              <p class="cta-row">
+                <a class="sbtn" href={pdfs.stage}>Télécharger la plaquette</a>
+              </p>
+              <details class="fold">
+                <summary>Déroulement, intervenants, conditions</summary>
+                <div class="fold-body">
+                  <p>Le stage est réservé en priorité aux adhérents de Chemins d’Éveil, et reste ouvert aux non-adhérents. L’inscription au week-end complet est conseillée ; ces personnes sont prioritaires.</p>
+                  <p>Samedi : accueil dès 9h00 ; 9h30–12h30 pratique ; 12h30–13h45 pause repas ; 13h45–17h00 échange et pratique. Prévoir un repas léger. Dimanche : 9h00–12h00 pratique.</p>
+                  <p>Couverture, tenue chaude et confortable, support pour l’assise. Pour la soirée : sa tasse (nom noté), tisanes et eau chaude sur place, pause-collation à partager.</p>
+                  <p>Il sera animé par Sybille Schatz-Botti et François Botti. <span class="pending">[La plaquette écrit Sibylle.]</span></p>
+                  <p>
+                    Née en Allemagne, Sibylle découvre le yoga en 1996 et devient en 2001 professeure de yoga (BDY/EYU). Elle enseigne depuis 1998. Arrivée en France, elle enseigne depuis 2005 dans des cours collectifs et des soirées « mantra et méditation ». François découvre le yoga en 1985 lors d’un séjour en Inde. Diplômé de l’Ecole Française de Yoga de Lyon en 2005 dans la lignée du Yoga de l’Energie, il enseigne depuis 2003. Sibylle et François ont suivi depuis 2019 l’enseignement de Bernard Bouanchaud (Viniyoga Fondation France ou VFF), et puis, au sein de la VFF, dès 2022, la formation « Yogathérapie » de Bernard Bouanchaud et du Docteur N. Chandrasekaran, dont ils ont obtenu la certification en février 2025.
+                  </p>
+                  <p class="pending">[Photos des intervenants : à compléter]</p>
+                  <p>Bulletin et règlement à Françoise Bataillard, 130 rue du presbytère, 39570 Revigny.</p>
+                  <p>Tout désistement intervenant moins d’une semaine avant le stage ne peut donner lieu à remboursement.</p>
+                  <p>
+                    Renseignements : Anne-Marie Meudre <a href="tel:+33786820545">07 86 82 05 45</a> ; Françoise Bataillard <a href="tel:+33626256588">06 26 25 65 88</a>.
+                  </p>
+                </div>
+              </details>
+            </div>
+          </section>
+          </>
+        )
+      }
+
+      <Gate i={flags.showStage ? 4 : 3} />
+      <section class="plane sheet" data-station={flags.showStage ? '5' : '4'} id="professeurs" aria-labelledby="profs-title">
+        <div class="s-wrap">
+          <p class="chap">05 — L’équipe</p>
+          <h2 id="profs-title">Professeures</h2>
+          <p>Les heures de chacune sont dans les séances, plus haut. Les adresses d’envoi sont avec les tarifs.</p>
+          <ul class="people">
+            <li class="person">
+              <span class="mono" aria-hidden="true">FB</span>
+              <div>
+                <h3>Françoise Bataillard</h3>
+                <p class="meta">Yoga classique</p>
+                <details class="fold">
+                  <summary>Présentation</summary>
+                  <div class="fold-body">
+                    <p>Françoise Bataillard enseigne le yoga à l’association Chemins d’Éveil, à Perrigny.</p>
+                    <p class="pending">[Photo, formation, approche : à compléter]</p>
+                  </div>
+                </details>
+              </div>
+            </li>
+            <li class="person">
+              <span class="mono" aria-hidden="true">SP</span>
+              <div>
+                <h3>Sandrine Peyronel</h3>
+                <p class="meta">Yoga classique</p>
+                <details class="fold">
+                  <summary>Présentation</summary>
+                  <div class="fold-body">
+                    <p>Sandrine Peyronel enseigne le yoga à l’association Chemins d’Éveil, à Perrigny.</p>
+                    <p class="pending">[Photo, téléphone, formation, approche : à compléter]</p>
+                  </div>
+                </details>
+              </div>
+            </li>
+            <li class="person">
+              <Picture
+                src={portrait}
+                formats={['avif', 'webp']}
+                fallbackFormat="png"
+                width={90}
+                height={90}
+                alt="Portrait d’Anne-Marie Meudre, professeure de yoga à l’association Chemins d’Éveil."
+              />
+              <div>
+                <h3>Anne-Marie Meudre</h3>
+                <p class="meta">Yoga classique</p>
+                <details class="fold">
+                  <summary>Formation</summary>
+                  <div class="fold-body">
+                    <p>
+                      École Française de Yoga Auvergne Rhône-Alpes, 2002-2006, diplôme 2006, Yoga de l’énergie (Lyon 5e). Formateurs cités sur la fiche : Boris Tatzky, Cécile Beaudin, Claire-Line Hédouin, Myllarka Aeply, Patrick Tomatis, Philippe de Fallois. Stages suivis notamment avec Ora Josef Hay et Cécile Beaudin, Babacar Khane, Yvette Clouet, Tiwari, Maurice Daubard, Pierre Gariel.
+                    </p>
+                    <p>
+                      Déroulement indicatif : « intériorisation, enchaînement avec respiration, relaxation, préparation spécifique de posture(s), posture(s) et complémentarité, relaxation ou assise avec respiration et/ou méditation. »
+                    </p>
+                    <p class="pending">[E-mail personnel : publication à confirmer. Texte à relire par Anne-Marie. Autres activités de la fiche : à confirmer. Accord de republication du portrait : à confirmer.]</p>
+                  </div>
+                </details>
+              </div>
+            </li>
+            <li class="person">
+              <span class="mono" aria-hidden="true">OS</span>
+              <div>
+                <h3>Odile Sappez</h3>
+                <p class="meta">Yoga adapté</p>
+                <details class="fold">
+                  <summary>Formation</summary>
+                  <div class="fold-body">
+                    <p>
+                      École Française de Yoga Auvergne Rhône-Alpes, 2011-2015, diplôme 2016 (Boris Tatzky), Yoga de l’énergie. Post-formation Institut International de Yoga / Yogi Babacar Khane, 2017-2020 (yoga égyptien, yoga chinois, hatha yoga).
+                    </p>
+                    <p>
+                      Enseignement « selon la pédagogie de Maître Babacar Khane ». Déroulement indicatif : intériorisation, yoga égyptien, yoga de la tradition chinoise, postures de yoga indien, relaxation et approche de la méditation.
+                    </p>
+                    <p class="pending">[Photo : à compléter. E-mail personnel : publication à confirmer. Texte à relire. Enseignement hors association : à confirmer.]</p>
+                  </div>
+                </details>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <Gate i={flags.showStage ? 5 : 4} />
+      <section class="plane sheet" data-station={flags.showStage ? '6' : '5'} id="lieu" aria-labelledby="lieu-title">
+        <div class="s-wrap lieu-grid">
+          <div>
+            <p class="chap">06 — Perrigny</p>
+            <h2 id="lieu-title">Le lieu</h2>
+            <p class="address">
+              <span>{association.street}</span>
+              <span>{association.postal}</span>
+            </p>
+            <p>{association.place} La salle est équipée d’un ascenseur.</p>
+            <p>
+              <a href={itinerary}>Itinéraire</a>
+            </p>
+            <p class="pending">[Stationnement, entrée, accès détaillé : à compléter]</p>
+            {
+              flags.showRessources && (
+                <p>
+                  <a href={pdfs.bibliotheque}>Bibliothèque de l’association, liste 2022</a>
+                  <span class="pending"> [À rééditer ou à retirer.]</span>
+                </p>
+              )
+            }
+          </div>
+          <figure class="frame-photo frame-photo-place">
+            <Picture
+              src={exterior}
+              formats={['avif', 'webp']}
+              fallbackFormat="jpeg"
+              widths={[480, 768, 1024]}
+              sizes="(min-width: 62rem) 40rem, 100vw"
+              alt="Extérieur du bâtiment des cours, à Perrigny : façade en pierre claire, jardinières fleuries et rue ensoleillée."
+              quality={72}
+            />
+            <figcaption>
+              Le bâtiment, rue du moulin.
+              <span class="pending">[crédit photo à compléter]</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <Gate i={flags.showStage ? 6 : 5} />
+      <section class="plane sheet" data-station={flags.showStage ? '7' : '6'} id="contact" aria-labelledby="contact-title">
+        <div class="s-wrap">
+          <p class="chap">Écrire</p>
+          <h2 id="contact-title">Contact</h2>
+          <p>Pas de formulaire. Un courriel suffit.</p>
+          <p><a class="mail" href={mailto}>{association.email}</a></p>
+          <p>
+            {association.phonePerson} · <a href={`tel:${association.phoneTel}`}>{association.phoneDisplay}</a> · <a href={`mailto:${association.phoneEmail}`}>{association.phoneEmail}</a>
+          </p>
+          <p><a href="#envoi">Adresses pour l’envoi des fiches</a></p>
+        </div>
+        <footer class="s-foot">
+          <div class="s-wrap">
+            <div class="s-foot-row">
+              <a class="s-mark" href="#accueil" aria-label="Yoga Perrigny"><Logo /></a>
+          <nav aria-label="Pied de page">
+            <ul>
+              <li><a href={`${import.meta.env.BASE_URL}mentions-legales/`}>Mentions légales</a></li>
+              <li><a href={`${import.meta.env.BASE_URL}confidentialite/`}>Politique de confidentialité</a></li>
+              <li><a href={mailto}>Contact</a></li>
+            </ul>
+          </nav>
+        </div>
+            <p>Tous droits réservés</p>
+          </div>
+        </footer>
+      </section>
+          </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <svg class="progress" viewBox="0 0 40 40" aria-hidden="true">
+      <circle class="track" cx="20" cy="20" r="16" fill="none" />
+      <circle data-progress cx="20" cy="20" r="16" fill="none" transform="rotate(-90 20 20)" />
+    </svg>
+  </div>
+  <script>
+    import '../scripts/souffle.ts';
+  </script>
+</Base>
