@@ -3,6 +3,8 @@ import { Picture } from 'astro:assets';
 import portrait from '../assets/portrait-anne-marie-meudre.png';
 import hall from '../assets/salle-2025.jpg';
 import exterior from '../assets/salle-exterieur.jpg';
+import Gate from '../components/Gate.astro';
+import Logo from '../components/Logo.astro';
 import { flags } from '../config';
 import { association, days, itinerary, pdfs } from '../data/site';
 import Base from '../layouts/Base.astro';
@@ -51,7 +53,7 @@ const voices = [
 >
   <div class="souffle">
     <header class="s-nav" data-header>
-      <a class="s-mark" href="#accueil">Chemins d’Éveil</a>
+      <a class="s-mark" href="#accueil" aria-label="Yoga Perrigny, accueil"><Logo /></a>
       <nav class="s-links" aria-label="Sections">
         <a href="#seances" data-nav-link>Séances</a>
         <a href="#tarifs" data-nav-link>Tarifs</a>
@@ -79,7 +81,11 @@ const voices = [
     </header>
 
     <main id="contenu">
-      <section class="s-hero" id="accueil" aria-labelledby="souffle-title">
+      <div class="journey" data-stations={flags.showStage ? '8' : '7'}>
+        <div class="tunnel">
+          <div class="camera">
+          <div class="world">
+      <section class="plane s-hero" data-station="0" id="accueil" aria-labelledby="souffle-title">
         <div class="orb" aria-hidden="true">
           <svg viewBox="0 0 800 800">
             <g class="ring ring-1"><ellipse cx="400" cy="400" rx="360" ry="328" /></g>
@@ -105,8 +111,9 @@ const voices = [
           <a class="s-scroll" href="#club">Défiler <i></i></a>
         </p>
       </section>
+      <Gate i={0} />
 
-      <section class="sheet sheet-rise" id="club" aria-labelledby="club-title">
+      <section class="plane sheet sheet-rise" data-station="1" id="club" aria-labelledby="club-title">
         <div class="s-wrap club-grid">
           <div>
           <p class="chap">01 — L’association</p>
@@ -152,7 +159,8 @@ const voices = [
         </div>
       </section>
 
-      <section class="sheet" id="seances" aria-labelledby="seances-title">
+      <Gate i={1} />
+      <section class="plane sheet" data-station="2" id="seances" aria-labelledby="seances-title">
         <div class="s-wrap">
           <p class="chap">02 — La semaine</p>
           <h2 id="seances-title">Les <em>séances</em></h2>
@@ -256,7 +264,8 @@ const voices = [
         </div>
       </section>
 
-      <section class="sheet" id="tarifs" aria-labelledby="tarifs-title">
+      <Gate i={2} />
+      <section class="plane sheet" data-station="3" id="tarifs" aria-labelledby="tarifs-title">
         <div class="s-wrap">
           <p class="chap">03 — 2026-2027</p>
           <h2 id="tarifs-title">Tarifs</h2>
@@ -372,7 +381,9 @@ const voices = [
 
       {
         flags.showStage && (
-          <section class="night" id="stage" aria-labelledby="stage-title">
+          <>
+          <Gate i={3} />
+          <section class="plane night" data-station="4" id="stage" aria-labelledby="stage-title">
             <div class="night-orb" aria-hidden="true">
               <svg viewBox="0 0 800 800">
                 <g class="ring ring-2"><ellipse cx="400" cy="400" rx="300" ry="270" /></g>
@@ -427,10 +438,12 @@ const voices = [
               </details>
             </div>
           </section>
+          </>
         )
       }
 
-      <section class="sheet" id="professeurs" aria-labelledby="profs-title">
+      <Gate i={flags.showStage ? 4 : 3} />
+      <section class="plane sheet" data-station={flags.showStage ? '5' : '4'} id="professeurs" aria-labelledby="profs-title">
         <div class="s-wrap">
           <p class="chap">05 — L’équipe</p>
           <h2 id="profs-title">Professeures</h2>
@@ -513,7 +526,8 @@ const voices = [
         </div>
       </section>
 
-      <section class="sheet" id="lieu" aria-labelledby="lieu-title">
+      <Gate i={flags.showStage ? 5 : 4} />
+      <section class="plane sheet" data-station={flags.showStage ? '6' : '5'} id="lieu" aria-labelledby="lieu-title">
         <div class="s-wrap lieu-grid">
           <div>
             <p class="chap">06 — Perrigny</p>
@@ -554,7 +568,8 @@ const voices = [
         </div>
       </section>
 
-      <section class="sheet" id="contact" aria-labelledby="contact-title">
+      <Gate i={flags.showStage ? 6 : 5} />
+      <section class="plane sheet" data-station={flags.showStage ? '7' : '6'} id="contact" aria-labelledby="contact-title">
         <div class="s-wrap">
           <p class="chap">Écrire</p>
           <h2 id="contact-title">Contact</h2>
@@ -565,13 +580,10 @@ const voices = [
           </p>
           <p><a href="#envoi">Adresses pour l’envoi des fiches</a></p>
         </div>
-      </section>
-    </main>
-
-    <footer class="s-foot">
-      <div class="s-wrap">
-        <div class="s-foot-row">
-          <p class="s-mark">Association Chemins d’Éveil</p>
+        <footer class="s-foot">
+          <div class="s-wrap">
+            <div class="s-foot-row">
+              <a class="s-mark" href="#accueil" aria-label="Yoga Perrigny"><Logo /></a>
           <nav aria-label="Pied de page">
             <ul>
               <li><a href={`${import.meta.env.BASE_URL}mentions-legales/`}>Mentions légales</a></li>
@@ -580,9 +592,15 @@ const voices = [
             </ul>
           </nav>
         </div>
-        <p>Tous droits réservés</p>
+            <p>Tous droits réservés</p>
+          </div>
+        </footer>
+      </section>
+          </div>
+          </div>
+        </div>
       </div>
-    </footer>
+    </main>
 
     <svg class="progress" viewBox="0 0 40 40" aria-hidden="true">
       <circle class="track" cx="20" cy="20" r="16" fill="none" />

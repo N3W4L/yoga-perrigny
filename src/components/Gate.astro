@@ -1,0 +1,14 @@
+---
+interface Props {
+  i: number;
+}
+const { i } = Astro.props;
+---
+
+<div class="gate" data-i={i} aria-hidden="true">
+  <svg viewBox="0 0 800 800">
+    <g class="ring ring-1"><ellipse cx="400" cy="400" rx="360" ry="328" /></g>
+    <g class="ring ring-2"><ellipse cx="400" cy="400" rx="270" ry="292" transform="rotate(18 400 400)" /></g>
+    <g class="ring ring-3"><ellipse cx="400" cy="400" rx="168" ry="154" /></g>
+  </svg>
+</div>

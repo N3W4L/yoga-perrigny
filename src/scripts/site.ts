@@ -36,6 +36,7 @@ if (sections.length > 0) {
   const visible = new Set<string>();
 
   const mark = () => {
+    if (document.documentElement.classList.contains('journey-3d')) return;
     let current: string | null = null;
     let best = Number.POSITIVE_INFINITY;
     visible.forEach((id) => {
