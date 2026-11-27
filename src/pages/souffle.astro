@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import portrait from '../assets/portrait-anne-marie-meudre.png';
 import hall from '../assets/salle-2025.jpg';
+import exterior from '../assets/salle-exterieur.jpg';
 import { flags } from '../config';
 import { association, days, itinerary, pdfs } from '../data/site';
 import Base from '../layouts/Base.astro';
@@ -106,7 +107,8 @@ const voices = [
       </section>
 
       <section class="sheet sheet-rise" id="club" aria-labelledby="club-title">
-        <div class="s-wrap">
+        <div class="s-wrap club-grid">
+          <div>
           <p class="chap">01 — L’association</p>
           <h2 id="club-title">Le club</h2>
           <div class="prose">
@@ -131,6 +133,22 @@ const voices = [
               </p>
             </div>
           </details>
+          </div>
+          <figure class="frame-photo">
+            <Picture
+              src={hall}
+              formats={['avif', 'webp']}
+              fallbackFormat="jpeg"
+              widths={[480, 768, 1024]}
+              sizes="(min-width: 62rem) 34rem, 100vw"
+              alt="Cours de yoga dans la salle de sports de Perrigny : un groupe en fente, les bras levés, sur un sol vert. Photo du 20 novembre 2025."
+              quality={70}
+            />
+            <figcaption>
+              Salle de sports, 20 novembre 2025.
+              <span class="pending">[crédit photo à compléter]</span>
+            </figcaption>
+          </figure>
         </div>
       </section>
 
@@ -518,15 +536,20 @@ const voices = [
               )
             }
           </div>
-          <figure class="lieu-photo">
+          <figure class="frame-photo frame-photo-place">
             <Picture
-              src={hall}
+              src={exterior}
               formats={['avif', 'webp']}
               fallbackFormat="jpeg"
-              widths={[320, 480]}
-              sizes="18rem"
-              alt="Cours de yoga dans la salle de sports de Perrigny, 20 novembre 2025."
+              widths={[480, 768, 1024]}
+              sizes="(min-width: 62rem) 40rem, 100vw"
+              alt="Extérieur du bâtiment des cours, à Perrigny : façade en pierre claire, jardinières fleuries et rue ensoleillée."
+              quality={72}
             />
+            <figcaption>
+              Le bâtiment, rue du moulin.
+              <span class="pending">[crédit photo à compléter]</span>
+            </figcaption>
           </figure>
         </div>
       </section>
