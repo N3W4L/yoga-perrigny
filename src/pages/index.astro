@@ -55,6 +55,7 @@ const voices = [
     <header class="s-nav" data-header>
       <a class="s-mark" href="#accueil" aria-label="Yoga Perrigny, accueil"><Logo /></a>
       <nav class="s-links" aria-label="Sections">
+        <a href="#club" data-nav-link>Le club</a>
         <a href="#seances" data-nav-link>Séances</a>
         <a href="#tarifs" data-nav-link>Tarifs</a>
         {flags.showStage && <a href="#stage" data-nav-link>Stage</a>}
@@ -69,6 +70,7 @@ const voices = [
         </summary>
         <div class="s-panel">
           <nav aria-label="Sections">
+            <a href="#club" data-nav-link>Le club</a>
             <a href="#seances" data-nav-link>Séances</a>
             <a href="#tarifs" data-nav-link>Tarifs</a>
             {flags.showStage && <a href="#stage" data-nav-link>Stage</a>}
@@ -97,7 +99,7 @@ const voices = [
         </div>
         <div class="s-hero-copy">
           <p class="s-kicker">Perrigny · Jura</p>
-          <h1 id="souffle-title">Chemins<br /><em>d’Éveil</em></h1>
+          <h1 id="souffle-title">Chemins <em>d’Éveil</em></h1>
           <p class="lede">
             Yoga à Perrigny, dans le Jura. L’association propose des cours et des stages, pour pratiquer à tout âge, sans recherche de performance.
           </p>
@@ -162,17 +164,23 @@ const voices = [
       <Gate i={1} />
       <section class="plane sheet" data-station="2" id="seances" aria-labelledby="seances-title">
         <div class="s-wrap">
-          <p class="chap">02 — La semaine</p>
-          <h2 id="seances-title">Les <em>séances</em></h2>
-          <p class="pull">L’association vous propose 6 séances de yoga par semaine.</p>
-          <p class="prose">Reprise les 15, 16 ou 17 septembre 2026 (selon jour de cours).</p>
-          {
-            flags.showStage && flags.showActualites && (
-              <p class="prose">
-                <a href="#stage">4–6 décembre · Passages, au seuil de l’hiver</a>
-              </p>
-            )
-          }
+          <div class="seance-top">
+            <div>
+              <p class="chap">02 — La semaine</p>
+              <h2 id="seances-title">Les <em>séances</em></h2>
+            </div>
+            <div class="seance-intro">
+              <p class="pull">L’association vous propose 6 séances de yoga par semaine.</p>
+              <p>Reprise les 15, 16 ou 17 septembre 2026 (selon jour de cours).</p>
+              {
+                flags.showStage && flags.showActualites && (
+                  <p>
+                    <a href="#stage">4–6 décembre · Passages, au seuil de l’hiver</a>
+                  </p>
+                )
+              }
+            </div>
+          </div>
           <ol class="week">
             {
               days.map((day) => (
@@ -193,6 +201,14 @@ const voices = [
             }
           </ol>
 
+          <figure class="feature-quote">
+            <p>
+              « Le yoga, c’est comme le goût des fraises, on ne peut pas l’expliquer. Et en plus, à Perrigny, c’est avec de la chantilly ! »
+            </p>
+            <figcaption>Marie-Annick</figcaption>
+          </figure>
+
+          <div class="fold-row">
           <details class="fold">
             <summary>Yoga adapté</summary>
             <div class="fold-body">
@@ -210,13 +226,6 @@ const voices = [
               </p>
             </div>
           </details>
-
-          <figure class="feature-quote">
-            <p>
-              « Le yoga, c’est comme le goût des fraises, on ne peut pas l’expliquer. Et en plus, à Perrigny, c’est avec de la chantilly ! »
-            </p>
-            <figcaption>Marie-Annick</figcaption>
-          </figure>
 
           <details class="fold">
             <summary>Les élèves ont la parole</summary>
@@ -261,6 +270,7 @@ const voices = [
               <p><a href={pdfs.absences}>Télécharger le calendrier <span class="sr-only">(PDF)</span></a></p>
             </div>
           </details>
+          </div>
         </div>
       </section>
 
