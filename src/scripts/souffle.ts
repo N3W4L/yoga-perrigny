@@ -8,6 +8,14 @@ function lowPower() {
   return Boolean(connection?.saveData) || Boolean(slow) || (typeof memory === 'number' && memory <= 2) || (typeof cores === 'number' && cores <= 2);
 }
 
+/** Plein cadre sur un long palier, fondu court de part et d'autre. */
+function focusWindow(distance: number, plateau: number, edge: number) {
+  if (distance <= plateau) return 1;
+  if (distance >= edge) return 0;
+  const t = (distance - plateau) / (edge - plateau);
+  return 1 - t * t * (3 - 2 * t);
+}
+
 if (root) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const narrow = window.matchMedia('(max-width: 720px)').matches;
@@ -18,77 +26,113 @@ if (root) {
 
   const scrollSpan = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
 
-  const smooth = (t: number) => {
-    const x = Math.max(0, Math.min(1, t));
-    return x * x * (3 - 2 * x);
+  const scrollToIndex = (index: number, behavior: ScrollBehavior) => {
+    const span = scrollSpan();
+    const top = planes.length > 1 ? (index / (planes.length - 1)) * span : 0;
+    window.scrollTo({ top, behavior });
   };
 
-  const scrollToIndex = (index: number, behavior: ScrollBehavior) => {
-    const top = planes.length > 1 ? (index / (planes.length - 1)) * scrollSpan() : 0;
-    window.scrollTo({ top, behavior });
+  const progress = root.querySelector<SVGCircleElement>('[data-progress]');
+  let progressLength = 0;
+  if (!reduce && progress) {
+    const radius = 16;
+    progressLength = 2 * Math.PI * radius;
+    progress.style.strokeDasharray = `${progressLength}`;
+  }
+
+  const paintProgress = (ratio: number) => {
+    if (!progress || reduce) return;
+    progress.style.strokeDashoffset = `${progressLength * (1 - ratio)}`;
   };
 
   if (canFly && planes.length > 1) {
     document.documentElement.classList.add('journey-3d');
     const world = root.querySelector<HTMLElement>('.world');
-
     const step = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--step')) || 1500;
     const travel = step * (planes.length - 1);
-    let shown = 0;
-    let chasing = false;
+
+    let span = 0;
+    const measure = () => {
+      span = scrollSpan();
+    };
+
+    const planeReveal = planes.map(() => -1);
+    const gateReveal = gates.map(() => -1);
+    let lastAlong = Number.NaN;
+    let currentIndex = -1;
+
+    const paintReveal = (el: HTMLElement, store: number[], index: number, reveal: number) => {
+      const q = Math.round(reveal * 1000) / 1000;
+      if (store[index] === q) return;
+      store[index] = q;
+      el.style.setProperty('--reveal', String(q));
+      el.style.visibility = q === 0 ? 'hidden' : 'visible';
+    };
 
     const apply = (position: number) => {
-      if (world) {
-        const along = planes.length > 1 ? position / (planes.length - 1) : 0;
+      const along = planes.length > 1 ? position / (planes.length - 1) : 0;
+      if (world && along !== lastAlong) {
+        lastAlong = along;
         world.style.transform = `translate3d(0,0,${(along * travel).toFixed(2)}px)`;
       }
+
       let current = 0;
-      planes.forEach((plane, index) => {
-        const signed = index - position;
-        const distance = Math.abs(signed);
-        let reveal = smooth(1 - distance / 1.05);
-        if (signed < -0.045) reveal *= Math.max(0, 1 - (-signed - 0.045) / 0.1);
-        plane.style.setProperty('--reveal', reveal.toFixed(3));
-        plane.classList.toggle('is-near', distance < 0.62);
-        if (distance < Math.abs(current - position)) current = index;
-      });
-      gates.forEach((gate, index) => {
-        const signed = index + 0.5 - position;
-        const distance = Math.abs(signed);
-        let reveal = smooth(1 - distance / 1.2);
-        if (signed < -0.16) reveal *= Math.max(0, 1 - (-signed - 0.16) / 0.14);
-        gate.style.setProperty('--reveal', reveal.toFixed(3));
-      });
-      const id = planes[current]?.id ?? '';
-      nav?.classList.remove('is-on-light');
-      root.querySelectorAll<HTMLAnchorElement>('.s-links a, .s-panel a').forEach((link) => {
-        const on = link.getAttribute('href') === `#${id}`;
-        link.classList.toggle('is-active', on);
-        if (on) link.setAttribute('aria-current', 'true');
-        else link.removeAttribute('aria-current');
-      });
+      let best = Infinity;
+      for (let index = 0; index < planes.length; index++) {
+        const distance = Math.abs(index - position);
+        if (distance < best) {
+          best = distance;
+          current = index;
+        }
+        paintReveal(planes[index], planeReveal, index, focusWindow(distance, 0.45, 0.55));
+      }
+
+      for (let index = 0; index < planes.length; index++) {
+        const near = index === current;
+        if (planes[index].classList.contains('is-near') !== near) planes[index].classList.toggle('is-near', near);
+      }
+
+      for (let index = 0; index < gates.length; index++) {
+        const distance = Math.abs(index + 0.5 - position);
+        const reveal = focusWindow(distance, 0.08, 0.78);
+        paintReveal(gates[index], gateReveal, index, reveal);
+        const live = reveal > 0.04;
+        if (gates[index].classList.contains('is-live') !== live) gates[index].classList.toggle('is-live', live);
+      }
+
+      if (current !== currentIndex) {
+        currentIndex = current;
+        const id = planes[current]?.id ?? '';
+        nav?.classList.remove('is-on-light');
+        root.querySelectorAll<HTMLAnchorElement>('.s-links a[href^="#"], .s-panel a[href^="#"]').forEach((link) => {
+          const on = link.getAttribute('href') === `#${id}`;
+          link.classList.toggle('is-active', on);
+          if (on) link.setAttribute('aria-current', 'true');
+          else link.removeAttribute('aria-current');
+        });
+      }
     };
 
-    const chase = () => {
-      const max = scrollSpan();
-      const progress = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-      const target = progress * (planes.length - 1);
-      shown += (target - shown) * 0.14;
-      if (Math.abs(target - shown) < 0.0012) shown = target;
-      apply(shown);
-      if (shown !== target) requestAnimationFrame(chase);
-      else chasing = false;
+    let raf = 0;
+    const frame = () => {
+      raf = 0;
+      const ratio = span > 0 ? Math.min(1, Math.max(0, window.scrollY / span)) : 0;
+      apply(ratio * (planes.length - 1));
+      paintProgress(ratio);
     };
 
-    const nudge = () => {
-      if (chasing) return;
-      chasing = true;
-      requestAnimationFrame(chase);
+    const request = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(frame);
     };
 
-    nudge();
-    window.addEventListener('scroll', nudge, { passive: true });
-    window.addEventListener('resize', nudge);
+    measure();
+    request();
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', () => {
+      measure();
+      request();
+    }, { passive: true });
 
     root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (event) => {
@@ -109,38 +153,25 @@ if (root) {
       if (index >= 0) scrollToIndex(index, 'auto');
     });
 
-    root.addEventListener(
-      'wheel',
-      (event) => {
-        const scroller = (event.target as HTMLElement | null)?.closest<HTMLElement>('.plane > .s-wrap');
-        if (!scroller) return;
-        const delta = event.deltaY;
-        const overflow = scroller.scrollHeight > scroller.clientHeight + 2;
-        const atTop = scroller.scrollTop <= 0;
-        const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2;
-        if (!overflow || (delta < 0 && atTop) || (delta > 0 && atBottom)) {
-          event.preventDefault();
-          window.scrollBy({ top: delta });
-        }
-      },
-      { passive: false },
-    );
-
     const hashIndex = planes.findIndex((plane) => `#${plane.id}` === window.location.hash);
     if (hashIndex > 0) scrollToIndex(hashIndex, 'auto');
-  }
-
-  const progress = root.querySelector<SVGCircleElement>('[data-progress]');
-  if (!reduce && progress) {
-    const radius = 16;
-    const length = 2 * Math.PI * radius;
-    progress.style.strokeDasharray = `${length}`;
-    const tick = () => {
-      const max = scrollSpan();
-      const ratio = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-      progress.style.strokeDashoffset = `${length * (1 - ratio)}`;
+  } else if (!reduce && progress) {
+    let span = scrollSpan();
+    let raf = 0;
+    const frame = () => {
+      raf = 0;
+      const ratio = span > 0 ? Math.min(1, window.scrollY / span) : 0;
+      paintProgress(ratio);
     };
-    tick();
-    window.addEventListener('scroll', tick, { passive: true });
+    const request = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(frame);
+    };
+    frame();
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', () => {
+      span = scrollSpan();
+      request();
+    }, { passive: true });
   }
 }

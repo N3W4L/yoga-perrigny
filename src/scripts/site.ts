@@ -3,11 +3,16 @@ const toTop = document.querySelector<HTMLElement>('[data-to-top]');
 const menu = document.querySelector<HTMLDetailsElement>('[data-menu]');
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+let scrollTick = 0;
 function onScroll() {
-  header?.classList.toggle('is-scrolled', window.scrollY > 8);
-  if (!toTop) return;
-  if (window.scrollY > 640) toTop.removeAttribute('hidden');
-  else toTop.setAttribute('hidden', '');
+  if (scrollTick) return;
+  scrollTick = requestAnimationFrame(() => {
+    scrollTick = 0;
+    header?.classList.toggle('is-scrolled', window.scrollY > 8);
+    if (!toTop) return;
+    if (window.scrollY > 640) toTop.removeAttribute('hidden');
+    else toTop.setAttribute('hidden', '');
+  });
 }
 
 onScroll();
