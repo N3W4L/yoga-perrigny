@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://n3w4l.github.io/yoga-perrigny/sitemap.xml

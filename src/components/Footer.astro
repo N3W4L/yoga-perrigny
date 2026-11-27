@@ -1,0 +1,36 @@
+---
+import { Picture } from 'astro:assets';
+import logo from '../assets/logo-yoga.png';
+import { association } from '../data/site';
+
+const base = import.meta.env.BASE_URL;
+const mailto = `mailto:${association.email}`;
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-row">
+      <a class="footer-brand" href={base}>
+        <Picture
+          src={logo}
+          formats={['avif', 'webp']}
+          fallbackFormat="png"
+          width={165}
+          height={68}
+          alt=""
+          quality={80}
+        />
+        Association Chemins d’Éveil
+      </a>
+      <nav aria-label="Pied de page">
+        <ul>
+          <li><a href={`${base}mentions-legales/`}>Mentions légales</a></li>
+          <li><a href={`${base}confidentialite/`}>Politique de confidentialité</a></li>
+          <li><a href={mailto}>Contact : {association.email}</a></li>
+          <li><a href={base + '#accueil'}>Haut de page</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="footer-meta">Tous droits réservés</p>
+  </div>
+</footer>

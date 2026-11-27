@@ -1,0 +1,28 @@
+---
+import { flags } from '../config';
+import Absences from './Absences.astro';
+---
+
+<section class="news" id="actualites" aria-labelledby="actualites-title">
+  <div class="wrap">
+    <h2 id="actualites-title">Actualités</h2>
+    <p>Vous souhaitez :</p>
+    <ul class="news-list">
+      <li>
+        <a href="#tarifs">Adhérer à l’association pour pratiquer le yoga</a>
+      </li>
+      {
+        flags.showStage && (
+          <li>
+            <a href="#stage">Vous inscrire à un stage</a>
+            <span>
+              {' '}
+              — soirée mantras le 4/12 et stage les 5 et 6/12 « Passages : au seuil de l’hiver, un voyage intérieur ».
+            </span>
+          </li>
+        )
+      }
+    </ul>
+    <Absences />
+  </div>
+</section>

@@ -1,0 +1,76 @@
+---
+import { Picture } from 'astro:assets';
+import logo from '../assets/logo-yoga.png';
+import { flags } from '../config';
+import { association, nav } from '../data/site';
+
+const items = nav.filter((item) => !('flag' in item) || flags[item.flag]);
+const base = import.meta.env.BASE_URL;
+const onHome = Astro.url.pathname === base;
+const hrefFor = (id: string) => (onHome ? `#${id}` : `${base}#${id}`);
+const mailto = `mailto:${association.email}`;
+---
+
+<header class="header" data-header>
+  <div class="header-inner">
+    <a class="logo" href={base}>
+      <Picture
+        src={logo}
+        formats={['avif', 'webp']}
+        fallbackFormat="png"
+        width={220}
+        height={90}
+        alt="Logo Yoga Perrigny : le O du mot Yoga est dessiné par la silhouette d’une personne en posture."
+        quality={85}
+      />
+    </a>
+
+    <div class="header-tools">
+      <nav class="nav-desktop" aria-label="Sections" data-nav>
+        <ul>
+          {
+            items.map((item) => (
+              <li>
+                <a href={hrefFor(item.id)} data-nav-link>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <a class="btn header-write" href={mailto}>
+        <span class="write-long">Nous écrire</span>
+        <span class="write-short">Écrire</span>
+      </a>
+      <details class="nav-mobile" data-menu>
+        <summary class="nav-toggle">
+          <span class="label-open">Menu</span>
+          <span class="label-close">Fermer</span>
+        </summary>
+        <div class="nav-panel" id="menu-mobile">
+          <div>
+            <p class="panel-mark">Chemins d’Éveil</p>
+            <nav aria-label="Sections">
+              <ul>
+                {
+                  items.map((item) => (
+                    <li>
+                      <a class="nav-link" href={hrefFor(item.id)} data-nav-link>
+                        {item.label}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </nav>
+          </div>
+          <div class="panel-foot">
+            <a class="btn" href={mailto}>Nous écrire</a>
+            <a class="btn btn-ghost" href={hrefFor('horaires')}>Voir les horaires</a>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

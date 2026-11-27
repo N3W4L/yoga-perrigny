@@ -1,0 +1,152 @@
+---
+import { flags } from '../config';
+import { association, pdfs } from '../data/site';
+
+const classique = [
+  {
+    name: 'Anne-Marie Meudre',
+    lines: ['285, rue du puits à sel', '39570 Perrigny', '07 86 82 05 45'],
+    tel: '+33786820545',
+    phone: '07 86 82 05 45',
+  },
+  {
+    name: 'Sandrine Peyronel',
+    lines: [association.email],
+    mail: association.email,
+    pending: 'Téléphone : à compléter',
+  },
+  {
+    name: 'Odile Sappez',
+    lines: ['3, rue du petit Bourg', '39570 Montaigu', '06 23 95 12 37'],
+    tel: '+33623951237',
+    phone: '06 23 95 12 37',
+  },
+  {
+    name: 'Françoise Bataillard',
+    lines: ['130 rue du presbytère', '39570 Revigny', '06 26 25 65 88'],
+    tel: '+33626256588',
+    phone: '06 26 25 65 88',
+  },
+];
+---
+
+<section class="section tarifs" id="tarifs" aria-labelledby="tarifs-title">
+  <div class="wrap">
+    <p class="eyebrow">Saison 2026-2027</p>
+    <h2 id="tarifs-title">Tarifs</h2>
+    <p class="lede">Les professeures s’engagent à assurer 30 séances. Inscription par fiche et par chèque, sans paiement en ligne.</p>
+
+    <div class:list={['price-grid', 'stack', !flags.showTarifReduit && 'cols-3']}>
+      <article class="price reveal">
+        <p class="kicker">Association</p>
+        <h3>Adhésion</h3>
+        <p class="price-value">30 <span>€</span></p>
+        <p>Chèque à l’ordre de l’association Chemins d’Éveil.</p>
+      </article>
+
+      <article class="price reveal">
+        <p class="kicker">Yoga classique · 30 séances</p>
+        <h3>Inscription</h3>
+        <p class="price-value">175 <span>€</span></p>
+        <p>Chèque à l’ordre de la professeure, en plus de l’adhésion. Année 2026/2027.</p>
+      </article>
+
+      {
+        flags.showTarifReduit && (
+          <article class="price reveal">
+            <p class="kicker">Yoga classique</p>
+            <h3>Tarif réduit</h3>
+            <p class="price-value">85 <span>€</span></p>
+            <p>Les personnes à faibles revenus peuvent bénéficier de ce tarif réduit.</p>
+            <p class="pending">
+              [Mention de la page Inscriptions. Cette case ne figure pas sur le formulaire PDF 2026-2027.]
+            </p>
+          </article>
+        )
+      }
+
+      <article class="price reveal">
+        <p class="kicker">Adhésion + inscription</p>
+        <h3>Yoga adapté</h3>
+        <p class="price-value">185 <span>€</span></p>
+        <p>
+          185&nbsp;€ à l’ordre de chemins d’Eveil (adhésion + inscription). Pour les personnes ayant des difficultés de mouvement dues à l’avancée en âge, un accident ou une maladie.
+        </p>
+        <p>
+          Pour le tarif réduit, voir avec le président.
+          <span class="pending">[Nom du président : à compléter]</span>
+        </p>
+      </article>
+    </div>
+
+    <div class="fine">
+      <div>
+        <h3>Nouvelles inscriptions</h3>
+        <p>
+          Adresser votre fiche d’inscription remplie et votre règlement à votre enseignante. Possibilité de participer à une séance avant votre inscription définitive (prévenir avant au cas où le cours serait déjà complet).
+        </p>
+        <p>
+          Tapis et support pour l’assise sont à votre disposition dans la salle. Apporter une serviette à disposer sur le tapis ainsi qu’une couverture.
+        </p>
+        <p>
+          L’inscription est effective après réception de votre fiche d’inscription, de votre règlement et l’envoi de votre e-mail à cette adresse&nbsp;:
+          <a href={`mailto:${association.email}`}>{association.email}</a>.
+        </p>
+        <p>
+          Le nombre d’élèves étant limité par séance, les inscriptions sont enregistrées dans l’ordre de réception des fiches et du règlement.
+        </p>
+        <p>
+          <a class="btn" href={pdfs.inscription} target="_blank" rel="noopener noreferrer">
+            Télécharger le formulaire <span class="sr-only">(PDF, nouvel onglet)</span>
+          </a>
+        </p>
+      </div>
+
+      {
+        flags.showReinscriptions && (
+          <div>
+            <h3>Réinscriptions</h3>
+            <p>
+              Page du site : « A faire avant le 1er septembre, soit par courrier, soit lors d’une séance avec la fiche dûment complétée et le règlement par chèque ».
+            </p>
+            <p>Formulaire PDF : « à redonner au plus tard à la première séance ».</p>
+            <p class="pending">[Les deux formulations divergent. Règle à retenir : à arbitrer.]</p>
+          </div>
+        )
+      }
+
+      <div>
+        <h3>Renseignements et envoi</h3>
+        <ul class="contacts">
+          {
+            classique.map((person) => (
+              <li>
+                <strong>{person.name}</strong>
+                <br />
+                {person.lines.map((line) =>
+                  person.mail && line === person.mail ? (
+                    <span>
+                      <a href={`mailto:${person.mail}`}>{person.mail}</a>
+                      <br />
+                    </span>
+                  ) : person.phone && line === person.phone ? (
+                    <span>
+                      <a href={`tel:${person.tel}`}>{person.phone}</a>
+                      <br />
+                    </span>
+                  ) : (
+                    <span>
+                      {line}
+                      <br />
+                    </span>
+                  ),
+                )}
+                {person.pending && <span class="pending">[{person.pending}]</span>}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

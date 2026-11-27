@@ -1,0 +1,42 @@
+---
+import Actualites from '../components/Actualites.astro';
+import BackToTop from '../components/BackToTop.astro';
+import Club from '../components/Club.astro';
+import Contact from '../components/Contact.astro';
+import Cours from '../components/Cours.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Horaires from '../components/Horaires.astro';
+import Lieu from '../components/Lieu.astro';
+import Premiere from '../components/Premiere.astro';
+import Profs from '../components/Profs.astro';
+import Ressources from '../components/Ressources.astro';
+import Stage from '../components/Stage.astro';
+import Tarifs from '../components/Tarifs.astro';
+import { flags } from '../config';
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Cours de yoga à Perrigny — Chemins d’Éveil"
+  description="Cours de yoga à Perrigny. Association Chemins d’Éveil, salle de sports, 76 rue du moulin, 39570 Perrigny."
+>
+  <Header />
+  <main id="contenu">
+    <Hero />
+    {flags.showActualites && <Actualites />}
+    <Club />
+    <Cours />
+    <Horaires showAbsences={!flags.showActualites} />
+    <Tarifs />
+    <Premiere />
+    {flags.showStage && <Stage />}
+    <Profs />
+    <Lieu />
+    {flags.showRessources && <Ressources />}
+    <Contact />
+  </main>
+  <Footer />
+  <BackToTop />
+</Base>
