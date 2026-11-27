@@ -1,0 +1,23 @@
+---
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Page introuvable — Chemins d’Éveil"
+  description="Cette page n’existe pas sur le site de l’association Chemins d’Éveil, cours de yoga à Perrigny."
+>
+  <Header />
+  <main id="contenu" class="page-main">
+    <div class="wrap prose">
+      <p class="eyebrow">404</p>
+      <h1>Page introuvable</h1>
+      <p class="lede">Cette adresse ne correspond à aucune page.</p>
+      <p class="stack-top">
+        <a class="btn" href={import.meta.env.BASE_URL}>Retour à l’accueil</a>
+      </p>
+    </div>
+  </main>
+  <Footer />
+</Base>

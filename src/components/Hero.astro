@@ -1,0 +1,38 @@
+---
+import { Picture } from 'astro:assets';
+import hall from '../assets/salle-2025.jpg';
+import { association } from '../data/site';
+---
+
+<section class="hero" id="accueil" aria-labelledby="hero-title">
+  <div class="hero-media">
+    <Picture
+      src={hall}
+      formats={['avif', 'webp']}
+      fallbackFormat="jpeg"
+      widths={[480, 768, 1024]}
+      sizes="100vw"
+      alt="Cours de yoga dans la salle de sports de Perrigny : un groupe en fente, les bras levés, sur un sol vert. Photo du 20 novembre 2025."
+      quality={68}
+      priority
+      pictureAttributes={{ class: 'frame' }}
+      class="frame"
+    />
+  </div>
+  <div class="hero-copy">
+    <p class="eyebrow">Association · Perrigny · Jura</p>
+    <h1 id="hero-title">Chemins <em>d’Éveil</em></h1>
+    <p class="lede">
+      Yoga à Perrigny, dans le Jura. L’association Chemins d’Éveil propose des cours et des stages, pour pratiquer à tout âge, sans recherche de performance.
+    </p>
+    <div class="hero-actions">
+      <a class="btn" href="#horaires">Voir les horaires</a>
+      <a class="btn btn-ghost" href={`mailto:${association.email}`}>Nous écrire</a>
+    </div>
+    <p class="where">
+      <span>{association.street}</span>
+      <span>{association.postal}</span>
+      <span>{association.place}</span>
+    </p>
+  </div>
+</section>
