@@ -15,9 +15,13 @@ if (root) {
   const planes = [...root.querySelectorAll<HTMLElement>('.plane')];
   const gates = [...root.querySelectorAll<HTMLElement>('.gate')];
   const nav = root.querySelector<HTMLElement>('.s-nav');
-  const darkIds = new Set(['accueil', 'stage']);
 
   const scrollSpan = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+
+  const smooth = (t: number) => {
+    const x = Math.max(0, Math.min(1, t));
+    return x * x * (3 - 2 * x);
+  };
 
   const scrollToIndex = (index: number, behavior: ScrollBehavior) => {
     const top = planes.length > 1 ? (index / (planes.length - 1)) * scrollSpan() : 0;
@@ -30,29 +34,33 @@ if (root) {
 
     const step = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--step')) || 1500;
     const travel = step * (planes.length - 1);
+    let shown = 0;
+    let chasing = false;
 
-    const update = () => {
-      const max = scrollSpan();
-      const progress = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-      if (world) world.style.transform = `translate3d(0,0,${(progress * travel).toFixed(2)}px)`;
-      const position = progress * (planes.length - 1);
+    const apply = (position: number) => {
+      if (world) {
+        const along = planes.length > 1 ? position / (planes.length - 1) : 0;
+        world.style.transform = `translate3d(0,0,${(along * travel).toFixed(2)}px)`;
+      }
       let current = 0;
       planes.forEach((plane, index) => {
         const signed = index - position;
         const distance = Math.abs(signed);
-        const reveal = signed < -0.05 ? 0 : Math.max(0, Math.min(1, 1.08 - distance * 1.7));
+        let reveal = smooth(1 - distance / 1.05);
+        if (signed < -0.045) reveal *= Math.max(0, 1 - (-signed - 0.045) / 0.1);
         plane.style.setProperty('--reveal', reveal.toFixed(3));
-        plane.classList.toggle('is-near', distance < 0.58);
+        plane.classList.toggle('is-near', distance < 0.62);
         if (distance < Math.abs(current - position)) current = index;
       });
       gates.forEach((gate, index) => {
         const signed = index + 0.5 - position;
         const distance = Math.abs(signed);
-        const reveal = signed < -0.2 ? 0 : Math.max(0, Math.min(1, 1.08 - distance * 1.05));
+        let reveal = smooth(1 - distance / 1.2);
+        if (signed < -0.16) reveal *= Math.max(0, 1 - (-signed - 0.16) / 0.14);
         gate.style.setProperty('--reveal', reveal.toFixed(3));
       });
       const id = planes[current]?.id ?? '';
-      nav?.classList.toggle('is-on-light', !darkIds.has(id));
+      nav?.classList.remove('is-on-light');
       root.querySelectorAll<HTMLAnchorElement>('.s-links a, .s-panel a').forEach((link) => {
         const on = link.getAttribute('href') === `#${id}`;
         link.classList.toggle('is-active', on);
@@ -61,9 +69,26 @@ if (root) {
       });
     };
 
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+    const chase = () => {
+      const max = scrollSpan();
+      const progress = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+      const target = progress * (planes.length - 1);
+      shown += (target - shown) * 0.14;
+      if (Math.abs(target - shown) < 0.0012) shown = target;
+      apply(shown);
+      if (shown !== target) requestAnimationFrame(chase);
+      else chasing = false;
+    };
+
+    const nudge = () => {
+      if (chasing) return;
+      chasing = true;
+      requestAnimationFrame(chase);
+    };
+
+    nudge();
+    window.addEventListener('scroll', nudge, { passive: true });
+    window.addEventListener('resize', nudge);
 
     root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (event) => {
