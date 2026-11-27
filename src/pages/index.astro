@@ -84,6 +84,11 @@ const voices = [
 
     <main id="contenu">
       <div class="journey" data-stations={flags.showStage ? '8' : '7'}>
+        <div class="snap-rail" aria-hidden="true">
+          {Array.from({ length: flags.showStage ? 8 : 7 }, (_, index) => (
+            <div class="snap-stop" data-snap={index}></div>
+          ))}
+        </div>
         <div class="tunnel">
           <div class="camera">
           <div class="world">

@@ -1303,61 +1303,98 @@ html.journey-3d {
   --step: 1500;
   --rest: -40;
   scroll-behavior: auto;
+  scroll-snap-type: y mandatory;
+}
+
+html.journey-3d .journey {
+  position: relative;
 }
 
 html.journey-3d .journey[data-stations='8'] {
-  height: 800svh;
-  --gaps: 7;
+  height: 800dvh;
 }
 
 html.journey-3d .journey[data-stations='7'] {
-  height: 700svh;
-  --gaps: 6;
+  height: 700dvh;
+}
+
+html.journey-3d .snap-rail {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+html.journey-3d .snap-stop {
+  flex: 1 0 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+html:has(.souffle):not(.journey-3d) {
+  scroll-snap-type: y proximity;
+}
+
+html:has(.souffle):not(.journey-3d) .plane {
+  scroll-snap-align: start;
 }
 
 html.journey-3d .tunnel {
   position: sticky;
   top: 0;
+  z-index: 1;
   height: 100svh;
   height: 100dvh;
   overflow: hidden;
   contain: paint;
   background:
-    radial-gradient(ellipse at 50% 42%, rgba(142, 164, 140, 0.22), transparent 42%),
-    radial-gradient(ellipse at 50% 48%, #24362c 0%, #121a16 52%, #070a08 100%);
+    radial-gradient(ellipse at 50% 46%, #24362c 0%, #121a16 54%, #070a08 100%);
 }
 
-html.journey-3d .tunnel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.1;
-  background-image: url('../assets/grain.svg');
-  background-size: 180px 180px;
-}
-
-html.journey-3d .camera {
-  height: 100%;
-  perspective: 860px;
-  perspective-origin: 50% 46%;
-}
-
+html.journey-3d .tunnel::before,
 html.journey-3d .tunnel::after {
   content: '';
   position: absolute;
-  inset: 0;
-  z-index: 4;
+  left: 50%;
+  top: 46%;
+  z-index: 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--linen) 42%, transparent);
   pointer-events: none;
-  background: radial-gradient(ellipse at 50% 48%, transparent 42%, rgba(6, 10, 8, 0.55) 100%);
+  transform: translate(-50%, -50%);
+}
+
+html.journey-3d .tunnel::before {
+  width: min(72vmin, 42rem);
+  height: min(64vmin, 36rem);
+}
+
+html.journey-3d .tunnel::after {
+  width: min(46vmin, 26rem);
+  height: min(40vmin, 22rem);
+  border-color: color-mix(in srgb, var(--sage) 70%, transparent);
+}
+
+html.journey-3d[data-station='0'] .tunnel::before,
+html.journey-3d[data-station='0'] .tunnel::after {
+  opacity: 0;
+}
+
+html.journey-3d .camera {
+  position: relative;
+  z-index: 1;
+  height: 100%;
 }
 
 html.journey-3d .world {
   height: 100%;
-  transform-style: preserve-3d;
-  will-change: transform;
-  --travel: calc(var(--step) * var(--gaps) * 1px);
+  transform-style: flat;
+}
+
+html.journey-3d .world.is-moving .plane.is-live {
+  will-change: transform, opacity;
 }
 
 html.journey-3d .plane {
@@ -1367,14 +1404,22 @@ html.journey-3d .plane {
   background: transparent;
   color: var(--sand);
   pointer-events: none;
-  visibility: hidden;
-  opacity: var(--reveal, 0);
-  transform: translateZ(calc(var(--z) * -1px)) scale(calc(0.975 + var(--reveal, 0) * 0.025));
+  display: none;
+  opacity: 0;
+  content-visibility: hidden;
 }
 
-html.journey-3d .plane[data-station='0'] {
-  --reveal: 1;
-  visibility: visible;
+html.journey-3d .plane.is-live {
+  display: block;
+  content-visibility: visible;
+}
+
+html.journey-3d .plane.is-live.s-hero {
+  display: grid;
+}
+
+html.journey-3d .plane.is-live:not(.s-hero) {
+  display: flex;
 }
 
 html.journey-3d .plane.is-near > .s-wrap,
@@ -1391,8 +1436,7 @@ html.journey-3d .plane.night {
   color: var(--sand);
 }
 
-html.journey-3d .plane:not(.s-hero) {
-  display: flex;
+html.journey-3d .plane.is-live:not(.s-hero) {
   flex-direction: column;
   justify-content: center;
   padding: 4.35rem 0 1.1rem;
@@ -1403,7 +1447,8 @@ html.journey-3d .s-hero::before {
 }
 
 html.journey-3d .orb,
-html.journey-3d .day-group {
+html.journey-3d .day-group,
+html.journey-3d .ring {
   animation: none;
 }
 
@@ -1443,26 +1488,7 @@ html.journey-3d .s-hero {
 }
 
 html.journey-3d .gate {
-  display: block;
-  position: absolute;
-  left: 50%;
-  top: 48%;
-  width: min(118vmax, 1600px);
-  aspect-ratio: 1;
-  color: var(--linen);
-  pointer-events: none;
-  visibility: hidden;
-  opacity: var(--reveal, 0);
-  transform-style: preserve-3d;
-  transform: translate(-50%, -50%) translateZ(calc(var(--z) * -1px));
-}
-
-html.journey-3d .gate .ring {
-  animation-play-state: paused;
-}
-
-html.journey-3d .gate.is-live .ring {
-  animation-play-state: running;
+  display: none;
 }
 
 html.journey-3d .gate svg {
