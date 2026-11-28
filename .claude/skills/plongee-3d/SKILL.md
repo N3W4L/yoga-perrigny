@@ -22,6 +22,16 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
   L'animation est liée au défilement en CSS (`animation-timeline: scroll()`,
   `@keyframes dive` à la fin de `src/styles/souffle.css`) : le navigateur la
   calcule hors du fil principal.
+- **Le décor** se choisit par la constante `DECOR` en tête de `souffle.ts` :
+  - `'logo'` (par défaut, `src/scripts/logo3d.ts`) : le « O » du logo en
+    anamorphose. Il est découpé en une quarantaine de morceaux posés à des
+    profondeurs différentes (de `NEAREST` à `FARTHEST` écrans) et agrandis en
+    proportion. Depuis l'accueil tout s'aligne ; dès qu'on avance, le logo se
+    disloque et on traverse ses morceaux un par un. Projection : p × Z / (Z − c).
+    `SWAY_X` et `SWAY_Y` règlent la dérive latérale de la caméra, qui révèle
+    les plans. La géométrie est relevée sur le dessin du logo (fonction
+    `logoPieces`).
+  - `'anneaux'` : le tunnel d'anneaux décrit ci-dessous.
 - **Le tunnel d'anneaux** (`src/scripts/tunnel.ts`) : des anneaux posés à
   intervalles réguliers en profondeur sur tout le trajet, et au-delà (il ne
   finit pas). Ils sont dessinés sur un seul `<canvas class="rings">`, redessiné

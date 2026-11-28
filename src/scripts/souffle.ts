@@ -1,4 +1,11 @@
+import { createLogoTunnel } from './logo3d';
 import { createTunnel } from './tunnel';
+
+/**
+ * Décor du trajet : 'logo' = le logo en anamorphose, qui se disloque quand on
+ * avance (logo3d.ts) ; 'anneaux' = le tunnel d'anneaux infini (tunnel.ts).
+ */
+const DECOR: 'logo' | 'anneaux' = 'logo';
 
 const root = document.querySelector<HTMLElement>('.souffle');
 
@@ -41,7 +48,7 @@ if (root) {
     if (cssDriven) html.classList.add('journey-css');
 
     const ringsCanvas = root.querySelector<HTMLCanvasElement>('.rings');
-    const tunnel = ringsCanvas ? createTunnel(ringsCanvas) : null;
+    const tunnel = ringsCanvas ? (DECOR === 'logo' ? createLogoTunnel(ringsCanvas) : createTunnel(ringsCanvas)) : null;
     const links = [...root.querySelectorAll<HTMLAnchorElement>('.s-links a[href^="#"], .s-panel a[href^="#"]')];
     const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
     const last = planes.length - 1;
