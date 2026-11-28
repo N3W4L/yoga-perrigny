@@ -1,0 +1,40 @@
+---
+name: contenu-asso
+description: Règles de contenu du site de l'association Chemins d'Éveil (yoga à Perrigny) - ne rien inventer, où se trouvent horaires, tarifs et réglages, conventions de rédaction. À suivre pour toute modification de texte ou d'information.
+---
+
+# Contenu du site Chemins d'Éveil
+
+## Ne rien inventer
+
+- Horaires, tarifs, noms, dates : uniquement ce que donnent le site actuel
+  (yoga-perrigny.com) ou les PDF de l'association (liens dans `src/data/site.ts`).
+- Une information manquante s'écrit entre crochets dans un élément `.pending`,
+  par exemple `<span class="pending">[Téléphone : à compléter]</span>`. Elle
+  apparaît en italique atténué et se repère facilement : `grep -rn "pending" src/pages`.
+- Quand deux sources se contredisent, montrer les deux et le signaler, sans trancher.
+
+## Où se trouve quoi
+
+- `src/data/site.ts` : coordonnées de l'association, liens PDF, **grille des
+  séances** (`days`). Les créneaux affichés sur les cartes des professeures en
+  sont tirés automatiquement (`slotsOf` dans index.astro) : ne modifier
+  qu'à un seul endroit.
+- `src/config.ts` : sections optionnelles (`showStage`, `showActualites`,
+  `showRessources`, `showTarifReduit`, `showReinscriptions`). **Après le
+  6 décembre 2026 : `showStage: false`.**
+- `src/pages/index.astro` : textes de toutes les sections.
+- Pages légales : `src/pages/mentions-legales.astro`, `src/pages/confidentialite.astro`.
+
+## Rédaction
+
+- Français, apostrophe typographique (’), espaces avant « ; : ! ? » comme dans le texte existant.
+- Les enseignantes sont toutes des femmes : « professeures », y compris dans le menu.
+- Ton sobre, sans promesse de résultat ni vocabulaire marketing.
+- Le site n'a ni traceur, ni formulaire, ni police ou script venus d'un CDN :
+  le contact se fait par courriel. Ne pas en ajouter.
+
+## Après une modification
+
+Lancer la compétence `verifier-site` : un texte plus long peut faire déborder un
+écran du trajet 3D en 1280×720.

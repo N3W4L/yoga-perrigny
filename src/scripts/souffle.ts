@@ -13,7 +13,6 @@ if (root) {
   const narrow = window.matchMedia('(max-width: 720px)').matches;
   const canFly = !reduce && !narrow && !lowPower();
   const planes = [...root.querySelectorAll<HTMLElement>('.plane')];
-  const nav = root.querySelector<HTMLElement>('.s-nav');
   const progress = root.querySelector<SVGCircleElement>('[data-progress]');
 
   let progressLength = 0;
@@ -29,152 +28,142 @@ if (root) {
   };
 
   if (canFly && planes.length > 1) {
-    document.documentElement.classList.add('journey-3d');
-    const world = root.querySelector<HTMLElement>('.world');
+    const html = document.documentElement;
+    html.classList.add('journey-3d');
+    /* Le navigateur sait lier l'animation au défilement : il la calcule seul,
+       hors du fil principal. Sinon, on applique la même table à la main. */
+    const cssDriven =
+      typeof CSS !== 'undefined' &&
+      CSS.supports('animation-timeline: scroll()') &&
+      CSS.supports('animation-range: 0px 100px');
+    if (cssDriven) html.classList.add('journey-css');
+
+    const gates = [...root.querySelectorAll<HTMLElement>('.gate')];
+    const links = [...root.querySelectorAll<HTMLAnchorElement>('.s-links a[href^="#"], .s-panel a[href^="#"]')];
+    const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
     const last = planes.length - 1;
-    const duration = 640;
+    const clamp = (value: number) => Math.max(0, Math.min(last, value));
+    /* Longueur de défilement d'un écran au suivant : --stop dans souffle.css. */
+    const firstStop = root.querySelector<HTMLElement>('.snap-stop');
+    const secondStop = firstStop?.nextElementSibling as HTMLElement | null;
+    const stopLength = () =>
+      (firstStop && secondStop ? secondStop.offsetTop - firstStop.offsetTop : 0) || window.innerHeight || 1;
 
-    let camera = 0;
-    let fromPos = 0;
-    let toPos = 0;
-    let started = 0;
-    let raf = 0;
-    let currentIndex = -1;
-    let driving = false;
-    let driveTimer = 0;
-    const shown = planes.map(() => false);
-
-    const clamp = (index: number) => Math.max(0, Math.min(last, index));
-
-    const indexFromScroll = () => {
-      const stop = window.innerHeight;
-      if (stop <= 0) return 0;
-      return clamp(Math.round(window.scrollY / stop));
+    /* Paliers [progression, opacité, échelle] : identiques aux @keyframes dive et pass de souffle.css. */
+    type Stop = readonly [number, number, number];
+    const DIVE: readonly Stop[] = [
+      [0, 0, 0.62], [0.2, 0.12, 0.73], [0.325, 0.5, 0.83], [0.425, 0.92, 0.93], [0.47, 1, 0.975],
+      [0.5, 1, 1], [0.53, 1, 1.03], [0.575, 0.85, 1.08], [0.65, 0.3, 1.18], [0.71, 0, 1.28], [1, 0, 1.28],
+    ];
+    const PASS: readonly Stop[] = [
+      [0, 0, 0.22], [0.31, 0.18, 0.3], [0.625, 0.25, 0.5], [0.78, 0.45, 0.72], [0.875, 0.6, 1], [0.94, 0.4, 1.3], [1, 0, 1.6],
+    ];
+    const sample = (stops: readonly Stop[], t: number) => {
+      const x = Math.max(0, Math.min(1, t));
+      for (let k = 1; k < stops.length; k++) {
+        const [t1, o1, s1] = stops[k];
+        if (x <= t1) {
+          const [t0, o0, s0] = stops[k - 1];
+          const f = t1 > t0 ? (x - t0) / (t1 - t0) : 1;
+          return [o0 + (o1 - o0) * f, s0 + (s1 - s0) * f] as const;
+        }
+      }
+      return [stops[stops.length - 1][1], stops[stops.length - 1][2]] as const;
     };
+
+    /* Un écran est rendu s'il est à une station au plus (les voisins restent
+       atteignables au clavier) ; un anneau, entre son apparition et son passage. */
+    const planeLive = planes.map(() => false);
+    const gateLive = gates.map(() => false);
+    let currentIndex = -1;
 
     const markNav = (index: number) => {
       if (index === currentIndex) return;
       currentIndex = index;
-      document.documentElement.dataset.station = String(index);
+      html.dataset.station = String(index);
       const id = planes[index]?.id ?? '';
-      root.querySelectorAll<HTMLAnchorElement>('.s-links a[href^="#"], .s-panel a[href^="#"]').forEach((link) => {
+      links.forEach((link) => {
         const on = link.getAttribute('href') === `#${id}`;
         link.classList.toggle('is-active', on);
         if (on) link.setAttribute('aria-current', 'true');
         else link.removeAttribute('aria-current');
       });
-      paintProgress(last > 0 ? index / last : 0);
+      planes.forEach((plane, i) => plane.classList.toggle('is-near', i === index));
     };
 
-    const paint = (position: number) => {
-      const near = clamp(Math.round(position));
-      markNav(near);
-      world?.classList.toggle('is-moving', Math.abs(position - toPos) > 0.004 && raf !== 0);
-      for (let index = 0; index < planes.length; index++) {
-        const distance = Math.abs(index - position);
-        const live = distance < 0.985;
-        const plane = planes[index];
-        if (shown[index] !== live) {
-          shown[index] = live;
-          plane.classList.toggle('is-live', live);
+    const frame = () => {
+      raf = 0;
+      const position = clamp(window.scrollY / stopLength());
+      markNav(clamp(Math.round(position)));
+      paintProgress(last > 0 ? position / last : 0);
+
+      for (let i = 0; i < planes.length; i++) {
+        const live = Math.abs(i - position) <= 1.001;
+        if (live !== planeLive[i]) {
+          planeLive[i] = live;
+          planes[i].classList.toggle('is-live', live);
         }
-        if (!live) {
-          if (plane.classList.contains('is-near')) plane.classList.remove('is-near');
-          continue;
+        if (live && !cssDriven) {
+          const [opacity, scale] = sample(DIVE, (position - (i - 1)) / 2);
+          planes[i].style.opacity = opacity.toFixed(3);
+          planes[i].style.transform = `scale(${scale.toFixed(4)})`;
         }
-        const opacity = Math.max(0, 1 - distance);
-        plane.style.opacity = opacity.toFixed(3);
-        const shift = (index - position) * 36;
-        plane.style.transform = `translate3d(0, ${shift.toFixed(1)}px, 0)`;
-        const focus = index === near;
-        if (plane.classList.contains('is-near') !== focus) plane.classList.toggle('is-near', focus);
+      }
+      for (let g = 0; g < gates.length; g++) {
+        const t = (position - (g - 1)) / 1.6;
+        const live = t > -0.02 && t < 1.02;
+        if (live !== gateLive[g]) {
+          gateLive[g] = live;
+          gates[g].classList.toggle('is-live', live);
+        }
+        if (live && !cssDriven) {
+          const [opacity, scale] = sample(PASS, t);
+          gates[g].style.opacity = opacity.toFixed(3);
+          gates[g].style.transform = `scale(${scale.toFixed(4)})`;
+        }
       }
     };
 
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - started) / duration);
-      const eased = t < 0.5 ? 2 * t * t : 1 - ((-2 * t + 2) ** 2) / 2;
-      camera = fromPos + (toPos - fromPos) * eased;
-      if (t >= 1) {
-        camera = toPos;
-        raf = 0;
-        paint(camera);
-        return;
-      }
-      paint(camera);
-      raf = requestAnimationFrame(tick);
+    let raf = 0;
+    /* Aimant doux : à l'arrêt du défilement, si l'on arrive à moins de 20 % d'un
+       écran (dans le sens où l'on avance), on le pose. On ne ramène jamais vers
+       l'écran qu'on vient de quitter : chaque cran de molette fait avancer. */
+    let settleTimer = 0;
+    let lastY = window.scrollY;
+    let heading = 0;
+    const settle = () => {
+      const length = stopLength();
+      const position = window.scrollY / length;
+      const ahead = heading > 0 ? Math.ceil(position - 0.002) : Math.floor(position + 0.002);
+      const target = clamp(ahead);
+      const gap = Math.abs(position - target);
+      if (heading !== 0 && gap > 0.002 && gap < 0.2) window.scrollTo({ top: target * length, behavior: 'smooth' });
+    };
+    const request = () => {
+      if (!raf) raf = requestAnimationFrame(frame);
+      const y = window.scrollY;
+      if (y !== lastY) heading = Math.sign(y - lastY);
+      lastY = y;
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(settle, 180);
     };
 
-    const travelTo = (index: number, immediate = false) => {
-      const next = clamp(index);
-      if (immediate) {
-        if (raf) cancelAnimationFrame(raf);
-        raf = 0;
-        fromPos = next;
-        toPos = next;
-        camera = next;
-        paint(camera);
-        return;
-      }
-      if (next === toPos && raf) return;
-      if (next === toPos && !raf && Math.abs(camera - next) < 0.001) return;
-      fromPos = camera;
-      toPos = next;
-      started = performance.now();
-      if (!raf) raf = requestAnimationFrame(tick);
-    };
-
-    const scrollToIndex = (index: number) => {
-      window.scrollTo({ top: clamp(index) * window.innerHeight, behavior: 'auto' });
-    };
-
-    const go = (index: number, immediate = false) => {
-      const next = clamp(index);
-      driving = true;
-      window.clearTimeout(driveTimer);
-      scrollToIndex(next);
-      travelTo(next, immediate);
-      driveTimer = window.setTimeout(() => {
-        driving = false;
-      }, 80);
-      const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
+    /* Le défilement natif fait avancer petit à petit dans les cercles. */
+    const go = (index: number, smooth: boolean) => {
+      window.scrollTo({ top: clamp(index) * stopLength(), behavior: smooth ? 'smooth' : 'auto' });
       if (menu) menu.open = false;
     };
 
-    let scrollRaf = 0;
-    const onScroll = () => {
-      if (driving || scrollRaf) return;
-      scrollRaf = requestAnimationFrame(() => {
-        scrollRaf = 0;
-        if (!driving) travelTo(indexFromScroll());
-      });
-    };
-
-    travelTo(0, true);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener(
-      'scrollend',
-      () => {
-        driving = false;
-        travelTo(indexFromScroll());
-      },
-      { passive: true },
-    );
-    window.addEventListener('resize', () => {
-      driving = true;
-      scrollToIndex(toPos);
-      travelTo(toPos, true);
-      driveTimer = window.setTimeout(() => {
-        driving = false;
-      }, 80);
-    });
+    frame();
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
 
     root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (event) => {
         const index = planes.findIndex((plane) => `#${plane.id}` === link.getAttribute('href'));
         if (index < 0) return;
         event.preventDefault();
-        go(index);
+        go(index, true);
       });
     });
 
@@ -193,40 +182,23 @@ if (root) {
     );
 
     window.addEventListener('keydown', (event) => {
-      const target = event.target as HTMLElement | null;
-      const tag = target?.tagName ?? '';
-      if (event.key === 'Escape') {
-        const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
-        if (menu?.open) return;
-        const open = root.querySelector<HTMLDetailsElement>('details.fold[open]');
-        if (!open) return;
-        event.preventDefault();
-        open.open = false;
-        open.querySelector('summary')?.focus({ preventScroll: true });
-        return;
-      }
-      if (target?.isContentEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-      let next: number | null = null;
-      if (event.key === 'ArrowDown' || event.key === 'PageDown') next = toPos + 1;
-      else if (event.key === 'ArrowUp' || event.key === 'PageUp') next = toPos - 1;
-      else if (event.key === 'Home') next = 0;
-      else if (event.key === 'End') next = last;
-      else if (event.key === ' ' && tag !== 'BUTTON' && tag !== 'A' && tag !== 'SUMMARY') next = toPos + 1;
-      else return;
+      if (event.key !== 'Escape') return;
+      if (menu?.open) return;
+      const open = root.querySelector<HTMLDetailsElement>('details.fold[open]');
+      if (!open) return;
       event.preventDefault();
-      go(next);
+      open.open = false;
+      open.querySelector('summary')?.focus({ preventScroll: true });
     });
 
     root.querySelector('.world')?.addEventListener('focusin', (event) => {
-      const target = event.target as HTMLElement | null;
-      const plane = target?.closest<HTMLElement>('.plane');
-      if (!plane) return;
-      const index = planes.indexOf(plane);
-      if (index >= 0) go(index, true);
+      const plane = (event.target as HTMLElement | null)?.closest<HTMLElement>('.plane');
+      const index = plane ? planes.indexOf(plane) : -1;
+      if (index >= 0 && index !== currentIndex) go(index, false);
     });
 
     const hashIndex = planes.findIndex((plane) => `#${plane.id}` === window.location.hash);
-    if (hashIndex > 0) go(hashIndex, true);
+    if (hashIndex > 0) go(hashIndex, false);
   } else if (!reduce && progress) {
     let raf = 0;
     const frame = () => {
