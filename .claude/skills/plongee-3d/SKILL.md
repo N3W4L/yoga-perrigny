@@ -27,7 +27,8 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
     anamorphose. Il est découpé trait par trait, aux angles de l'esquisse
     (cercle en deux moitiés coupées en haut, barre, deux traits tige + courbe,
     pentes et arc de l'arche, traits de construction), posés à des
-    profondeurs différentes (ordre des traits : `OUTLINE_ORDER`) (de `NEAREST` à `FARTHEST` écrans) et agrandis en
+    profondeurs différentes, du premier écran (`NEAREST`) jusqu'un peu après le
+    dernier (`FARTHEST_MARGIN`), dans l'ordre `OUTLINE_ORDER`, et agrandis en
     proportion. Depuis l'accueil tout s'aligne ; dès qu'on avance, le logo se
     disloque et on traverse ses morceaux un par un. Projection : p × Z / (Z − c).
     `SWAY_X` et `SWAY_Y` règlent la dérive latérale de la caméra, qui révèle

@@ -52,7 +52,7 @@ Tout se règle dans `src/config.ts`. Passer une valeur à `false`, puis relancer
 
 **Après le 6 décembre 2026**, mettre `showStage` à `false`. Le stage est dans la page d’accueil, `src/pages/index.astro`.
 
-Les passages encore inconnus (président, RNA, hébergeur, bios, photos manquantes, crédits) sont écrits en italique entre crochets, par exemple `[à compléter]`. Ils ne sont pas inventés.
+Les informations encore inconnues (président, bios, photos, crédits…) ne sont pas inventées ni annotées sur la page d’accueil : elles sont listées dans `A-COMPLETER.md`.
 
 ## Polices et images
 
