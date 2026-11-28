@@ -25,10 +25,6 @@ Informations absentes ou à confirmer. Elles ne sont plus écrites sur le site
   Inscriptions de l'ancien site (« avant le 1er septembre, par courrier ou lors d'une
   séance ») ; le formulaire PDF (édition juin 2026) dit « par courrier ou lors de la
   1ère séance » et « à redonner au plus tard à la première séance ». Règle à arbitrer.
-- **Yoga adapté : l'ancienne page « Horaires des séances » est périmée.** Elle indique
-  le jeudi 14 h 30 – 15 h 45 avec Françoise Bataillard ; le formulaire 2026-2027 et
-  « Le coin des profs » donnent le mardi 15 h – 16 h 15 avec Odile Sappez. Le site
-  suit le formulaire.
 
 ## Envoi des fiches
 - Téléphone de Sandrine Peyronel.
