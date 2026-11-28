@@ -26,7 +26,10 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
   intervalles réguliers en profondeur sur tout le trajet, et au-delà (il ne
   finit pas). Ils sont dessinés sur un seul `<canvas class="rings">`, redessiné
   seulement quand la position change. On les traverse **un par un** et l'on en
-  voit toujours une dizaine s'enfoncer vers le point de fuite. Pas de cercle
+  voit toujours une dizaine s'enfoncer vers le point de fuite. Chaque anneau a sa forme
+  propre (`makeShape`) : ovale plus ou moins aplati au contour ondulé,
+  inclinaison, épaisseur, teinte, parfois doublé ; le tunnel serpente
+  légèrement. Les formes sont stables (tirées de l'indice de l'anneau). Pas de cercle
   fixe en fond, pas de groupe d'anneaux qui avance d'un bloc. Les orbes propres
   à l'accueil et au stage sont masquées en 3D pour la même raison.
 - `src/scripts/souffle.ts` ne fait que :
