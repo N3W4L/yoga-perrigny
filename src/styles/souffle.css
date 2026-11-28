@@ -2171,8 +2171,9 @@ html.journey-3d .souffle .prices strong {
   margin: 0.35rem 0 0.45rem;
 }
 
-/* Photos : cadre en arche commun, trait de lin décalé. Les images sont
-   étalonnées à la palette par scripts/photos.mjs. */
+/* Photos : coins en superellipse (corner-shape, coins arrondis classiques
+   sinon), bordure intérieure très fine et ombre douce. Images étalonnées à la
+   palette par scripts/photos.mjs. */
 .souffle .frame-photo {
   margin: 0;
 }
@@ -2180,17 +2181,39 @@ html.journey-3d .souffle .prices strong {
 .souffle .frame-photo picture,
 html.journey-3d .souffle .club-grid .frame-photo picture,
 html.journey-3d .souffle .frame-photo-place picture {
+  position: relative;
   display: block;
   overflow: hidden;
-  border-radius: 999px 999px 1.1rem 1.1rem;
-  box-shadow: none;
-  outline: 1px solid color-mix(in srgb, var(--linen) 55%, transparent);
-  outline-offset: 7px;
+  border-radius: 1.75rem;
+  corner-shape: squircle;
+  outline: none;
+  box-shadow:
+    0 1px 0 0 color-mix(in srgb, var(--sand) 10%, transparent) inset,
+    0 30px 60px -28px rgba(0, 0, 0, 0.55);
   margin-inline: auto;
 }
 
-.souffle .frame-photo picture::after {
-  display: none;
+@supports (corner-shape: squircle) {
+  .souffle .frame-photo picture,
+  html.journey-3d .souffle .club-grid .frame-photo picture,
+  html.journey-3d .souffle .frame-photo-place picture {
+    border-radius: 3rem;
+  }
+}
+
+/* Fine bordure intérieure, posée au-dessus de l'image. */
+.souffle .frame-photo picture::after,
+html.journey-3d .souffle .frame-photo picture::after {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  corner-shape: inherit;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sand) 14%, transparent);
+  background: none;
+  mix-blend-mode: normal;
+  pointer-events: none;
 }
 
 .souffle .frame-photo img,
@@ -2206,8 +2229,8 @@ html.journey-3d .souffle .frame-photo-place img {
 
 .souffle .club-grid .frame-photo picture,
 html.journey-3d .souffle .club-grid .frame-photo picture {
-  aspect-ratio: 4 / 3;
-  max-width: min(30rem, 100%);
+  aspect-ratio: 3 / 2;
+  max-width: min(34rem, 100%);
 }
 
 .souffle .frame-photo-place picture,
@@ -2216,16 +2239,24 @@ html.journey-3d .souffle .frame-photo-place picture {
   max-width: min(22rem, 100%);
 }
 
-.souffle .frame-photo figcaption {
-  margin-top: 1rem;
-  text-align: center;
+.souffle .frame-photo figcaption,
+html.journey-3d .souffle .frame-photo figcaption {
+  margin: 0.85rem auto 0;
+  max-width: min(34rem, 100%);
+  text-align: left;
   font-size: var(--t-label);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+}
+
+.souffle .frame-photo-place figcaption,
+html.journey-3d .souffle .frame-photo-place figcaption {
+  max-width: min(22rem, 100%);
 }
 
 .souffle .person picture {
-  outline: 1px solid color-mix(in srgb, var(--linen) 55%, transparent);
-  outline-offset: 3px;
+  outline: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sand) 14%, transparent);
 }
 
 .souffle .person img {

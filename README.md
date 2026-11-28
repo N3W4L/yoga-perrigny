@@ -58,7 +58,7 @@ Les informations encore inconnues (président, bios, photos, crédits…) ne son
 
 Spectral (titres) et DM Sans (texte) sont dans `src/fonts/`, sous licence OFL (`OFL-Spectral.txt`, `OFL-DM-Sans.txt`). Aucun appel à un CDN de polices.
 
-Les photos sont retouchées par `node scripts/photos.mjs` : cadrage (arche 4:3 pour la salle, 4:5 pour le bâtiment, carré pour le portrait) et étalonnage commun accordé à la palette. Les originaux restent intacts dans `src/assets/sources/`. Astro les optimise ensuite au build en AVIF et WebP, avec plusieurs largeurs. Le logo est détouré pour reposer sur le fond sable.
+Les photos sont retouchées par `node scripts/photos.mjs` : cadrage (3:2 pour la salle, 4:5 pour le bâtiment, carré pour le portrait) et étalonnage commun accordé à la palette. Sur la page, elles ont des coins en superellipse (`corner-shape: squircle`, coins arrondis classiques sinon) et une ombre douce. Les originaux restent intacts dans `src/assets/sources/`. Astro les optimise ensuite au build en AVIF et WebP, avec plusieurs largeurs. Le logo est détouré pour reposer sur le fond sable.
 
 L’image de partage (`public/og.jpg`, 1200 × 630) est une capture de l’accueil.
 
