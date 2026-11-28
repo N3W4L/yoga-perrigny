@@ -17,13 +17,27 @@ const stations = [
   'club',
   'seances',
   'adapte',
-  'paroles',
+  'professeurs',
   'tarifs',
   'inscriptions',
   ...(flags.showStage ? ['stage', 'programme'] : []),
-  'professeurs',
+  'paroles',
   'lieu',
   'contact',
+];
+
+/** Menu du haut : une entrée par écran. Le programme du stage allume « Stage » (data-nav). */
+const menu = [
+  { id: 'club', label: 'Le club' },
+  { id: 'seances', label: 'Séances' },
+  { id: 'adapte', label: 'Yoga adapté' },
+  { id: 'professeurs', label: 'Professeures' },
+  { id: 'tarifs', label: 'Tarifs' },
+  { id: 'inscriptions', label: 'Inscriptions' },
+  ...(flags.showStage ? [{ id: 'stage', label: 'Stage' }] : []),
+  { id: 'paroles', label: 'Témoignages' },
+  { id: 'lieu', label: 'Lieu' },
+  { id: 'contact', label: 'Contact' },
 ];
 const at = (id: string) => String(stations.indexOf(id));
 /** Numéro de chapitre affiché : 01, 02… */
@@ -127,7 +141,7 @@ const voices = [
     ],
   },
   {
-    name: 'Jacqueline, 18 ans de pratique à Chemins d’Éveil',
+    name: 'Jacqueline, 18 ans de pratique',
     lines: [
       'Un espace-temps, rien que pour soi où la bienveillance est d’actualité et les bénéfices psychiques et physiques sont nombreux.',
       'Des séances toujours différentes au fil des ans et adaptées avec des professeures de qualité.',
@@ -149,12 +163,11 @@ const voices = [
     <header class="s-nav" data-header>
       <a class="s-mark" href="#accueil" aria-label="Yoga Perrigny, accueil"><Logo /></a>
       <nav class="s-links" aria-label="Sections">
-        <a href="#club" data-nav-link>Le club</a>
-        <a href="#seances" data-nav-link>Séances</a>
-        <a href="#tarifs" data-nav-link>Tarifs</a>
-        {flags.showStage && <a href="#stage" data-nav-link>Stage</a>}
-        <a href="#professeurs" data-nav-link>Professeures</a>
-        <a href="#lieu" data-nav-link>Lieu</a>
+        {menu.map((item) => (
+          <a href={`#${item.id}`} data-nav-link>
+            {item.label}
+          </a>
+        ))}
       </nav>
       <a class="s-write" href={mailto}>Écrire</a>
       <details class="s-menu" data-menu>
@@ -164,12 +177,11 @@ const voices = [
         </summary>
         <div class="s-panel">
           <nav aria-label="Sections">
-            <a href="#club" data-nav-link>Le club</a>
-            <a href="#seances" data-nav-link>Séances</a>
-            <a href="#tarifs" data-nav-link>Tarifs</a>
-            {flags.showStage && <a href="#stage" data-nav-link>Stage</a>}
-            <a href="#professeurs" data-nav-link>Professeures</a>
-            <a href="#lieu" data-nav-link>Lieu</a>
+            {menu.map((item) => (
+              <a href={`#${item.id}`} data-nav-link>
+                {item.label}
+              </a>
+            ))}
           </nav>
           <a class="sbtn" href={mailto}>Nous écrire</a>
         </div>
@@ -276,7 +288,7 @@ const voices = [
             </div>
             <div class="seance-intro">
               <p class="pull">6 séances de yoga par semaine.</p>
-              <p>Reprise les 15, 16 ou 17 septembre 2026, selon le jour de cours.</p>
+              <p>Yoga classique, sauf mention. Reprise les 15, 16 ou 17 septembre 2026 selon le jour.</p>
             </div>
           </div>
           <ol class="week">
@@ -289,7 +301,8 @@ const voices = [
                       <li class:list={[session.type === 'Yoga adapté' && 'adapted']}>
                         <span class="hours">{session.time}</span>
                         <span class="who">
-                          {session.teacher} · {session.type}
+                          {session.teacher}
+                          {session.type === 'Yoga adapté' && <span class="tag">· Yoga adapté</span>}
                         </span>
                       </li>
                     ))}
@@ -313,14 +326,14 @@ const voices = [
               <div>
                 <h4>11 novembre</h4>
                 <ul>
-                  <li>Mercredi 11 novembre, férié : pas de séance avec Anne-Marie ni Sandrine</li>
+                  <li>Mercredi, férié : ni Anne-Marie ni Sandrine</li>
                 </ul>
               </div>
               <div>
                 <h4>Vacances de Noël</h4>
                 <ul>
                   <li>Sandrine : mardi 29 et mercredi 30 décembre</li>
-                  <li>Anne-Marie : pendant toutes les vacances scolaires</li>
+                  <li>Anne-Marie : toutes les vacances scolaires</li>
                   <li>Françoise : à préciser</li>
                 </ul>
               </div>
@@ -369,30 +382,53 @@ const voices = [
         </div>
       </section>
 
-      <section class="plane sheet" data-station={at('paroles')} id="paroles" aria-labelledby="paroles-title">
+      <section class="plane sheet" data-station={at('professeurs')} id="professeurs" aria-labelledby="profs-title">
         <div class="s-wrap">
-          <p class="chap">{num('paroles')} — Témoignages</p>
-          <h2 id="paroles-title">Les élèves ont <em>la parole</em></h2>
-          <figure class="feature-quote">
-            <p>
-              « Le yoga, c’est comme le goût des fraises, on ne peut pas l’expliquer. Et en plus, à Perrigny, c’est avec de la chantilly ! »
-            </p>
-            <figcaption>Marie-Annick</figcaption>
-          </figure>
-          <div class="voices">
+          <p class="chap">{num('professeurs')} — L’équipe</p>
+          <h2 id="profs-title">Professeures</h2>
+          <ul class="people">
             {
-              voices.map((voice) => (
-                <figure class="voice">
-                  <blockquote>
-                    {voice.lines.map((line) => (
-                      <p>« {line} »</p>
+              teachers.map((teacher) => (
+                <li class="person">
+                  {teacher.portrait ? (
+                    <Picture
+                      src={portrait}
+                      formats={['avif', 'webp']}
+                      fallbackFormat="png"
+                      width={90}
+                      height={90}
+                      alt={`Portrait de ${teacher.name}, professeure de yoga à l’association Chemins d’Éveil.`}
+                    />
+                  ) : (
+                    <span class="mono" aria-hidden="true">
+                      {teacher.initials}
+                    </span>
+                  )}
+                  <div>
+                    <h3>{teacher.name}</h3>
+                    <p class="meta">{teacher.type}</p>
+                    <ul class="slots">
+                      {slotsOf(teacher.name).map((slot) => (
+                        <li>{slot}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div class="bio">
+                    {teacher.bio.map((paragraph) => (
+                      <p>{paragraph}</p>
                     ))}
-                  </blockquote>
-                  <figcaption>{voice.name}</figcaption>
-                </figure>
+                    {teacher.fiche && (
+                      <p>
+                        <a href={teacher.fiche}>
+                          Fiche de présentation <span class="sr-only">de {teacher.name} (PDF)</span>
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                </li>
               ))
             }
-          </div>
+          </ul>
         </div>
       </section>
 
@@ -405,12 +441,12 @@ const voices = [
             <li>
               <span class="label">Adhésion</span>
               <strong>30 €</strong>
-              <span class="fine">Chèque à l’ordre de l’association Chemins d’Éveil.</span>
+              <span class="fine">Chèque à l’ordre de Chemins d’Éveil.</span>
             </li>
             <li>
               <span class="label">Yoga classique</span>
               <strong>175 €</strong>
-              <span class="fine">Chèque à l’ordre de la professeure, en plus de l’adhésion.</span>
+              <span class="fine">Chèque à la professeure, adhésion en plus.</span>
             </li>
             {
               flags.showTarifReduit && (
@@ -424,7 +460,8 @@ const voices = [
             <li>
               <span class="label">Yoga adapté</span>
               <strong>185 €</strong>
-              <span class="fine">Adhésion comprise. Chèque à l’ordre de Chemins d’Éveil. Tarif réduit : voir avec le président.</span>
+              <span class="fine">Adhésion comprise, chèque à Chemins d’Éveil.</span>
+              <span class="fine">Tarif réduit : voir avec le président.</span>
             </li>
           </ul>
 
@@ -432,7 +469,7 @@ const voices = [
           <ol class="points">
             <li>
               <b>01</b>
-              <span>Une séance d’essai est possible avant l’inscription : prévenez avant, au cas où le cours serait complet.</span>
+              <span>Séance d’essai possible avant l’inscription : prévenez, au cas où le cours serait complet.</span>
             </li>
             <li>
               <b>02</b>
@@ -510,9 +547,8 @@ const voices = [
                   </div>
                   <div>
                     <p class="pull">Au seuil de l’hiver, un voyage intérieur.</p>
-                    <p>
-                      Une invitation à ralentir, à écouter ce qui bat au cœur de soi : postures lentes, souffle, yoga nidra, méditation. Places limitées à 22 participants ; réservations auprès des professeures.
-                    </p>
+                    <p>Une invitation à ralentir, à écouter ce qui bat au cœur de soi : postures lentes, souffle, yoga nidra, méditation.</p>
+                    <p>22 places, réservations auprès des professeures.</p>
                   </div>
                 </div>
                 <div class="stage-facts">
@@ -529,7 +565,7 @@ const voices = [
                   <article>
                     <h3>Où et quand</h3>
                     <p><a href="#lieu">Salle de sports de Perrigny</a></p>
-                    <p>Inscription avant le mercredi 25 novembre 2026.</p>
+                    <p>Inscription avant le 25 novembre.</p>
                   </article>
                 </div>
                 <p class="cta-row">
@@ -538,7 +574,7 @@ const voices = [
               </div>
             </section>
 
-            <section class="plane night" data-station={at('programme')} id="programme" aria-labelledby="programme-title">
+            <section class="plane night" data-station={at('programme')} data-nav="stage" id="programme" aria-labelledby="programme-title">
               <div class="s-wrap">
                 <p class="chap">{num('programme')} — Le stage en pratique</p>
                 <h2 id="programme-title">Programme et <em>intervenants</em></h2>
@@ -560,7 +596,7 @@ const voices = [
                   </div>
                   <div>
                     <h3>Inscription</h3>
-                    <p>Priorité aux adhérents de Chemins d’Éveil ; le stage reste ouvert à tous. Le week-end complet est conseillé et prioritaire.</p>
+                    <p>Ouvert à tous, priorité aux adhérents. Le week-end complet est conseillé et prioritaire.</p>
                     <p>Bulletin et règlement à Françoise Bataillard, 130 rue du presbytère, 39570 Revigny.</p>
                     <p>Aucun remboursement en cas de désistement moins d’une semaine avant le stage.</p>
                     <p>
@@ -574,53 +610,30 @@ const voices = [
         )
       }
 
-      <section class="plane sheet" data-station={at('professeurs')} id="professeurs" aria-labelledby="profs-title">
+      <section class="plane sheet" data-station={at('paroles')} id="paroles" aria-labelledby="paroles-title">
         <div class="s-wrap">
-          <p class="chap">{num('professeurs')} — L’équipe</p>
-          <h2 id="profs-title">Professeures</h2>
-          <ul class="people">
+          <p class="chap">{num('paroles')} — Témoignages</p>
+          <h2 id="paroles-title">Les élèves ont <em>la parole</em></h2>
+          <figure class="feature-quote">
+            <p>
+              « Le yoga, c’est comme le goût des fraises, on ne peut pas l’expliquer. Et en plus, à Perrigny, c’est avec de la chantilly ! »
+            </p>
+            <figcaption>Marie-Annick</figcaption>
+          </figure>
+          <div class="voices">
             {
-              teachers.map((teacher) => (
-                <li class="person">
-                  {teacher.portrait ? (
-                    <Picture
-                      src={portrait}
-                      formats={['avif', 'webp']}
-                      fallbackFormat="png"
-                      width={90}
-                      height={90}
-                      alt={`Portrait de ${teacher.name}, professeure de yoga à l’association Chemins d’Éveil.`}
-                    />
-                  ) : (
-                    <span class="mono" aria-hidden="true">
-                      {teacher.initials}
-                    </span>
-                  )}
-                  <div>
-                    <h3>{teacher.name}</h3>
-                    <p class="meta">{teacher.type}</p>
-                    <ul class="slots">
-                      {slotsOf(teacher.name).map((slot) => (
-                        <li>{slot}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div class="bio">
-                    {teacher.bio.map((paragraph) => (
-                      <p>{paragraph}</p>
+              voices.map((voice) => (
+                <figure class="voice">
+                  <blockquote>
+                    {voice.lines.map((line) => (
+                      <p>« {line} »</p>
                     ))}
-                    {teacher.fiche && (
-                      <p>
-                        <a href={teacher.fiche}>
-                          Fiche de présentation <span class="sr-only">de {teacher.name} (PDF)</span>
-                        </a>
-                      </p>
-                    )}
-                  </div>
-                </li>
+                  </blockquote>
+                  <figcaption>{voice.name}</figcaption>
+                </figure>
               ))
             }
-          </ul>
+          </div>
         </div>
       </section>
 
@@ -633,17 +646,18 @@ const voices = [
               <span>{association.street}</span>
               <span>{association.postal}</span>
             </p>
-            <p>{association.place}. La salle est équipée d’un ascenseur.</p>
-            <p>
-              <a href={itinerary}>Itinéraire</a>
-            </p>
+            <p>{association.place}.</p>
+            <p>Salle équipée d’un ascenseur · <a href={itinerary}>Itinéraire</a></p>
             {
               flags.showRessources && (
-                <p class="library">
-                  <strong>Bibliothèque</strong> : l’association dispose d’une bibliothèque —
-                  <a href={pdfs.bibliotheque}>liste des ouvrages<span class="sr-only"> (PDF)</span></a>. Voir aussi les
-                  <a href={ujbeyReadings}>lectures conseillées par l’UJ-BEY</a>, Union Jura-Bresse des Enseignants de Yoga.
-                </p>
+                <ul class="library">
+                  <li>
+                    Bibliothèque de l’association : <a href={pdfs.bibliotheque}>liste des ouvrages<span class="sr-only"> (PDF)</span></a>
+                  </li>
+                  <li>
+                    <a href={ujbeyReadings}>Lectures conseillées</a> par l’<abbr title="Union Jura-Bresse des Enseignants de Yoga">UJ-BEY</abbr>
+                  </li>
+                </ul>
               )
             }
           </div>

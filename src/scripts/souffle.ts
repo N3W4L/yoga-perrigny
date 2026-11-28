@@ -87,7 +87,8 @@ if (root) {
       if (index === currentIndex) return;
       currentIndex = index;
       html.dataset.station = String(index);
-      const id = planes[index]?.id ?? '';
+      // Un sous-écran (programme du stage) allume l'entrée de menu de son parent.
+      const id = planes[index]?.dataset.nav || planes[index]?.id || '';
       links.forEach((link) => {
         const on = link.getAttribute('href') === `#${id}`;
         link.classList.toggle('is-active', on);

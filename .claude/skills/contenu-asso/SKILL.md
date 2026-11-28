@@ -28,7 +28,9 @@ description: Règles de contenu du site de l'association Chemins d'Éveil (yoga 
   séances** (`days`). Les créneaux affichés sur les cartes des professeures en
   sont tirés automatiquement (`slotsOf` dans index.astro), comme le créneau
   du yoga adapté : ne modifier qu'à un seul endroit.
-- `src/pages/index.astro`, en tête : l'ordre des écrans (`stations`), les
+- `src/pages/index.astro`, en tête : l'ordre des écrans (`stations`), le menu
+  du haut (`menu`, une entrée par écran ; un sous-écran pointe vers son parent
+  avec `data-nav`), les
   professeures et leur présentation (`teachers`), les adresses d'envoi des
   fiches (`senders`), les témoignages (`voices`). Les numéros de chapitre
   (01, 02…) se calculent depuis `stations`.
@@ -39,6 +41,10 @@ description: Règles de contenu du site de l'association Chemins d'Éveil (yoga 
 - Pages légales : `src/pages/mentions-legales.astro`, `src/pages/confidentialite.astro`.
 
 ## Rédaction
+
+- Une information courte tient sur une ligne : préférer « Chèque à la
+  professeure, adhésion en plus. » à une phrase qui se coupe. Vérifier avec
+  `lignes.cjs` (compétence `verifier-site`).
 
 - Français, apostrophe typographique (’), espaces avant « ; : ! ? » comme dans le texte existant.
 - Les enseignantes sont toutes des femmes : « professeures », y compris dans le menu.
