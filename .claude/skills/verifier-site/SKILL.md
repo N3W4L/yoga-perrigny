@@ -35,6 +35,17 @@ Pour une comparaison avant/après, copier `dist/` avant la modification, la serv
 sur un autre port (`python3 -m http.server 4400 --directory <copie-parente>`) et
 comparer les mêmes captures pixel par pixel.
 
+## 2 bis. Toutes les tailles d'écran
+
+```bash
+node .claude/skills/verifier-site/scripts/tailles.cjs
+```
+
+14 tailles, du petit mobile (320 px) au grand écran (2560 px), plus le
+téléphone en paysage. Le trajet 3D ne s'active qu'à partir de 768 × 640 px
+(souffle.ts) ; en dessous, lecture à plat. Toute ligne autre que « OK »
+signale un écran coupé ou un débordement horizontal.
+
 ## 3. Contraste
 
 ```bash
@@ -42,7 +53,8 @@ node .claude/skills/verifier-site/scripts/contraste.cjs http://127.0.0.1:4321/yo
 ```
 
 Liste les textes sous le seuil WCAG AA (4,5:1, ou 3:1 pour les grands textes)
-sur chaque écran en mode 3D. Aucune ligne = tout passe. Le fond pris par défaut
+sur chaque écran en mode 3D. La version à plat (mobile, fond sable) se vérifie
+avec axe-core en 390 px (section 4 bis). Aucune ligne = tout passe. Le fond pris par défaut
 est le vert sombre du tunnel.
 
 ## 3 bis. Retours à la ligne évitables
