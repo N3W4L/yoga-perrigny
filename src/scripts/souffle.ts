@@ -140,6 +140,67 @@ if (root) {
        (6 % du trajet entre deux écrans), on glisse jusqu'à l'écran vers lequel
        on se dirige ; sinon (frôlement), on revient à l'écran de départ. */
     const COMMIT = 0.06;
+
+    /* Glissement piloté plutôt que le défilement « smooth » du navigateur :
+       une courbe de Hermite part de la position ET de la vitesse actuelles et
+       arrive exactement sur l'écran visé, vitesse nulle. Quand on change de
+       destination en plein vol (deux clics de menu rapprochés), la nouvelle
+       courbe reprend la vitesse en cours : pas d'arrêt ni de redémarrage. Durée
+       selon la distance (≈ 0,7 s pour un écran, 1,7 s au plus). Toute action de
+       l'utilisateur (molette, toucher) reprend la main aussitôt. */
+    let glide: { from: number; to: number; v0: number; start: number; duration: number } | null = null;
+    let glideFrame = 0;
+    let glideWritten = -1;
+    const hermite = (g: NonNullable<typeof glide>, t: number) => {
+      // Position et vitesse (px/s) à l'instant t (0 → 1) : h00·p0 + h10·D·v0 + h01·p1.
+      const t2 = t * t;
+      const t3 = t2 * t;
+      const d = g.duration / 1000;
+      const position = (2 * t3 - 3 * t2 + 1) * g.from + (t3 - 2 * t2 + t) * d * g.v0 + (-2 * t3 + 3 * t2) * g.to;
+      const velocity = ((6 * t2 - 6 * t) * g.from + (3 * t2 - 4 * t + 1) * d * g.v0 + (-6 * t2 + 6 * t) * g.to) / d;
+      return { position, velocity };
+    };
+    const stopGlide = () => {
+      if (glideFrame) cancelAnimationFrame(glideFrame);
+      glideFrame = 0;
+      glide = null;
+    };
+    const glideStep = (now: number) => {
+      if (!glide) return;
+      // Défilement par l'utilisateur pendant le glissement : il reprend la main.
+      if (glideWritten >= 0 && Math.abs(window.scrollY - glideWritten) > 3) {
+        stopGlide();
+        return;
+      }
+      const t = Math.min(1, (now - glide.start) / glide.duration);
+      const { position } = hermite(glide, t);
+      window.scrollTo(0, t >= 1 ? glide.to : position);
+      glideWritten = window.scrollY;
+      if (t >= 1) {
+        stopGlide();
+        return;
+      }
+      glideFrame = requestAnimationFrame(glideStep);
+    };
+    const glideTo = (top: number) => {
+      const now = performance.now();
+      let from = window.scrollY;
+      let v0 = 0;
+      if (glide) {
+        const current = hermite(glide, Math.min(1, (now - glide.start) / glide.duration));
+        from = current.position;
+        v0 = current.velocity;
+      }
+      const screens = Math.abs(top - from) / stopLength();
+      const duration = Math.min(1700, 560 + 130 * Math.min(screens, 9));
+      glide = { from, to: top, v0, start: now, duration };
+      glideWritten = -1;
+      if (!glideFrame) glideFrame = requestAnimationFrame(glideStep);
+    };
+    // La main revient à l'utilisateur dès qu'il défile lui-même.
+    for (const type of ['wheel', 'touchstart'] as const) {
+      window.addEventListener(type, stopGlide, { passive: true });
+    }
     const IDLE = 140;
     let settleTimer = 0;
     let lastY = window.scrollY;
@@ -149,6 +210,7 @@ if (root) {
       const length = stopLength();
       const position = window.scrollY / length;
       const nearest = clamp(Math.round(position));
+      if (glideFrame) return; // un glissement est en cours : il se pose seul
       if (Math.abs(position - nearest) < 0.002) {
         anchor = nearest;
         return;
@@ -157,7 +219,7 @@ if (root) {
       if (heading > 0 && position - anchor >= COMMIT) target = Math.ceil(position - 0.002);
       else if (heading < 0 && anchor - position >= COMMIT) target = Math.floor(position + 0.002);
       target = clamp(target);
-      window.scrollTo({ top: target * length, behavior: reduce ? 'auto' : 'smooth' });
+      glideTo(target * length);
     };
     const request = () => {
       if (!raf) raf = requestAnimationFrame(frame);
@@ -171,7 +233,12 @@ if (root) {
     /* Le défilement natif fait avancer petit à petit dans les cercles. */
     const go = (index: number, smooth: boolean) => {
       anchor = clamp(index);
-      window.scrollTo({ top: clamp(index) * stopLength(), behavior: smooth ? 'smooth' : 'auto' });
+      const top = clamp(index) * stopLength();
+      if (smooth) glideTo(top);
+      else {
+        stopGlide();
+        window.scrollTo(0, top);
+      }
       if (menu) menu.open = false;
     };
 
