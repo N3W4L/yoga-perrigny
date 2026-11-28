@@ -12,8 +12,12 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
   `--stop` (150dvh, dans `html.journey-3d`) : plus grand = plongée plus lente.
 - Pas de `scroll-snap` : même en `proximity`, son aimant ramène chaque cran de
   molette en arrière, et une zone plus haute que l'écran bloque le défilement à
-  son bord bas. À la place, souffle.ts pose doucement l'écran **vers lequel on
-  avance** quand on s'arrête à moins de 20 % de lui (jamais celui qu'on quitte).
+  son bord bas. À la place, **ancrage** dans souffle.ts : à l'arrêt du
+  défilement (`IDLE`, 140 ms), on se pose toujours sur un écran. Si l'on a
+  quitté l'écran de départ d'au moins `COMMIT` (6 %), on glisse jusqu'à
+  l'écran vers lequel on se dirige ; sinon on revient à l'écran de départ.
+  Un cran de molette = un écran, avec la traversée animée. Les flèches ↑ ↓
+  avancent d'un écran entier.
 - Les `.snap-stop` ne servent plus que de repères : souffle.ts y lit l'écart
   entre deux stations.
 - `.tunnel` reste collé à l'écran. Dedans, chaque section `.plane` est un
@@ -52,7 +56,7 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
   - poser `is-live` sur les 3 écrans proches (les autres ne sont pas rendus) ;
   - redessiner le tunnel ;
   - marquer le menu actif et l'anneau de progression ;
-  - gérer l'aimant doux, les liens d'ancre, le focus clavier et Échap.
+  - gérer l'ancrage, les flèches, les liens d'ancre et le focus clavier.
 
   Sans `animation-timeline` (Firefox), il applique lui-même la table `DIVE`.
 

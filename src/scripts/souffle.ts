@@ -123,19 +123,29 @@ if (root) {
     };
 
     let raf = 0;
-    /* Aimant doux : à l'arrêt du défilement, si l'on arrive à moins de 20 % d'un
-       écran (dans le sens où l'on avance), on le pose. On ne ramène jamais vers
-       l'écran qu'on vient de quitter : chaque cran de molette fait avancer. */
+    /* Ancrage : à l'arrêt du défilement, on se pose toujours sur un écran,
+       jamais entre deux. Si l'on a quitté l'écran de départ d'au moins COMMIT
+       (6 % du trajet entre deux écrans), on glisse jusqu'à l'écran vers lequel
+       on se dirige ; sinon (frôlement), on revient à l'écran de départ. */
+    const COMMIT = 0.06;
+    const IDLE = 140;
     let settleTimer = 0;
     let lastY = window.scrollY;
     let heading = 0;
+    let anchor = Math.round(window.scrollY / stopLength());
     const settle = () => {
       const length = stopLength();
       const position = window.scrollY / length;
-      const ahead = heading > 0 ? Math.ceil(position - 0.002) : Math.floor(position + 0.002);
-      const target = clamp(ahead);
-      const gap = Math.abs(position - target);
-      if (heading !== 0 && gap > 0.002 && gap < 0.2) window.scrollTo({ top: target * length, behavior: 'smooth' });
+      const nearest = clamp(Math.round(position));
+      if (Math.abs(position - nearest) < 0.002) {
+        anchor = nearest;
+        return;
+      }
+      let target = anchor;
+      if (heading > 0 && position - anchor >= COMMIT) target = Math.ceil(position - 0.002);
+      else if (heading < 0 && anchor - position >= COMMIT) target = Math.floor(position + 0.002);
+      target = clamp(target);
+      window.scrollTo({ top: target * length, behavior: reduce ? 'auto' : 'smooth' });
     };
     const request = () => {
       if (!raf) raf = requestAnimationFrame(frame);
@@ -143,14 +153,25 @@ if (root) {
       if (y !== lastY) heading = Math.sign(y - lastY);
       lastY = y;
       window.clearTimeout(settleTimer);
-      settleTimer = window.setTimeout(settle, 180);
+      settleTimer = window.setTimeout(settle, IDLE);
     };
 
     /* Le défilement natif fait avancer petit à petit dans les cercles. */
     const go = (index: number, smooth: boolean) => {
+      anchor = clamp(index);
       window.scrollTo({ top: clamp(index) * stopLength(), behavior: smooth ? 'smooth' : 'auto' });
       if (menu) menu.open = false;
     };
+
+    /* Flèches ↑ ↓ : un écran entier (leur pas natif, 40 px, resterait sous le seuil d'ancrage). */
+    window.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('input, textarea, select, [contenteditable="true"], details[open] .s-panel')) return;
+      event.preventDefault();
+      go(anchor + (event.key === 'ArrowDown' ? 1 : -1), !reduce);
+    });
 
     frame();
     window.addEventListener('scroll', request, { passive: true });
@@ -193,6 +214,16 @@ if (root) {
       if (raf) return;
       raf = requestAnimationFrame(frame);
     };
+    /* Flèches ↑ ↓ : un écran entier (leur pas natif, 40 px, resterait sous le seuil d'ancrage). */
+    window.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('input, textarea, select, [contenteditable="true"], details[open] .s-panel')) return;
+      event.preventDefault();
+      go(anchor + (event.key === 'ArrowDown' ? 1 : -1), !reduce);
+    });
+
     frame();
     window.addEventListener('scroll', request, { passive: true });
     window.addEventListener('resize', request);
