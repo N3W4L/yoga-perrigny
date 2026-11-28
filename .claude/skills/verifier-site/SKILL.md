@@ -45,6 +45,18 @@ Liste les textes sous le seuil WCAG AA (4,5:1, ou 3:1 pour les grands textes)
 sur chaque écran en mode 3D. Aucune ligne = tout passe. Le fond pris par défaut
 est le vert sombre du tunnel.
 
+## 3 bis. Retours à la ligne évitables
+
+```bash
+node .claude/skills/verifier-site/scripts/lignes.cjs http://127.0.0.1:4321/yoga-perrigny/ 1280 720
+```
+
+Liste, écran par écran, les textes coupés sur 2 ou 3 lignes dont la dernière
+est courte. Raccourcir le texte, élargir la colonne ou passer en une colonne.
+Faux positifs connus : le grand titre de l'accueil (deux lignes voulues), le
+pied de l'accueil, les boutons, l'adresse e-mail du contact. Pour des
+citations ou de la prose, quelques retours sont normaux.
+
 ## 4. Fluidité (si on touche au trajet, au CSS des écrans ou à souffle.ts)
 
 ```bash

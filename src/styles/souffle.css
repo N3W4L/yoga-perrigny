@@ -176,11 +176,18 @@
   background: var(--night);
   color: var(--sand);
   padding: 5.5rem 1.5rem 2rem;
+  overflow-y: auto;
+  gap: 1.5rem;
+}
+
+.s-panel nav {
+  display: grid;
+  gap: 0.35rem;
 }
 
 .s-panel a {
   font-family: var(--serif);
-  font-size: clamp(2.1rem, 9vw, 3rem);
+  font-size: clamp(1.6rem, 6.5vw, 2.4rem);
   line-height: 1.2;
   letter-spacing: -0.03em;
   text-decoration: none;
@@ -191,13 +198,14 @@
   color: var(--linen);
 }
 
-@media (max-width: 61.99rem) {
+/* Menu en ligne dès qu'il tient (10 entrées) ; en dessous, bouton « Menu ». */
+@media (max-width: 74.99rem) {
   html:has(.s-menu[open]) {
     overflow: hidden;
   }
 }
 
-@media (min-width: 62rem) {
+@media (min-width: 75rem) {
   .s-menu {
     display: none;
   }
@@ -895,12 +903,7 @@
   color: var(--sage-deep);
 }
 
-@media (min-width: 48rem) {
-  .points {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.8rem 2rem;
-  }
-}
+/* Les consignes tiennent chacune sur une ligne : une seule colonne. */
 
 .envoi {
   list-style: none;
@@ -2047,5 +2050,29 @@ html.journey-3d .voices .voice {
 }
 
 .library {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
   font-size: 0.95rem;
+}
+
+.library li + li {
+  margin-top: 0.2rem;
+}
+
+.library abbr {
+  text-decoration: none;
+}
+
+.who .tag {
+  white-space: nowrap;
+}
+
+.prices .fine + .fine {
+  margin-top: 0.15rem;
+}
+
+/* Fins de paragraphe sans mot isolé. */
+.souffle :is(p, li, figcaption, .fine) {
+  text-wrap: pretty;
 }

@@ -95,5 +95,7 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
 2. Mettre à jour `data-stations` sur `.journey` et un `.snap-stop` de plus dans
    le rail. La hauteur du trajet se calcule depuis `--n`. Les règles `--n` et
    `--i` de souffle.css vont jusqu'à 8 écrans : en ajouter si besoin.
-3. Ajouter le lien dans les deux menus (`.s-links` et `.s-panel`).
+3. Ajouter l'écran à `stations` et une entrée à `menu` (en tête de
+   index.astro) ; les deux menus (en ligne et mobile) se construisent depuis
+   `menu`. Un sous-écran sans entrée propre porte `data-nav="<parent>"`.
 4. Vérifier qu'aucun écran ne déborde en 1280×720.
