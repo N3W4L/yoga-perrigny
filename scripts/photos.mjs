@@ -7,7 +7,7 @@
  *
  * Étalonnage commun, accordé à la palette (sable, lin, sauge) : saturation
  * réduite, noirs légèrement relevés (rendu mat), tonalité chaude, verts
- * apaisés, légère accentuation. Cadrages : arche 4:3 (salle), 4:5 (bâtiment),
+ * apaisés, légère accentuation. Cadrages : 3:2 (salle), 4:5 (bâtiment),
  * carré centré sur le visage (portrait).
  */
 import sharp from 'sharp';
@@ -31,16 +31,16 @@ const grade = (image) =>
 const jobs = [
   {
     // Cours dans la salle de sports, version 1200 × 630 (ancienne image de
-    // partage du site) : cadrage 4:3 sur le groupe.
+    // partage du site) : cadrage 3:2 sur le groupe.
     file: 'salle-2025-grande.jpg',
-    output: 'salle-2025-arche.jpg',
-    crop: { left: 200, top: 12, width: 760, height: 570 },
-    width: 1000,
+    output: 'salle-2025-cadre.jpg',
+    crop: { left: 140, top: 0, width: 945, height: 630 },
+    width: 1100,
   },
   {
     // Bâtiment rue du moulin, 1024 × 768 : cadrage 4:5 sur la façade et les fleurs.
     file: 'salle-exterieur.jpg',
-    output: 'salle-exterieur-arche.jpg',
+    output: 'salle-exterieur-cadre.jpg',
     crop: { left: 330, top: 0, width: 614, height: 768 },
     width: 900,
   },
