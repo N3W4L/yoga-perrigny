@@ -3,7 +3,6 @@ import { Picture } from 'astro:assets';
 import portrait from '../assets/portrait-anne-marie-meudre.png';
 import hall from '../assets/salle-2025.jpg';
 import exterior from '../assets/salle-exterieur.jpg';
-import Gate from '../components/Gate.astro';
 import Logo from '../components/Logo.astro';
 import { flags } from '../config';
 import { association, days, itinerary, pdfs } from '../data/site';
@@ -116,6 +115,7 @@ const voices = [
           ))}
         </div>
         <div class="tunnel">
+          <canvas class="rings" aria-hidden="true"></canvas>
           <div class="camera">
           <div class="world">
       <section class="plane s-hero" data-station="0" id="accueil" aria-labelledby="souffle-title">
@@ -144,7 +144,6 @@ const voices = [
           <a class="s-scroll" href="#club">Défiler <i></i></a>
         </p>
       </section>
-      <Gate i={0} />
 
       <section class="plane sheet sheet-rise" data-station="1" id="club" aria-labelledby="club-title">
         <div class="s-wrap club-grid">
@@ -192,7 +191,6 @@ const voices = [
         </div>
       </section>
 
-      <Gate i={1} />
       <section class="plane sheet" data-station="2" id="seances" aria-labelledby="seances-title">
         <div class="s-wrap">
           <div class="seance-top">
@@ -305,7 +303,6 @@ const voices = [
         </div>
       </section>
 
-      <Gate i={2} />
       <section class="plane sheet" data-station="3" id="tarifs" aria-labelledby="tarifs-title">
         <div class="s-wrap">
           <p class="chap">03 — 2026-2027</p>
@@ -429,7 +426,6 @@ const voices = [
       {
         flags.showStage && (
           <>
-          <Gate i={3} />
           <section class="plane night" data-station="4" id="stage" aria-labelledby="stage-title">
             <div class="night-orb" aria-hidden="true">
               <svg viewBox="0 0 800 800">
@@ -495,7 +491,6 @@ const voices = [
         )
       }
 
-      <Gate i={flags.showStage ? 4 : 3} />
       <section class="plane sheet" data-station={flags.showStage ? '5' : '4'} id="professeurs" aria-labelledby="profs-title">
         <div class="s-wrap">
           <p class="chap">05 — L’équipe</p>
@@ -583,7 +578,6 @@ const voices = [
         </div>
       </section>
 
-      <Gate i={flags.showStage ? 5 : 4} />
       <section class="plane sheet" data-station={flags.showStage ? '6' : '5'} id="lieu" aria-labelledby="lieu-title">
         <div class="s-wrap lieu-grid">
           <div>
@@ -625,7 +619,6 @@ const voices = [
         </div>
       </section>
 
-      <Gate i={flags.showStage ? 6 : 5} />
       <section class="plane sheet" data-station={flags.showStage ? '7' : '6'} id="contact" aria-labelledby="contact-title">
         <div class="s-wrap">
           <p class="chap">Écrire</p>
