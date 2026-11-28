@@ -48,7 +48,7 @@ if (root) {
     if (cssDriven) html.classList.add('journey-css');
 
     const ringsCanvas = root.querySelector<HTMLCanvasElement>('.rings');
-    const tunnel = ringsCanvas ? (DECOR === 'logo' ? createLogoTunnel(ringsCanvas) : createTunnel(ringsCanvas)) : null;
+    const tunnel = ringsCanvas ? (DECOR === 'logo' ? createLogoTunnel(ringsCanvas, planes.length - 1) : createTunnel(ringsCanvas)) : null;
     const links = [...root.querySelectorAll<HTMLAnchorElement>('.s-links a[href^="#"], .s-panel a[href^="#"]')];
     const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
     const last = planes.length - 1;
@@ -162,30 +162,6 @@ if (root) {
         event.preventDefault();
         go(index, true);
       });
-    });
-
-    root.addEventListener(
-      'toggle',
-      (event) => {
-        const details = event.target;
-        if (!(details instanceof HTMLDetailsElement) || !details.classList.contains('fold')) return;
-        if (!details.open) return;
-        root.querySelectorAll('details.fold[open]').forEach((other) => {
-          if (other !== details) other.open = false;
-        });
-        details.querySelector('summary')?.focus({ preventScroll: true });
-      },
-      true,
-    );
-
-    window.addEventListener('keydown', (event) => {
-      if (event.key !== 'Escape') return;
-      if (menu?.open) return;
-      const open = root.querySelector<HTMLDetailsElement>('details.fold[open]');
-      if (!open) return;
-      event.preventDefault();
-      open.open = false;
-      open.querySelector('summary')?.focus({ preventScroll: true });
     });
 
     root.querySelector('.world')?.addEventListener('focusin', (event) => {

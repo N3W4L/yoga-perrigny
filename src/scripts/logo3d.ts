@@ -24,9 +24,11 @@ interface Piece {
   tick: boolean;
 }
 
-/** Profondeurs des morceaux : du premier traversé au dernier, en écrans. */
+/** Profondeur du premier trait traversé, en écrans. Le dernier est posé un
+    peu au-delà du dernier écran (FARTHEST_MARGIN) : on traverse le logo sur
+    tout le trajet, quel que soit le nombre d'écrans. */
 const NEAREST = 0.85;
-const FARTHEST = 9.2;
+const FARTHEST_MARGIN = 1.3;
 /** Centre du logo, en fraction de la hauteur (aligné sur transform-origin des écrans). */
 const CENTER_Y = 0.46;
 /** Dérive latérale de la caméra (unités du logo) : révèle les plans. Nulle à l'accueil. */
@@ -110,14 +112,14 @@ function logoPieces(): Array<[Point[], boolean]> {
  */
 const OUTLINE_ORDER = [2, 0, 4, 5, 7, 3, 6, 1];
 
-function buildPieces(): Piece[] {
+function buildPieces(farthest: number): Piece[] {
   const raw = logoPieces();
   const outlineCount = raw.filter(([, tick]) => !tick).length;
   const hash = (n: number) => {
     const x = Math.sin(n * 91.7 + 13.3) * 43758.5453;
     return x - Math.floor(x);
   };
-  const span = FARTHEST - NEAREST;
+  const span = farthest - NEAREST;
   return raw.map(([points, tick], index) => {
     const flat = new Float32Array(points.length * 2);
     points.forEach(([x, y], i) => {
@@ -131,9 +133,10 @@ function buildPieces(): Piece[] {
   });
 }
 
-export function createLogoTunnel(canvas: HTMLCanvasElement) {
+/** @param lastStation indice du dernier écran du trajet. */
+export function createLogoTunnel(canvas: HTMLCanvasElement, lastStation: number) {
   const context = canvas.getContext('2d');
-  const pieces = buildPieces();
+  const pieces = buildPieces(Math.max(2, lastStation) + FARTHEST_MARGIN);
   let width = 0;
   let height = 0;
   let ratio = 1;

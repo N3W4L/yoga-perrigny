@@ -9,17 +9,25 @@ description: Règles de contenu du site de l'association Chemins d'Éveil (yoga 
 
 - Horaires, tarifs, noms, dates : uniquement ce que donnent le site actuel
   (yoga-perrigny.com) ou les PDF de l'association (liens dans `src/data/site.ts`).
-- Une information manquante s'écrit entre crochets dans un élément `.pending`,
-  par exemple `<span class="pending">[Téléphone : à compléter]</span>`. Elle
-  apparaît en italique atténué et se repère facilement : `grep -rn "pending" src/pages`.
-- Quand deux sources se contredisent, montrer les deux et le signaler, sans trancher.
+- **Aucune annotation sur le site** : pas de crochets « [à compléter] », pas
+  de note de travail visible. Une information manquante est simplement absente
+  de la page et notée dans `A-COMPLETER.md` (racine du dépôt, non publiée).
+- **Pas de repli « + »** : toutes les informations sont affichées en direct.
+  Si un écran du trajet 3D déborde, répartir le contenu sur un écran de plus
+  (voir la compétence `plongee-3d`) plutôt que de le replier.
+- Quand deux sources se contredisent, n'afficher qu'une version cohérente et
+  noter l'écart dans `A-COMPLETER.md` pour que l'association tranche.
 
 ## Où se trouve quoi
 
 - `src/data/site.ts` : coordonnées de l'association, liens PDF, **grille des
   séances** (`days`). Les créneaux affichés sur les cartes des professeures en
-  sont tirés automatiquement (`slotsOf` dans index.astro) : ne modifier
-  qu'à un seul endroit.
+  sont tirés automatiquement (`slotsOf` dans index.astro), comme le créneau
+  du yoga adapté : ne modifier qu'à un seul endroit.
+- `src/pages/index.astro`, en tête : l'ordre des écrans (`stations`), les
+  professeures et leur présentation (`teachers`), les adresses d'envoi des
+  fiches (`senders`), les témoignages (`voices`). Les numéros de chapitre
+  (01, 02…) se calculent depuis `stations`.
 - `src/config.ts` : sections optionnelles (`showStage`, `showActualites`,
   `showRessources`, `showTarifReduit`, `showReinscriptions`). **Après le
   6 décembre 2026 : `showStage: false`.**
