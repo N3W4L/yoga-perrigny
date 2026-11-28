@@ -2,8 +2,8 @@
  * Logo en anamorphose pour le trajet 3D.
  *
  * Le « O » du logo (cercle, tige, courbes, arche et traits de construction)
- * est découpé en morceaux posés chacun à une profondeur différente le long du
- * trajet. Chaque morceau est agrandi en proportion de sa distance : depuis
+ * est découpé trait par trait, aux angles du dessin. Chaque trait est posé
+ * à une profondeur différente le long du trajet. Chaque morceau est agrandi en proportion de sa distance : depuis
  * l'accueil, tout s'aligne en un logo parfait. Dès qu'on avance, les morceaux
  * proches grossissent plus vite que les lointains : le logo se disloque, on
  * découvre qu'il n'était pas sur un seul plan, et on traverse ses morceaux un
@@ -68,36 +68,25 @@ function logoPieces(): Array<[Point[], boolean]> {
   const pieces: Array<[Point[], boolean]> = [];
   const add = (points: Point[], tick = false) => pieces.push([points, tick]);
 
-  // Grand cercle, ouvert en bas : de la courbe gauche à la courbe droite, par le haut.
-  const from = 137.6;
-  const to = 402.4;
-  const parts = 8;
-  for (let i = 0; i < parts; i++) {
-    add(arc(1, from + ((to - from) * i) / parts, from + ((to - from) * (i + 1)) / parts, 14));
-  }
-  // Arc du bas, sous l'arche.
-  for (let i = 0; i < 3; i++) add(arc(1.041, 63.4 + (53.1 * i) / 3, 63.4 + (53.1 * (i + 1)) / 3, 8));
+  // Un morceau par trait d'esquisse, coupé aux angles.
+  // Grand cercle : deux moitiés, coupées au milieu en haut, qui finissent aux
+  // angles où le cercle rejoint les courbes, à gauche et à droite.
+  add(arc(1, 137.6, 270, 40));
+  add(arc(1, 270, 402.4, 40));
 
-  // Tige : barre du haut et deux montants.
+  // Tige : la barre du haut, d'angle à angle.
   add(line(u(500, 320), u(710, 320)));
-  add(line(u(500, 320), u(500, 520)));
-  add(line(u(710, 320), u(710, 520)));
-
-  // Courbes qui descendent de la tige jusqu'au cercle.
+  // De chaque côté, un seul trait du coin de la barre jusqu'au cercle :
+  // le montant puis la courbe, sans angle entre les deux.
   const left = [u(500, 520), u(500, 770), u(430, 880), u(210, 990)] as const;
   const right = [u(710, 520), u(710, 770), u(780, 880), u(998, 990)] as const;
-  for (const curve of [left, right]) {
-    add(cubic(curve[0], curve[1], curve[2], curve[3], 0, 0.5));
-    add(cubic(curve[0], curve[1], curve[2], curve[3], 0.5, 1));
-  }
+  add([...line(u(500, 320), u(500, 520), 4), ...cubic(left[0], left[1], left[2], left[3], 0, 1, 28).slice(1)]);
+  add([...line(u(710, 320), u(710, 520), 4), ...cubic(right[0], right[1], right[2], right[3], 0, 1, 28).slice(1)]);
 
-  // Arche du bas : deux pentes jusqu'au sommet.
-  const archLeft = [u(355, 1130), u(445, 1060), u(550, 930), u(604, 848)] as const;
-  const archRight = [u(855, 1130), u(765, 1060), u(660, 930), u(604, 848)] as const;
-  for (const curve of [archLeft, archRight]) {
-    add(cubic(curve[0], curve[1], curve[2], curve[3], 0, 0.5, 10));
-    add(cubic(curve[0], curve[1], curve[2], curve[3], 0.5, 1, 10));
-  }
+  // Arche : chaque pente de la base au sommet, et l'arc du bas d'un angle à l'autre.
+  add(cubic(u(355, 1130), u(445, 1060), u(550, 930), u(604, 848), 0, 1, 20));
+  add(cubic(u(855, 1130), u(765, 1060), u(660, 930), u(604, 848), 0, 1, 20));
+  add(arc(1.041, 63.4, 116.5, 16));
 
   // Traits de construction du dessin.
   const ticks: Array<[number, number, number, number]> = [
@@ -111,23 +100,34 @@ function logoPieces(): Array<[Point[], boolean]> {
   return pieces;
 }
 
-/** Répartit les profondeurs dans un ordre mêlé mais stable : chaque page en traverse quelques-uns. */
+/**
+ * Profondeurs. Les traits du logo sont répartis sur tout le trajet dans un
+ * ordre choisi : les deux moitiés du cercle loin l'une de l'autre, pour que la
+ * coupure se voie dès le départ ; on en traverse un par page environ. Les
+ * traits de construction s'intercalent, dans un ordre mêlé mais stable.
+ * Indices dans l'ordre de logoPieces : 0-1 moitiés du cercle, 2 barre,
+ * 3-4 traits gauche et droit, 5-6 pentes de l'arche, 7 arc du bas.
+ */
+const OUTLINE_ORDER = [2, 0, 4, 5, 7, 3, 6, 1];
+
 function buildPieces(): Piece[] {
   const raw = logoPieces();
-  const order = raw.map((_, index) => index);
+  const outlineCount = raw.filter(([, tick]) => !tick).length;
   const hash = (n: number) => {
     const x = Math.sin(n * 91.7 + 13.3) * 43758.5453;
     return x - Math.floor(x);
   };
-  order.sort((a, b) => hash(a) - hash(b));
+  const span = FARTHEST - NEAREST;
   return raw.map(([points, tick], index) => {
-    const rank = order.indexOf(index);
     const flat = new Float32Array(points.length * 2);
     points.forEach(([x, y], i) => {
       flat[i * 2] = x;
       flat[i * 2 + 1] = y;
     });
-    return { points: flat, tick, depth: NEAREST + ((FARTHEST - NEAREST) * rank) / (raw.length - 1) };
+    const depth = tick
+      ? NEAREST + span * hash(index)
+      : NEAREST + (span * (OUTLINE_ORDER.indexOf(index) + 0.3)) / outlineCount;
+    return { points: flat, tick, depth };
   });
 }
 

@@ -24,8 +24,10 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
   calcule hors du fil principal.
 - **Le décor** se choisit par la constante `DECOR` en tête de `souffle.ts` :
   - `'logo'` (par défaut, `src/scripts/logo3d.ts`) : le « O » du logo en
-    anamorphose. Il est découpé en une quarantaine de morceaux posés à des
-    profondeurs différentes (de `NEAREST` à `FARTHEST` écrans) et agrandis en
+    anamorphose. Il est découpé trait par trait, aux angles de l'esquisse
+    (cercle en deux moitiés coupées en haut, barre, deux traits tige + courbe,
+    pentes et arc de l'arche, traits de construction), posés à des
+    profondeurs différentes (ordre des traits : `OUTLINE_ORDER`) (de `NEAREST` à `FARTHEST` écrans) et agrandis en
     proportion. Depuis l'accueil tout s'aligne ; dès qu'on avance, le logo se
     disloque et on traverse ses morceaux un par un. Projection : p × Z / (Z − c).
     `SWAY_X` et `SWAY_Y` règlent la dérive latérale de la caméra, qui révèle
