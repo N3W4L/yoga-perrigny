@@ -178,9 +178,33 @@ if (root) {
       });
     });
 
+    root.addEventListener(
+      'toggle',
+      (event) => {
+        const details = event.target;
+        if (!(details instanceof HTMLDetailsElement) || !details.classList.contains('fold')) return;
+        if (!details.open) return;
+        root.querySelectorAll('details.fold[open]').forEach((other) => {
+          if (other !== details) other.open = false;
+        });
+        details.querySelector('summary')?.focus({ preventScroll: true });
+      },
+      true,
+    );
+
     window.addEventListener('keydown', (event) => {
       const target = event.target as HTMLElement | null;
       const tag = target?.tagName ?? '';
+      if (event.key === 'Escape') {
+        const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
+        if (menu?.open) return;
+        const open = root.querySelector<HTMLDetailsElement>('details.fold[open]');
+        if (!open) return;
+        event.preventDefault();
+        open.open = false;
+        open.querySelector('summary')?.focus({ preventScroll: true });
+        return;
+      }
       if (target?.isContentEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
       let next: number | null = null;
       if (event.key === 'ArrowDown' || event.key === 'PageDown') next = toPos + 1;
