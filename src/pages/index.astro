@@ -1,8 +1,8 @@
 ---
 import { Picture } from 'astro:assets';
-import portrait from '../assets/portrait-anne-marie-meudre.png';
-import hall from '../assets/salle-2025.jpg';
-import exterior from '../assets/salle-exterieur.jpg';
+import portrait from '../assets/portrait-anne-marie-meudre.jpg';
+import hall from '../assets/salle-2025-arche.jpg';
+import exterior from '../assets/salle-exterieur-arche.jpg';
 import Logo from '../components/Logo.astro';
 import { flags } from '../config';
 import { association, days, itinerary, pdfs, ujbeyReadings } from '../data/site';
@@ -265,10 +265,10 @@ const voices = [
               src={hall}
               formats={['avif', 'webp']}
               fallbackFormat="jpeg"
-              widths={[480, 768, 1024]}
-              sizes="(min-width: 62rem) 34rem, 100vw"
-              alt="Cours de yoga dans la salle de sports de Perrigny : un groupe en fente, les bras levés, sur un sol vert. Photo du 20 novembre 2025."
-              quality={70}
+              widths={[480, 760, 1000]}
+              sizes="(min-width: 62rem) 30rem, 100vw"
+              alt="Cours de yoga dans la salle de sports de Perrigny : un groupe en fente, les bras levés au-dessus de la tête. Photo du 20 novembre 2025."
+              quality={74}
             />
             <figcaption>Salle de sports, 20 novembre 2025.</figcaption>
           </figure>
@@ -390,9 +390,9 @@ const voices = [
                     <Picture
                       src={portrait}
                       formats={['avif', 'webp']}
-                      fallbackFormat="png"
-                      width={90}
-                      height={90}
+                      fallbackFormat="jpeg"
+                      widths={[104, 208]}
+                      sizes="3.25rem"
                       alt={`Portrait de ${teacher.name}, professeure de yoga à l’association Chemins d’Éveil.`}
                     />
                   ) : (
@@ -437,27 +437,29 @@ const voices = [
             <li>
               <span class="label">Adhésion</span>
               <strong>30 €</strong>
-              <span class="fine">Chèque à l’ordre de Chemins d’Éveil.</span>
+              <span class="fine">Chèque à Chemins d’Éveil.</span>
             </li>
             <li>
               <span class="label">Yoga classique</span>
               <strong>175 €</strong>
-              <span class="fine">Chèque à la professeure, adhésion en plus.</span>
+              <span class="fine">Chèque à la professeure.</span>
+              <span class="fine">En plus de l’adhésion.</span>
             </li>
             {
               flags.showTarifReduit && (
                 <li>
                   <span class="label">Tarif réduit</span>
                   <strong>85 €</strong>
-                  <span class="fine">Pour les personnes à faibles revenus.</span>
+                  <span class="fine">Pour les faibles revenus.</span>
                 </li>
               )
             }
             <li>
               <span class="label">Yoga adapté</span>
               <strong>185 €</strong>
-              <span class="fine">Adhésion comprise, chèque à Chemins d’Éveil.</span>
-              <span class="fine">Tarif réduit : voir avec le président.</span>
+              <span class="fine">Chèque à Chemins d’Éveil.</span>
+              <span class="fine">Adhésion comprise.</span>
+              <span class="fine">Tarif réduit : voir le président.</span>
             </li>
           </ul>
 
@@ -662,10 +664,10 @@ const voices = [
               src={exterior}
               formats={['avif', 'webp']}
               fallbackFormat="jpeg"
-              widths={[480, 768, 1024]}
-              sizes="(min-width: 62rem) 40rem, 100vw"
+              widths={[400, 640, 900]}
+              sizes="(min-width: 62rem) 22rem, 100vw"
               alt="Extérieur du bâtiment des cours, à Perrigny : façade en pierre claire, jardinières fleuries et rue ensoleillée."
-              quality={62}
+              quality={70}
             />
             <figcaption>Le bâtiment, rue du moulin.</figcaption>
           </figure>
@@ -705,6 +707,7 @@ const voices = [
       </div>
     </main>
 
+    <p class="progress-count" aria-hidden="true" data-progress-count></p>
     <svg class="progress" viewBox="0 0 40 40" aria-hidden="true">
       <circle class="track" cx="20" cy="20" r="16" fill="none" />
       <circle data-progress cx="20" cy="20" r="16" fill="none" transform="rotate(-90 20 20)" />

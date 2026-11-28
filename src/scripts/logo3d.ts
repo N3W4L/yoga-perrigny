@@ -34,6 +34,8 @@ const CENTER_Y = 0.46;
 /** Dérive latérale de la caméra (unités du logo) : révèle les plans. Nulle à l'accueil. */
 const SWAY_X = 0.32;
 const SWAY_Y = 0.14;
+/** Présence du décor au repos sur un écran de lecture (1 = pleine). */
+const REST_PRESENCE = 0.26;
 
 /* Géométrie relevée sur le dessin du logo (1208 × 1300 px), ramenée à un
    cercle de rayon 1 centré en (0, 0). */
@@ -173,13 +175,21 @@ export function createLogoTunnel(canvas: HTMLCanvasElement, lastStation: number)
     const camX = SWAY_X * Math.sin(position * 0.8);
     const camY = SWAY_Y * Math.sin(position * 0.55);
 
+    // Présence du décor : pleine à l'accueil (le logo y est entier) et pendant
+    // le voyage ; au repos sur un écran de lecture, il s'efface (REST_PRESENCE)
+    // pour ne pas barrer le texte.
+    const nearestStation = Math.round(position);
+    const travel = Math.min(1, Math.abs(position - nearestStation) * 2 * 1.6);
+    const eased = travel * travel * (3 - 2 * travel);
+    const presence = nearestStation === 0 ? 1 : REST_PRESENCE + (1 - REST_PRESENCE) * eased;
+
     for (const piece of pieces) {
       const distance = piece.depth - position;
       if (distance <= 0.05) continue; // déjà traversé
       const scale = piece.depth / distance;
       // Il s'efface en passant près de la caméra, et quand il devient démesuré.
       const fade = Math.min(1, (distance - 0.05) / 0.45) * Math.min(1, Math.max(0, (14 - scale) / 6));
-      const alpha = (piece.tick ? 0.32 : 0.55) * fade;
+      const alpha = (piece.tick ? 0.32 : 0.55) * fade * presence;
       if (alpha <= 0.004) continue;
 
       context.globalAlpha = alpha;

@@ -67,6 +67,15 @@ Repère (Chromium sans carte graphique, 1440×900) : médiane 16,7 ms par image
 (60 images/s). La 3D d'origine, abandonnée, était à 40-48 ms. Une médiane
 au-dessus de 17 ms signale une régression : voir la compétence `plongee-3d`.
 
+## 4 bis. Accessibilité
+
+- axe-core (WCAG 2.2 AA) : l'injecter avec un contexte Playwright
+  `bypassCSP: true` (la CSP bloque les scripts injectés), sur l'accueil en
+  1440 et 390 px et sur les deux pages légales. Objectif : aucune violation.
+- Parcours au clavier en mode 3D : appuyer sur Tab jusqu'au retour à
+  « Aller au contenu » ; chaque élément atteint doit être visible
+  (dans l'écran, opacité de son écran > 0,6). Tout le site doit être parcouru.
+
 ## 5. Avant de conclure
 
 - Console sans erreur ni violation de CSP (la CSP interdit les attributs `style`

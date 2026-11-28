@@ -40,6 +40,14 @@ description: Règles de contenu du site de l'association Chemins d'Éveil (yoga 
 - `src/pages/index.astro` : textes de toutes les sections.
 - Pages légales : `src/pages/mentions-legales.astro`, `src/pages/confidentialite.astro`.
 
+## Photos
+
+- Originaux dans `src/assets/sources/` (jamais modifiés), versions retouchées
+  produites par `node scripts/photos.mjs` (cadrage et étalonnage commun).
+  Pour une nouvelle photo : l'ajouter aux sources, ajouter une entrée au
+  script, le relancer. Ne pas publier de photo sans l'accord des personnes
+  reconnaissables (voir `A-COMPLETER.md`).
+
 ## Rédaction
 
 - Une information courte tient sur une ligne : préférer « Chèque à la
