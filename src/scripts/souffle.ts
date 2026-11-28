@@ -51,6 +51,7 @@ if (root) {
     const tunnel = ringsCanvas ? (DECOR === 'logo' ? createLogoTunnel(ringsCanvas, planes.length - 1) : createTunnel(ringsCanvas)) : null;
     const links = [...root.querySelectorAll<HTMLAnchorElement>('.s-links a[href^="#"], .s-panel a[href^="#"]')];
     const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
+    const counter = root.querySelector<HTMLElement>('[data-progress-count]');
     const last = planes.length - 1;
     const clamp = (value: number) => Math.max(0, Math.min(last, value));
     /* Longueur de défilement d'un écran au suivant : --stop dans souffle.css. */
@@ -87,6 +88,8 @@ if (root) {
       if (index === currentIndex) return;
       currentIndex = index;
       html.dataset.station = String(index);
+      // Repère : numéro de l'écran dans l'anneau de progression (pas sur l'accueil).
+      if (counter) counter.textContent = index > 0 ? String(index).padStart(2, '0') : '';
       // Un sous-écran (programme du stage) allume l'entrée de menu de son parent.
       const id = planes[index]?.dataset.nav || planes[index]?.id || '';
       links.forEach((link) => {
@@ -168,7 +171,12 @@ if (root) {
     root.querySelector('.world')?.addEventListener('focusin', (event) => {
       const plane = (event.target as HTMLElement | null)?.closest<HTMLElement>('.plane');
       const index = plane ? planes.indexOf(plane) : -1;
-      if (index >= 0 && index !== currentIndex) go(index, false);
+      if (index < 0 || index === currentIndex) return;
+      // Le focus peut arriver sur un écran éloigné (Tab, lecteur d'écran) :
+      // on s'y rend, puis encore à l'image suivante, après le défilement que
+      // le navigateur fait lui-même pour montrer l'élément focalisé.
+      go(index, false);
+      requestAnimationFrame(() => go(index, false));
     });
 
     const hashIndex = planes.findIndex((plane) => `#${plane.id}` === window.location.hash);

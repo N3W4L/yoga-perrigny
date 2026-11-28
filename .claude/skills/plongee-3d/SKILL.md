@@ -31,6 +31,9 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
     dernier (`FARTHEST_MARGIN`), dans l'ordre `OUTLINE_ORDER`, et agrandis en
     proportion. Depuis l'accueil tout s'aligne ; dès qu'on avance, le logo se
     disloque et on traverse ses morceaux un par un. Projection : p × Z / (Z − c).
+    `REST_PRESENCE` (0,26) règle sa présence au repos sur un écran de lecture :
+    le décor s'efface pour ne pas barrer le texte et revient pendant le voyage
+    (pleine présence à l'accueil).
     `SWAY_X` et `SWAY_Y` règlent la dérive latérale de la caméra, qui révèle
     les plans. La géométrie est relevée sur le dessin du logo (fonction
     `logoPieces`).
@@ -69,6 +72,17 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
   - `CENTER_Y` : hauteur du point de fuite (aligné sur `transform-origin` des écrans).
 
   L'opacité des anneaux (0,5 au maximum) règle leur présence derrière le texte.
+
+## Accessibilité (ne pas enfreindre)
+
+- Les écrans éloignés ne sont **jamais** en `display: none` : ils restent dans
+  la page, rangés hors champ (`top: 400vh`) avec `content-visibility: auto`.
+  Ainsi le navigateur saute leur rendu, mais lecteurs d'écran et Tab les
+  atteignent. Quand le focus arrive dans un écran, `focusin` y emmène le trajet.
+- Le tunnel est en `overflow: clip` (et non `hidden`) : le focus ne peut pas
+  le faire défiler de l'intérieur.
+- Vérifier avec un parcours Tab complet (chaque élément doit être visible) et
+  axe-core (voir la compétence `verifier-site`).
 
 ## Règles de performance (ne pas enfreindre)
 

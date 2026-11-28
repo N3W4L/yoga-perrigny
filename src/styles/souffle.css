@@ -1299,7 +1299,8 @@ html.journey-3d .tunnel {
   z-index: 1;
   height: 100svh;
   height: 100dvh;
-  overflow: hidden;
+  /* clip et non hidden : le focus clavier ne peut pas faire défiler le tunnel. */
+  overflow: clip;
   contain: paint;
   background:
     radial-gradient(ellipse at 50% 46%, #24362c 0%, #121a16 54%, #070a08 100%);
@@ -1323,23 +1324,26 @@ html.journey-3d .plane {
   background: transparent;
   color: var(--sand);
   pointer-events: none;
-  display: none;
+  display: block;
   opacity: 0;
-  content-visibility: hidden;
+  /* Les écrans éloignés restent dans la page (lecteurs d'écran, clavier) mais
+     sont rangés hors champ : le navigateur saute alors leur rendu. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100vh;
   z-index: 1;
   transform-origin: 50% 46%;
 }
 
-html.journey-3d .plane.is-live {
-  display: block;
-  content-visibility: visible;
+html.journey-3d .plane:not(.is-live) {
+  top: 400vh;
+  bottom: -400vh;
 }
 
-html.journey-3d .plane.is-live.s-hero {
+html.journey-3d .plane.s-hero {
   display: grid;
 }
 
-html.journey-3d .plane.is-live:not(.s-hero) {
+html.journey-3d .plane:not(.s-hero) {
   display: flex;
 }
 
@@ -1357,7 +1361,7 @@ html.journey-3d .plane.night {
   color: var(--sand);
 }
 
-html.journey-3d .plane.is-live:not(.s-hero) {
+html.journey-3d .plane:not(.s-hero) {
   flex-direction: column;
   justify-content: center;
   padding: 4.35rem 0 1.1rem;
@@ -2075,4 +2079,180 @@ html.journey-3d .voices .voice {
 /* Fins de paragraphe sans mot isolé. */
 .souffle :is(p, li, figcaption, .fine) {
   text-wrap: pretty;
+}
+
+/* ==========================================================================
+   Système typographique final (trajet 3D et page à plat).
+   Une seule échelle, un seul style d'étiquette, des espacements constants.
+   Placé en fin de feuille : il prime sur les réglages ponctuels plus haut.
+   ========================================================================== */
+
+.souffle {
+  --t-label: 0.75rem;
+  --t-small: 0.9375rem;
+  --t-body: 1.0625rem;
+  --t-lede: clamp(1.3rem, 1.75vw, 1.6rem);
+  --t-title: clamp(2.6rem, 3.9vw, 3.7rem);
+  --gap-label: 0.6rem;
+  --gap-title: 0.85rem;
+}
+
+/* Étiquettes : chapitres, intitulés de colonnes, légendes. */
+.souffle :is(.chap, .label, .facts .label, .breaks h4, .prices .label, .day-group h3, .stage-facts h3, .voice figcaption, .feature-quote figcaption, .s-news-label, .meta) {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.souffle .chap {
+  margin: 0 0 var(--gap-label);
+}
+
+.souffle .chap-space {
+  margin-top: 1.6rem;
+}
+
+html.journey-3d .souffle :is(.sheet, .night) h2 {
+  font-size: var(--t-title);
+  line-height: 1;
+  margin: 0 0 var(--gap-title);
+}
+
+html.journey-3d .souffle .pull {
+  font-size: var(--t-lede);
+  line-height: 1.3;
+  margin: 0 0 0.5rem;
+}
+
+html.journey-3d .plane:not(.s-hero) > .s-wrap {
+  font-size: var(--t-body);
+  line-height: 1.55;
+}
+
+/* Texte secondaire : jamais sous 15 px. */
+html.journey-3d .souffle :is(.prices .fine, #tarifs .prices .fine, .person .bio, .person .slots, .breaks ul, .voices .voice p, .program-grid p, .envoi li, .stage-facts p, .facts li, .library, .breaks-link) {
+  font-size: var(--t-small);
+  line-height: 1.5;
+}
+
+.souffle .person .meta {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+}
+
+.souffle .person .slots {
+  margin-top: 0.4rem;
+}
+
+/* Les étiquettes en couleur lin sur fond sombre, sauge sur fond clair. */
+html.journey-3d .souffle :is(.chap, .label, .breaks h4, .prices .label, .day-group h3, .stage-facts h3, .voice figcaption, .feature-quote figcaption, .meta) {
+  color: var(--linen);
+}
+
+/* Liens de texte : soulignement fin, plus marqué au survol. */
+.souffle .s-wrap a:not(.sbtn):not(.sbtn-ghost):not(.mail) {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition: text-decoration-thickness 160ms ease, color 160ms ease;
+}
+
+.souffle .s-wrap a:not(.sbtn):not(.sbtn-ghost):hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Prix : montant, puis mentions alignées. */
+html.journey-3d .souffle .prices strong {
+  font-size: clamp(2.2rem, 3vw, 2.8rem);
+  line-height: 1.1;
+  margin: 0.35rem 0 0.45rem;
+}
+
+/* Photos : cadre en arche commun, trait de lin décalé. Les images sont
+   étalonnées à la palette par scripts/photos.mjs. */
+.souffle .frame-photo {
+  margin: 0;
+}
+
+.souffle .frame-photo picture,
+html.journey-3d .souffle .club-grid .frame-photo picture,
+html.journey-3d .souffle .frame-photo-place picture {
+  display: block;
+  overflow: hidden;
+  border-radius: 999px 999px 1.1rem 1.1rem;
+  box-shadow: none;
+  outline: 1px solid color-mix(in srgb, var(--linen) 55%, transparent);
+  outline-offset: 7px;
+  margin-inline: auto;
+}
+
+.souffle .frame-photo picture::after {
+  display: none;
+}
+
+.souffle .frame-photo img,
+html.journey-3d .souffle .club-grid .frame-photo img,
+html.journey-3d .souffle .frame-photo-place img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  min-height: 0;
+  object-fit: cover;
+}
+
+.souffle .club-grid .frame-photo picture,
+html.journey-3d .souffle .club-grid .frame-photo picture {
+  aspect-ratio: 4 / 3;
+  max-width: min(30rem, 100%);
+}
+
+.souffle .frame-photo-place picture,
+html.journey-3d .souffle .frame-photo-place picture {
+  aspect-ratio: 4 / 5;
+  max-width: min(22rem, 100%);
+}
+
+.souffle .frame-photo figcaption {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: var(--t-label);
+  letter-spacing: 0.08em;
+}
+
+.souffle .person picture {
+  outline: 1px solid color-mix(in srgb, var(--linen) 55%, transparent);
+  outline-offset: 3px;
+}
+
+.souffle .person img {
+  mix-blend-mode: normal;
+  filter: none;
+}
+
+/* Numéro de l'écran au centre de l'anneau de progression (trajet 3D). */
+.progress-count {
+  display: none;
+}
+
+html.journey-3d .progress-count {
+  display: grid;
+  place-items: center;
+  position: fixed;
+  z-index: 36;
+  right: 1rem;
+  bottom: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--linen);
+  pointer-events: none;
 }
