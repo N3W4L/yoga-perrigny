@@ -2292,3 +2292,9 @@ html.journey-3d .progress-count {
   color: var(--linen);
   pointer-events: none;
 }
+
+/* Saut par le menu : les écrans traversés ne s'affichent pas, seul le décor
+   défile entre l'écran de départ et celui d'arrivée (souffle.ts). */
+html.journey-3d.is-jumping .plane:not([data-jump-keep]) {
+  visibility: hidden;
+}
