@@ -18,6 +18,12 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
   l'écran vers lequel on se dirige ; sinon on revient à l'écran de départ.
   Un cran de molette = un écran, avec la traversée animée. Les flèches ↑ ↓
   avancent d'un écran entier.
+- **Glissement piloté** (`glideTo` dans souffle.ts), jamais `scrollTo({ behavior:
+  'smooth' })` : une courbe de Hermite part de la position et de la vitesse
+  actuelles et arrive exactement sur l'écran visé. Un changement de destination
+  en plein vol (deux clics de menu rapprochés) garde la vitesse : pas d'à-coup.
+  Durée : ≈ 0,7 s pour un écran, 1,7 s au plus. Molette ou toucher pendant le
+  glissement : l'utilisateur reprend la main.
 - Les `.snap-stop` ne servent plus que de repères : souffle.ts y lit l'écart
   entre deux stations.
 - `.tunnel` reste collé à l'écran. Dedans, chaque section `.plane` est un
