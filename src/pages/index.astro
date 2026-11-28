@@ -11,6 +11,12 @@ import Base from '../layouts/Base.astro';
 import '../styles/souffle.css';
 
 const mailto = `mailto:${association.email}`;
+
+/** Créneaux de chaque professeure, tirés de la grille des séances : une seule source à tenir à jour. */
+const slotsOf = (teacher: string) =>
+  days.flatMap((day) =>
+    day.sessions.filter((session) => session.teacher === teacher).map((session) => `${day.label} · ${session.time}`),
+  );
 const home = new URL(import.meta.env.BASE_URL, Astro.site).href;
 /* Données structurées pour les moteurs de recherche (bloc de données, non exécuté : compatible avec la CSP). */
 const structuredData = JSON.stringify({
@@ -79,7 +85,7 @@ const voices = [
         <a href="#seances" data-nav-link>Séances</a>
         <a href="#tarifs" data-nav-link>Tarifs</a>
         {flags.showStage && <a href="#stage" data-nav-link>Stage</a>}
-        <a href="#professeurs" data-nav-link>Professeurs</a>
+        <a href="#professeurs" data-nav-link>Professeures</a>
         <a href="#lieu" data-nav-link>Lieu</a>
       </nav>
       <a class="s-write" href={mailto}>Écrire</a>
@@ -94,7 +100,7 @@ const voices = [
             <a href="#seances" data-nav-link>Séances</a>
             <a href="#tarifs" data-nav-link>Tarifs</a>
             {flags.showStage && <a href="#stage" data-nav-link>Stage</a>}
-            <a href="#professeurs" data-nav-link>Professeurs</a>
+            <a href="#professeurs" data-nav-link>Professeures</a>
             <a href="#lieu" data-nav-link>Lieu</a>
           </nav>
           <a class="sbtn" href={mailto}>Nous écrire</a>
@@ -494,13 +500,14 @@ const voices = [
         <div class="s-wrap">
           <p class="chap">05 — L’équipe</p>
           <h2 id="profs-title">Professeures</h2>
-          <p>Les heures de chacune sont dans les séances, plus haut. Les adresses d’envoi sont avec les tarifs.</p>
+          <p>Les adresses d’envoi des fiches sont avec les tarifs.</p>
           <ul class="people">
             <li class="person">
               <span class="mono" aria-hidden="true">FB</span>
               <div>
                 <h3>Françoise Bataillard</h3>
                 <p class="meta">Yoga classique</p>
+                <ul class="slots">{slotsOf('Françoise Bataillard').map((slot) => <li>{slot}</li>)}</ul>
                 <details class="fold">
                   <summary>Présentation</summary>
                   <div class="fold-body">
@@ -515,6 +522,7 @@ const voices = [
               <div>
                 <h3>Sandrine Peyronel</h3>
                 <p class="meta">Yoga classique</p>
+                <ul class="slots">{slotsOf('Sandrine Peyronel').map((slot) => <li>{slot}</li>)}</ul>
                 <details class="fold">
                   <summary>Présentation</summary>
                   <div class="fold-body">
@@ -536,6 +544,7 @@ const voices = [
               <div>
                 <h3>Anne-Marie Meudre</h3>
                 <p class="meta">Yoga classique</p>
+                <ul class="slots">{slotsOf('Anne-Marie Meudre').map((slot) => <li>{slot}</li>)}</ul>
                 <details class="fold">
                   <summary>Formation</summary>
                   <div class="fold-body">
@@ -555,6 +564,7 @@ const voices = [
               <div>
                 <h3>Odile Sappez</h3>
                 <p class="meta">Yoga adapté</p>
+                <ul class="slots">{slotsOf('Odile Sappez').map((slot) => <li>{slot}</li>)}</ul>
                 <details class="fold">
                   <summary>Formation</summary>
                   <div class="fold-body">
