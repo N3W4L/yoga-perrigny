@@ -84,6 +84,11 @@ const voices = [
 
     <main id="contenu">
       <div class="journey" data-stations={flags.showStage ? '8' : '7'}>
+        <div class="snap-rail" aria-hidden="true">
+          {Array.from({ length: flags.showStage ? 8 : 7 }, (_, index) => (
+            <div class="snap-stop" data-snap={index}></div>
+          ))}
+        </div>
         <div class="tunnel">
           <div class="camera">
           <div class="world">
@@ -313,6 +318,8 @@ const voices = [
             </li>
           </ul>
 
+          <div class="tarif-split">
+          <div>
           <h3 class="chap chap-space">Venir la première fois</h3>
           <ol class="points">
             <li>
@@ -335,6 +342,7 @@ const voices = [
               </span>
             </li>
           </ol>
+          </div>
 
           <div class="prose">
             <p>
@@ -345,7 +353,9 @@ const voices = [
               <a class="sbtn" href={pdfs.inscription}>Télécharger le formulaire</a>
             </p>
           </div>
+          </div>
 
+          <div class="fold-row">
           {
             flags.showReinscriptions && (
               <details class="fold">
@@ -386,6 +396,7 @@ const voices = [
               </ul>
             </div>
           </details>
+          </div>
         </div>
       </section>
 
@@ -401,12 +412,18 @@ const voices = [
               </svg>
             </div>
             <div class="s-wrap">
-              <p class="chap">04 — 4 au 6 décembre 2026</p>
-              <h2 id="stage-title"><em>Passages</em></h2>
-              <p class="pull">Au seuil de l’hiver, un voyage intérieur.</p>
-              <p>
-                Une invitation à ralentir, à écouter ce qui bat au cœur de soi. Postures lentes, souffle, yoga nidra, méditation. Les réservations se font auprès des professeures. 22 participants.
-              </p>
+              <div class="stage-top">
+                <div>
+                  <p class="chap">04 — 4 au 6 décembre 2026</p>
+                  <h2 id="stage-title"><em>Passages</em></h2>
+                </div>
+                <div>
+                  <p class="pull">Au seuil de l’hiver, un voyage intérieur.</p>
+                  <p>
+                    Une invitation à ralentir, à écouter ce qui bat au cœur de soi. Postures lentes, souffle, yoga nidra, méditation. Les réservations se font auprès des professeures. 22 participants.
+                  </p>
+                </div>
+              </div>
               <div class="stage-facts">
                 <article>
                   <h3>Soirée mantras · vendredi 4</h3>

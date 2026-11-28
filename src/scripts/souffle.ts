@@ -8,31 +8,14 @@ function lowPower() {
   return Boolean(connection?.saveData) || Boolean(slow) || (typeof memory === 'number' && memory <= 2) || (typeof cores === 'number' && cores <= 2);
 }
 
-/** Plein cadre sur un long palier, fondu court de part et d'autre. */
-function focusWindow(distance: number, plateau: number, edge: number) {
-  if (distance <= plateau) return 1;
-  if (distance >= edge) return 0;
-  const t = (distance - plateau) / (edge - plateau);
-  return 1 - t * t * (3 - 2 * t);
-}
-
 if (root) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const narrow = window.matchMedia('(max-width: 720px)').matches;
   const canFly = !reduce && !narrow && !lowPower();
   const planes = [...root.querySelectorAll<HTMLElement>('.plane')];
-  const gates = [...root.querySelectorAll<HTMLElement>('.gate')];
   const nav = root.querySelector<HTMLElement>('.s-nav');
-
-  const scrollSpan = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-
-  const scrollToIndex = (index: number, behavior: ScrollBehavior) => {
-    const span = scrollSpan();
-    const top = planes.length > 1 ? (index / (planes.length - 1)) * span : 0;
-    window.scrollTo({ top, behavior });
-  };
-
   const progress = root.querySelector<SVGCircleElement>('[data-progress]');
+
   let progressLength = 0;
   if (!reduce && progress) {
     const radius = 16;
@@ -48,101 +31,190 @@ if (root) {
   if (canFly && planes.length > 1) {
     document.documentElement.classList.add('journey-3d');
     const world = root.querySelector<HTMLElement>('.world');
-    const step = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--step')) || 1500;
-    const travel = step * (planes.length - 1);
+    const last = planes.length - 1;
+    const duration = 640;
 
-    let span = 0;
-    const measure = () => {
-      span = scrollSpan();
-    };
-
-    const planeReveal = planes.map(() => -1);
-    const gateReveal = gates.map(() => -1);
-    let lastAlong = Number.NaN;
+    let camera = 0;
+    let fromPos = 0;
+    let toPos = 0;
+    let started = 0;
+    let raf = 0;
     let currentIndex = -1;
+    let driving = false;
+    let driveTimer = 0;
+    const shown = planes.map(() => false);
 
-    const paintReveal = (el: HTMLElement, store: number[], index: number, reveal: number) => {
-      const q = Math.round(reveal * 1000) / 1000;
-      if (store[index] === q) return;
-      store[index] = q;
-      el.style.setProperty('--reveal', String(q));
-      el.style.visibility = q === 0 ? 'hidden' : 'visible';
+    const clamp = (index: number) => Math.max(0, Math.min(last, index));
+
+    const indexFromScroll = () => {
+      const stop = window.innerHeight;
+      if (stop <= 0) return 0;
+      return clamp(Math.round(window.scrollY / stop));
     };
 
-    const apply = (position: number) => {
-      const along = planes.length > 1 ? position / (planes.length - 1) : 0;
-      if (world && along !== lastAlong) {
-        lastAlong = along;
-        world.style.transform = `translate3d(0,0,${(along * travel).toFixed(2)}px)`;
-      }
+    const markNav = (index: number) => {
+      if (index === currentIndex) return;
+      currentIndex = index;
+      document.documentElement.dataset.station = String(index);
+      const id = planes[index]?.id ?? '';
+      root.querySelectorAll<HTMLAnchorElement>('.s-links a[href^="#"], .s-panel a[href^="#"]').forEach((link) => {
+        const on = link.getAttribute('href') === `#${id}`;
+        link.classList.toggle('is-active', on);
+        if (on) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
+      paintProgress(last > 0 ? index / last : 0);
+    };
 
-      let current = 0;
-      let best = Infinity;
+    const paint = (position: number) => {
+      const near = clamp(Math.round(position));
+      markNav(near);
+      world?.classList.toggle('is-moving', Math.abs(position - toPos) > 0.004 && raf !== 0);
       for (let index = 0; index < planes.length; index++) {
         const distance = Math.abs(index - position);
-        if (distance < best) {
-          best = distance;
-          current = index;
+        const live = distance < 0.985;
+        const plane = planes[index];
+        if (shown[index] !== live) {
+          shown[index] = live;
+          plane.classList.toggle('is-live', live);
         }
-        paintReveal(planes[index], planeReveal, index, focusWindow(distance, 0.45, 0.55));
-      }
-
-      for (let index = 0; index < planes.length; index++) {
-        const near = index === current;
-        if (planes[index].classList.contains('is-near') !== near) planes[index].classList.toggle('is-near', near);
-      }
-
-      for (let index = 0; index < gates.length; index++) {
-        const distance = Math.abs(index + 0.5 - position);
-        const reveal = focusWindow(distance, 0.08, 0.78);
-        paintReveal(gates[index], gateReveal, index, reveal);
-        const live = reveal > 0.04;
-        if (gates[index].classList.contains('is-live') !== live) gates[index].classList.toggle('is-live', live);
-      }
-
-      if (current !== currentIndex) {
-        currentIndex = current;
-        const id = planes[current]?.id ?? '';
-        nav?.classList.remove('is-on-light');
-        root.querySelectorAll<HTMLAnchorElement>('.s-links a[href^="#"], .s-panel a[href^="#"]').forEach((link) => {
-          const on = link.getAttribute('href') === `#${id}`;
-          link.classList.toggle('is-active', on);
-          if (on) link.setAttribute('aria-current', 'true');
-          else link.removeAttribute('aria-current');
-        });
+        if (!live) {
+          if (plane.classList.contains('is-near')) plane.classList.remove('is-near');
+          continue;
+        }
+        const opacity = Math.max(0, 1 - distance);
+        plane.style.opacity = opacity.toFixed(3);
+        const shift = (index - position) * 36;
+        plane.style.transform = `translate3d(0, ${shift.toFixed(1)}px, 0)`;
+        const focus = index === near;
+        if (plane.classList.contains('is-near') !== focus) plane.classList.toggle('is-near', focus);
       }
     };
 
-    let raf = 0;
-    const frame = () => {
-      raf = 0;
-      const ratio = span > 0 ? Math.min(1, Math.max(0, window.scrollY / span)) : 0;
-      apply(ratio * (planes.length - 1));
-      paintProgress(ratio);
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - started) / duration);
+      const eased = t < 0.5 ? 2 * t * t : 1 - ((-2 * t + 2) ** 2) / 2;
+      camera = fromPos + (toPos - fromPos) * eased;
+      if (t >= 1) {
+        camera = toPos;
+        raf = 0;
+        paint(camera);
+        return;
+      }
+      paint(camera);
+      raf = requestAnimationFrame(tick);
     };
 
-    const request = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(frame);
+    const travelTo = (index: number, immediate = false) => {
+      const next = clamp(index);
+      if (immediate) {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+        fromPos = next;
+        toPos = next;
+        camera = next;
+        paint(camera);
+        return;
+      }
+      if (next === toPos && raf) return;
+      if (next === toPos && !raf && Math.abs(camera - next) < 0.001) return;
+      fromPos = camera;
+      toPos = next;
+      started = performance.now();
+      if (!raf) raf = requestAnimationFrame(tick);
     };
 
-    measure();
-    request();
-    window.addEventListener('scroll', request, { passive: true });
+    const scrollToIndex = (index: number) => {
+      window.scrollTo({ top: clamp(index) * window.innerHeight, behavior: 'auto' });
+    };
+
+    const go = (index: number, immediate = false) => {
+      const next = clamp(index);
+      driving = true;
+      window.clearTimeout(driveTimer);
+      scrollToIndex(next);
+      travelTo(next, immediate);
+      driveTimer = window.setTimeout(() => {
+        driving = false;
+      }, 80);
+      const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
+      if (menu) menu.open = false;
+    };
+
+    let scrollRaf = 0;
+    const onScroll = () => {
+      if (driving || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = 0;
+        if (!driving) travelTo(indexFromScroll());
+      });
+    };
+
+    travelTo(0, true);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener(
+      'scrollend',
+      () => {
+        driving = false;
+        travelTo(indexFromScroll());
+      },
+      { passive: true },
+    );
     window.addEventListener('resize', () => {
-      measure();
-      request();
-    }, { passive: true });
+      driving = true;
+      scrollToIndex(toPos);
+      travelTo(toPos, true);
+      driveTimer = window.setTimeout(() => {
+        driving = false;
+      }, 80);
+    });
 
     root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (event) => {
         const index = planes.findIndex((plane) => `#${plane.id}` === link.getAttribute('href'));
         if (index < 0) return;
         event.preventDefault();
-        scrollToIndex(index, reduce ? 'auto' : 'smooth');
-        const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
-        if (menu) menu.open = false;
+        go(index);
       });
+    });
+
+    root.addEventListener(
+      'toggle',
+      (event) => {
+        const details = event.target;
+        if (!(details instanceof HTMLDetailsElement) || !details.classList.contains('fold')) return;
+        if (!details.open) return;
+        root.querySelectorAll('details.fold[open]').forEach((other) => {
+          if (other !== details) other.open = false;
+        });
+        details.querySelector('summary')?.focus({ preventScroll: true });
+      },
+      true,
+    );
+
+    window.addEventListener('keydown', (event) => {
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName ?? '';
+      if (event.key === 'Escape') {
+        const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
+        if (menu?.open) return;
+        const open = root.querySelector<HTMLDetailsElement>('details.fold[open]');
+        if (!open) return;
+        event.preventDefault();
+        open.open = false;
+        open.querySelector('summary')?.focus({ preventScroll: true });
+        return;
+      }
+      if (target?.isContentEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      let next: number | null = null;
+      if (event.key === 'ArrowDown' || event.key === 'PageDown') next = toPos + 1;
+      else if (event.key === 'ArrowUp' || event.key === 'PageUp') next = toPos - 1;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = last;
+      else if (event.key === ' ' && tag !== 'BUTTON' && tag !== 'A' && tag !== 'SUMMARY') next = toPos + 1;
+      else return;
+      event.preventDefault();
+      go(next);
     });
 
     root.querySelector('.world')?.addEventListener('focusin', (event) => {
@@ -150,17 +222,17 @@ if (root) {
       const plane = target?.closest<HTMLElement>('.plane');
       if (!plane) return;
       const index = planes.indexOf(plane);
-      if (index >= 0) scrollToIndex(index, 'auto');
+      if (index >= 0) go(index, true);
     });
 
     const hashIndex = planes.findIndex((plane) => `#${plane.id}` === window.location.hash);
-    if (hashIndex > 0) scrollToIndex(hashIndex, 'auto');
+    if (hashIndex > 0) go(hashIndex, true);
   } else if (!reduce && progress) {
-    let span = scrollSpan();
     let raf = 0;
     const frame = () => {
       raf = 0;
-      const ratio = span > 0 ? Math.min(1, window.scrollY / span) : 0;
+      const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      const ratio = max > 0 ? Math.min(1, window.scrollY / max) : 0;
       paintProgress(ratio);
     };
     const request = () => {
@@ -169,9 +241,6 @@ if (root) {
     };
     frame();
     window.addEventListener('scroll', request, { passive: true });
-    window.addEventListener('resize', () => {
-      span = scrollSpan();
-      request();
-    }, { passive: true });
+    window.addEventListener('resize', request);
   }
 }
