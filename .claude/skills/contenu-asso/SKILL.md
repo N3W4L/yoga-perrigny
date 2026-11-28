@@ -8,7 +8,7 @@ description: Règles de contenu du site de l'association Chemins d'Éveil (yoga 
 ## Ne rien inventer
 
 - Horaires, tarifs, noms, dates : uniquement ce que donnent le site actuel
-  (yoga-perrigny.com) ou les PDF de l'association (liens dans `src/data/site.ts`).
+  (yoga-perrigny.com) ou les PDF de l'association (dans `public/documents/`).
 - **Aucune annotation sur le site** : pas de crochets « [à compléter] », pas
   de note de travail visible. Une information manquante est simplement absente
   de la page et notée dans `A-COMPLETER.md` (racine du dépôt, non publiée).
@@ -20,30 +20,27 @@ description: Règles de contenu du site de l'association Chemins d'Éveil (yoga 
 
 ## Où se trouve quoi
 
-- `public/documents/` : les PDF de l'association (formulaire, interruptions,
-  plaquette du stage, bibliothèque, article, fiches des professeures). Pour une
-  nouvelle édition, remplacer le fichier en gardant son nom, ou changer le chemin
-  dans `pdfs` (src/data/site.ts).
-- `src/data/site.ts` : coordonnées de l'association, chemins des PDF, **grille des
-  séances** (`days`). Les créneaux affichés sur les cartes des professeures en
-  sont tirés automatiquement (`slotsOf` dans index.astro), comme le créneau
-  du yoga adapté : ne modifier qu'à un seul endroit.
-- `src/pages/index.astro`, en tête : l'ordre des écrans (`stations`), le menu
-  du haut (`menu`, une entrée par écran ; un sous-écran pointe vers son parent
-  avec `data-nav`), les
-  professeures et leur présentation (`teachers`), les adresses d'envoi des
-  fiches (`senders`), les témoignages (`voices`). Les numéros de chapitre
-  (01, 02…) se calculent depuis `stations`.
-- `src/config.ts` : sections optionnelles (`showStage`, `showActualites`,
-  `showRessources`, `showTarifReduit`, `showReinscriptions`). **Après le
-  6 décembre 2026 : `showStage: false`.**
-- `src/pages/index.astro` : textes de toutes les sections.
-- Pages légales : `src/pages/mentions-legales.astro`, `src/pages/confidentialite.astro`.
+- **Tout le texte du site** : `src/contenu/*.json` (un fichier par écran, plus
+  `reglages.json` pour les coordonnées et les cases « afficher ») et
+  `src/contenu/pages/*.md` (pages légales). Ces fichiers sont aussi modifiés
+  par l'interface /admin (Sveltia CMS, `public/admin/config.yml`) : garder
+  les deux en accord. Un champ ajouté au JSON doit l'être aussi dans le schéma
+  `src/contenu/index.ts` et dans `config.yml`.
+- **Grille des séances** : `src/contenu/seances.json`. Les créneaux des
+  professeures et du yoga adapté en sont tirés (`slotsOf`, `adaptedSlots`).
+- **Stage** : la case `afficher.stage` de `reglages.json` le masque partout.
+  **Après le 6 décembre 2026 : la décocher.**
+- `public/documents/` : les PDF de l'association.
+- `src/pages/index.astro` : la mise en page et l'ordre des écrans (`stations`).
+  Le menu du haut se construit depuis `menu` (`src/contenu/index.ts`).
+- Mise en forme autorisée dans les textes : `*italique*`, `**gras**`,
+  `[lien](adresse)` (rendu par `src/lib/md.ts`).
 
 ## Photos
 
 - Originaux dans `src/assets/sources/` (jamais modifiés), versions retouchées
-  produites par `node scripts/photos.mjs` (cadrage et étalonnage commun).
+  produites par `npm run photos` dans `src/assets/photos/` (cadrage et
+  étalonnage commun). Le contenu référence une photo par `/photos/nom.jpg`.
   Pour une nouvelle photo : l'ajouter aux sources, ajouter une entrée au
   script, le relancer. Ne pas publier de photo sans l'accord des personnes
   reconnaissables (voir `A-COMPLETER.md`).

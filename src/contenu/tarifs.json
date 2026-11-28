@@ -1,0 +1,46 @@
+{
+  "menu": "Tarifs",
+  "chapitre": "2026-2027",
+  "titre": "Tarifs",
+  "texte": "Les professeures s’engagent à assurer 30 séances dans l’année.",
+  "prix": [
+    {
+      "intitule": "Adhésion",
+      "montant": "30 €",
+      "mentions": [
+        "Chèque à Chemins d’Éveil."
+      ]
+    },
+    {
+      "intitule": "Yoga classique",
+      "montant": "175 €",
+      "mentions": [
+        "Chèque à la professeure.",
+        "En plus de l’adhésion."
+      ]
+    },
+    {
+      "intitule": "Tarif réduit",
+      "montant": "85 €",
+      "mentions": [
+        "Pour les faibles revenus."
+      ]
+    },
+    {
+      "intitule": "Yoga adapté",
+      "montant": "185 €",
+      "mentions": [
+        "Chèque à Chemins d’Éveil.",
+        "Adhésion comprise.",
+        "Tarif réduit : voir le président."
+      ]
+    }
+  ],
+  "premiere_fois_titre": "Venir la première fois",
+  "premiere_fois": [
+    "Séance d’essai possible avant l’inscription : prévenez, au cas où le cours serait complet.",
+    "Tapis et support pour l’assise sont à disposition dans la salle.",
+    "Apportez une serviette pour le tapis et une couverture.",
+    "Une tenue souple, dans laquelle vous êtes à l’aise."
+  ]
+}

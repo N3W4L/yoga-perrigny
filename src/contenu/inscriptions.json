@@ -1,0 +1,53 @@
+{
+  "menu": "Inscriptions",
+  "chapitre": "S’inscrire",
+  "titre": "Inscriptions",
+  "document": {
+    "texte": "Télécharger le formulaire",
+    "fichier": "/documents/inscription-2026-2027.pdf"
+  },
+  "paragraphes": [
+    "Adressez la fiche remplie et le règlement à votre enseignante, et envoyez un courriel à [yogaperrigny@orange.fr](mailto:yogaperrigny@orange.fr). L’inscription est effective à réception des trois. Les inscriptions sont enregistrées dans l’ordre d’arrivée ; le nombre d’élèves est limité par séance.",
+    "**Réinscriptions** : avant le 1er septembre, par courrier ou lors d’une séance, avec la fiche et le règlement par chèque."
+  ],
+  "envoi_titre": "Envoi des fiches et renseignements",
+  "contacts": [
+    {
+      "nom": "Anne-Marie Meudre",
+      "adresse": [
+        "285, rue du puits à sel",
+        "39570 Perrigny"
+      ],
+      "telephone_affiche": "07 86 82 05 45",
+      "telephone": "+33786820545",
+      "email": ""
+    },
+    {
+      "nom": "Sandrine Peyronel",
+      "adresse": [],
+      "telephone_affiche": "",
+      "telephone": "",
+      "email": "yogaperrigny@orange.fr"
+    },
+    {
+      "nom": "Odile Sappez",
+      "adresse": [
+        "3, rue du petit Bourg",
+        "39570 Montaigu"
+      ],
+      "telephone_affiche": "06 23 95 12 37",
+      "telephone": "+33623951237",
+      "email": ""
+    },
+    {
+      "nom": "Françoise Bataillard",
+      "adresse": [
+        "130, rue du presbytère",
+        "39570 Revigny"
+      ],
+      "telephone_affiche": "06 26 25 65 88",
+      "telephone": "+33626256588",
+      "email": ""
+    }
+  ]
+}

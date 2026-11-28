@@ -1,0 +1,85 @@
+{
+  "menu": "Séances",
+  "chapitre": "La semaine",
+  "titre": "Les *séances*",
+  "accroche": "6 séances de yoga par semaine.",
+  "texte": "Yoga classique, sauf mention. Reprise les 15, 16 ou 17 septembre 2026 selon le jour.",
+  "jours": [
+    {
+      "jour": "Lundi",
+      "seances": [
+        {
+          "horaire": "18 h 45 à 20 h 15",
+          "professeure": "Françoise Bataillard",
+          "type": "Yoga classique"
+        }
+      ]
+    },
+    {
+      "jour": "Mardi",
+      "seances": [
+        {
+          "horaire": "15 h 00 à 16 h 15",
+          "professeure": "Odile Sappez",
+          "type": "Yoga adapté"
+        },
+        {
+          "horaire": "17 h 00 à 18 h 30",
+          "professeure": "Sandrine Peyronel",
+          "type": "Yoga classique"
+        },
+        {
+          "horaire": "18 h 45 à 20 h 15",
+          "professeure": "Sandrine Peyronel",
+          "type": "Yoga classique"
+        }
+      ]
+    },
+    {
+      "jour": "Mercredi",
+      "seances": [
+        {
+          "horaire": "17 h 45 à 19 h 15",
+          "professeure": "Sandrine Peyronel",
+          "type": "Yoga classique"
+        },
+        {
+          "horaire": "19 h 30 à 21 h 00",
+          "professeure": "Anne-Marie Meudre",
+          "type": "Yoga classique"
+        }
+      ]
+    }
+  ],
+  "interruptions": {
+    "titre": "Pas de séance, octobre 2026 – janvier 2027",
+    "periodes": [
+      {
+        "titre": "Vacances d’automne",
+        "lignes": [
+          "Sandrine : mardi 20 et mercredi 21 octobre",
+          "Anne-Marie : mercredis 21 et 28 octobre",
+          "Françoise : à préciser"
+        ]
+      },
+      {
+        "titre": "11 novembre",
+        "lignes": [
+          "Mercredi, férié : ni Anne-Marie ni Sandrine"
+        ]
+      },
+      {
+        "titre": "Vacances de Noël",
+        "lignes": [
+          "Sandrine : mardi 29 et mercredi 30 décembre",
+          "Anne-Marie : toutes les vacances scolaires",
+          "Françoise : à préciser"
+        ]
+      }
+    ],
+    "document": {
+      "texte": "Calendrier des animatrices",
+      "fichier": "/documents/interruptions-2026-2027.pdf"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "menu": "Le club",
+  "chapitre": "L’association",
+  "titre": "Le club",
+  "paragraphes": [
+    "À l’origine, le yoga se pratiquait pour atteindre la clarté du mental, le calme et l’apaisement des pensées. Aujourd’hui, l’enseignement reste ancré dans ses éléments originels, tout en s’ouvrant à la culture occidentale pour être accessible au plus grand nombre.",
+    "Les cours réunissent des jeunes, des moins jeunes et des personnes très avancées en âge (plus de 90 ans), aux capacités physiques variées : des débutants comme des pratiquants depuis 10, 15, voire 30 ans, en toute simplicité. Les personnes en difficulté bénéficient de séances de yoga adapté.",
+    "Une activité encouragée par notre maire, Christiane Maugain. Merci à elle."
+  ],
+  "document": {
+    "texte": "Article de présentation 2025",
+    "fichier": "/documents/article-2025.pdf"
+  },
+  "photo": "/photos/salle-2025-cadre.jpg",
+  "photo_description": "Cours de yoga dans la salle de sports de Perrigny : un groupe en fente, les bras levés au-dessus de la tête. Photo du 20 novembre 2025.",
+  "legende": "Salle de sports, 20 novembre 2025."
+}

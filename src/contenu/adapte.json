@@ -1,0 +1,21 @@
+{
+  "menu": "Yoga adapté",
+  "chapitre": "Pour chacun",
+  "titre": "Yoga *adapté*",
+  "accroche": "Des postures en douceur, accessibles à tous.",
+  "paragraphes": [
+    "Chemins d’Éveil propose du yoga adapté aux personnes qui ont des difficultés de mouvement (membres, dos…) du fait de l’âge, d’un accident ou d’une maladie.",
+    "Les séances ont lieu à la salle de sports de Perrigny, l’après-midi, en petit groupe. La salle est équipée d’un ascenseur."
+  ],
+  "intitule_seance": "Séance",
+  "infos": [
+    {
+      "intitule": "Tarif",
+      "texte": "185 € l’année, adhésion comprise"
+    },
+    {
+      "intitule": "Renseignements",
+      "texte": "Marc Comment · [06 01 86 51 07](tel:+33601865107) · [marc.comment@orange.fr](mailto:marc.comment@orange.fr). Rencontre possible chez vous, sur rendez-vous."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "seo": {
+    "titre": "Cours de yoga à Perrigny — Chemins d’Éveil",
+    "description": "Cours de yoga à Perrigny. Association Chemins d’Éveil, salle de sports, 76 rue du moulin, 39570 Perrigny."
+  },
+  "association": {
+    "nom": "Chemins d’Éveil",
+    "email": "yogaperrigny@orange.fr",
+    "contact_nom": "Marc Comment",
+    "telephone_affiche": "06 01 86 51 07",
+    "telephone": "+33601865107",
+    "contact_email": "marc.comment@orange.fr",
+    "rue": "76 rue du moulin",
+    "code_postal": "39570",
+    "ville": "Perrigny",
+    "salle": "Salle de sports (au-dessus de la salle des fêtes)"
+  },
+  "itineraire": "https://www.openstreetmap.org/search?query=76%20rue%20du%20moulin%2C%2039570%20Perrigny%2C%20France",
+  "afficher": {
+    "actualites": true,
+    "stage": true
+  }
+}

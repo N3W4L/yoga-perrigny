@@ -3,7 +3,8 @@
  *   node scripts/photos.mjs
  *
  * Sources : src/assets/sources/ (originaux, jamais modifiés).
- * Sorties : src/assets/ (utilisées par la page, optimisées ensuite par Astro).
+ * Sorties : src/assets/photos/ (utilisées par la page et par l'interface admin,
+ *   optimisées ensuite par Astro).
  *
  * Étalonnage commun, accordé à la palette (sable, lin, sauge) : saturation
  * réduite, noirs légèrement relevés (rendu mat), tonalité chaude, verts
@@ -13,7 +14,7 @@
 import sharp from 'sharp';
 
 const src = new URL('../src/assets/sources/', import.meta.url).pathname;
-const out = new URL('../src/assets/', import.meta.url).pathname;
+const out = new URL('../src/assets/photos/', import.meta.url).pathname;
 
 const grade = (image) =>
   image

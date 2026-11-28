@@ -1,0 +1,49 @@
+{
+  "menu": "Professeures",
+  "chapitre": "L’équipe",
+  "titre": "Professeures",
+  "liste": [
+    {
+      "nom": "Françoise Bataillard",
+      "initiales": "FB",
+      "type": "Yoga classique",
+      "photo": "",
+      "presentation": [
+        "Enseigne le yoga à l’association Chemins d’Éveil, à Perrigny."
+      ],
+      "fiche": ""
+    },
+    {
+      "nom": "Sandrine Peyronel",
+      "initiales": "SP",
+      "type": "Yoga classique",
+      "photo": "",
+      "presentation": [
+        "Enseigne le yoga à l’association Chemins d’Éveil, à Perrigny."
+      ],
+      "fiche": ""
+    },
+    {
+      "nom": "Anne-Marie Meudre",
+      "initiales": "AM",
+      "type": "Yoga classique",
+      "photo": "/photos/portrait-anne-marie-meudre.jpg",
+      "presentation": [
+        "Formée à l’École Française de Yoga Auvergne Rhône-Alpes (2002-2006), diplômée en 2006 : Yoga de l’énergie. Stages notamment avec Ora Josef Hay, Cécile Beaudin, Babacar Khane, Yvette Clouet, Maurice Daubard et Pierre Gariel.",
+        "Une séance : intériorisation, enchaînement avec respiration, relaxation, préparation des postures, postures, puis relaxation ou assise avec respiration et méditation."
+      ],
+      "fiche": "/documents/presentation-anne-marie-meudre.pdf"
+    },
+    {
+      "nom": "Odile Sappez",
+      "initiales": "OS",
+      "type": "Yoga adapté",
+      "photo": "",
+      "presentation": [
+        "Formée à l’École Française de Yoga Auvergne Rhône-Alpes (2011-2015), diplômée en 2016 : Yoga de l’énergie. Post-formation auprès de Yogi Babacar Khane (2017-2020) : yoga égyptien, yoga chinois, hatha yoga.",
+        "Une séance, selon la pédagogie de Maître Babacar Khane : intériorisation, yoga égyptien, yoga de la tradition chinoise, postures de yoga indien, relaxation et approche de la méditation."
+      ],
+      "fiche": "/documents/fiche-odile-sappez.pdf"
+    }
+  ]
+}
