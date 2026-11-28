@@ -1330,21 +1330,30 @@
   display: none;
 }
 
+/* --stop : longueur de défilement entre deux écrans. Plus elle est grande,
+   plus on avance doucement dans les cercles. Pas de scroll-snap ici : son
+   aimant ramènerait chaque cran de molette en arrière. souffle.ts pose
+   l'écran en douceur quand on s'arrête tout près de lui. */
 html.journey-3d {
+  --stop: 150dvh;
   scroll-behavior: auto;
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: none;
 }
 
 html.journey-3d .journey {
   position: relative;
 }
 
+html.journey-3d .journey {
+  height: calc((var(--n, 8) - 1) * var(--stop) + 100dvh);
+}
+
 html.journey-3d .journey[data-stations='8'] {
-  height: 800dvh;
+  --n: 8;
 }
 
 html.journey-3d .journey[data-stations='7'] {
-  height: 700dvh;
+  --n: 7;
 }
 
 html.journey-3d .snap-rail {
@@ -1356,10 +1365,15 @@ html.journey-3d .snap-rail {
   pointer-events: none;
 }
 
+/* Repères de station, espacés de --stop (souffle.ts y lit la longueur). */
 html.journey-3d .snap-stop {
-  flex: 1 0 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  flex: none;
+  height: 100dvh;
+  margin-bottom: calc(var(--stop) - 100dvh);
+}
+
+html.journey-3d .snap-stop:last-child {
+  margin-bottom: 0;
 }
 
 html:has(.souffle):not(.journey-3d) {
@@ -2016,33 +2030,36 @@ html.journey-3d .fold[open] .envoi {
    sinon souffle.ts applique les mêmes paliers (même table, même courbe). */
 
 @keyframes dive {
-  0% { opacity: 0; transform: scale(0.625); }
-  20% { opacity: 0.15; transform: scale(0.735); }
-  35% { opacity: 0.6; transform: scale(0.847); }
-  45% { opacity: 0.95; transform: scale(0.943); }
+  0% { opacity: 0; transform: scale(0.62); }
+  20% { opacity: 0.12; transform: scale(0.73); }
+  32.5% { opacity: 0.5; transform: scale(0.83); }
+  42.5% { opacity: 0.92; transform: scale(0.93); }
+  47% { opacity: 1; transform: scale(0.975); }
   50% { opacity: 1; transform: none; }
-  55% { opacity: 0.9; transform: scale(1.064); }
-  65% { opacity: 0.3; transform: scale(1.2); }
-  72%, 100% { opacity: 0; transform: scale(1.28); }
+  53% { opacity: 1; transform: scale(1.03); }
+  57.5% { opacity: 0.85; transform: scale(1.08); }
+  65% { opacity: 0.3; transform: scale(1.18); }
+  71%, 100% { opacity: 0; transform: scale(1.28); }
 }
 
 @keyframes pass {
-  0% { opacity: 0; transform: scale(0.3); }
-  30% { opacity: 0.2; transform: scale(0.42); }
-  60% { opacity: 0.25; transform: scale(0.62); }
-  80% { opacity: 0.7; transform: scale(0.95); }
-  91% { opacity: 0.35; transform: scale(1.3); }
+  0% { opacity: 0; transform: scale(0.22); }
+  31% { opacity: 0.18; transform: scale(0.3); }
+  62.5% { opacity: 0.25; transform: scale(0.5); }
+  78% { opacity: 0.45; transform: scale(0.72); }
+  87.5% { opacity: 0.6; transform: scale(1); }
+  94% { opacity: 0.4; transform: scale(1.3); }
   100% { opacity: 0; transform: scale(1.6); }
 }
 
 html.journey-css .plane.is-live {
   animation: dive linear both;
-  animation-range: calc((var(--i) - 1) * 100dvh) calc((var(--i) + 1) * 100dvh);
+  animation-range: calc((var(--i) - 1) * var(--stop)) calc((var(--i) + 1) * var(--stop));
 }
 
 html.journey-css .gate.is-live {
   animation: pass linear both;
-  animation-range: calc((var(--g) - 0.5) * 100dvh) calc((var(--g) + 0.6) * 100dvh);
+  animation-range: calc((var(--g) - 1) * var(--stop)) calc((var(--g) + 0.6) * var(--stop));
 }
 
 /* À part : le minifieur fusionnerait sinon la timeline dans le raccourci

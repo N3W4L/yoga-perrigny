@@ -6,7 +6,7 @@ const { chromium } = require('playwright');
   await p.goto(process.argv[2] || 'http://127.0.0.1:4321/yoga-perrigny/', { waitUntil: 'networkidle' });
   const n = await p.locator('.plane').count(); const seen = new Map();
   for (let i = 0; i < n; i++) {
-    await p.evaluate(i => scrollTo(0, i * innerHeight), i); await p.waitForTimeout(400);
+    await p.evaluate(i => { const [a, b] = document.querySelectorAll('.snap-stop'); scrollTo(0, i * (a && b ? b.offsetTop - a.offsetTop : innerHeight)); }, i); await p.waitForTimeout(400);
     const rows = await p.evaluate(i => {
       const parse = c => { const m = c.match(/[\d.]+/g).map(Number); const k = c.startsWith('color(') ? 255 : 1; return { r: m[0] * k, g: m[1] * k, b: m[2] * k, a: m.length > 3 ? m[3] : 1 }; };
       const lum = ({ r, g, b }) => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };

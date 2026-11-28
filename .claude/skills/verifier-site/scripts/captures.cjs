@@ -11,7 +11,12 @@ const [url = 'http://127.0.0.1:4321/yoga-perrigny/', out = '.', tag = 'ecran'] =
     await p.evaluate(() => document.querySelectorAll('img').forEach((i) => (i.loading = 'eager')));
     const n = await p.locator('.plane').count();
     for (let i = 0; i < n; i++) {
-      await p.evaluate((i) => scrollTo(0, i * innerHeight), i);
+      await p.evaluate((i) => {
+        // Les écrans sont espacés de --stop (souffle.css), lu sur les repères de station.
+        const [a, b] = document.querySelectorAll('.snap-stop');
+        const step = document.documentElement.classList.contains('journey-3d') && a && b ? b.offsetTop - a.offsetTop : innerHeight;
+        scrollTo(0, i * step);
+      }, i);
       await p.waitForTimeout(500);
       const info = await p.evaluate((i) => {
         const plane = document.querySelectorAll('.plane')[i];

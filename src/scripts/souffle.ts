@@ -43,15 +43,20 @@ if (root) {
     const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
     const last = planes.length - 1;
     const clamp = (value: number) => Math.max(0, Math.min(last, value));
+    /* Longueur de défilement d'un écran au suivant : --stop dans souffle.css. */
+    const firstStop = root.querySelector<HTMLElement>('.snap-stop');
+    const secondStop = firstStop?.nextElementSibling as HTMLElement | null;
+    const stopLength = () =>
+      (firstStop && secondStop ? secondStop.offsetTop - firstStop.offsetTop : 0) || window.innerHeight || 1;
 
     /* Paliers [progression, opacité, échelle] : identiques aux @keyframes dive et pass de souffle.css. */
     type Stop = readonly [number, number, number];
     const DIVE: readonly Stop[] = [
-      [0, 0, 0.625], [0.2, 0.15, 0.735], [0.35, 0.6, 0.847], [0.45, 0.95, 0.943],
-      [0.5, 1, 1], [0.55, 0.9, 1.064], [0.65, 0.3, 1.2], [0.72, 0, 1.28], [1, 0, 1.28],
+      [0, 0, 0.62], [0.2, 0.12, 0.73], [0.325, 0.5, 0.83], [0.425, 0.92, 0.93], [0.47, 1, 0.975],
+      [0.5, 1, 1], [0.53, 1, 1.03], [0.575, 0.85, 1.08], [0.65, 0.3, 1.18], [0.71, 0, 1.28], [1, 0, 1.28],
     ];
     const PASS: readonly Stop[] = [
-      [0, 0, 0.3], [0.3, 0.2, 0.42], [0.6, 0.25, 0.62], [0.8, 0.7, 0.95], [0.91, 0.35, 1.3], [1, 0, 1.6],
+      [0, 0, 0.22], [0.31, 0.18, 0.3], [0.625, 0.25, 0.5], [0.78, 0.45, 0.72], [0.875, 0.6, 1], [0.94, 0.4, 1.3], [1, 0, 1.6],
     ];
     const sample = (stops: readonly Stop[], t: number) => {
       const x = Math.max(0, Math.min(1, t));
@@ -88,8 +93,7 @@ if (root) {
 
     const frame = () => {
       raf = 0;
-      const stop = window.innerHeight || 1;
-      const position = clamp(window.scrollY / stop);
+      const position = clamp(window.scrollY / stopLength());
       markNav(clamp(Math.round(position)));
       paintProgress(last > 0 ? position / last : 0);
 
@@ -106,7 +110,7 @@ if (root) {
         }
       }
       for (let g = 0; g < gates.length; g++) {
-        const t = (position - (g - 0.5)) / 1.1;
+        const t = (position - (g - 1)) / 1.6;
         const live = t > -0.02 && t < 1.02;
         if (live !== gateLive[g]) {
           gateLive[g] = live;
@@ -121,14 +125,32 @@ if (root) {
     };
 
     let raf = 0;
+    /* Aimant doux : à l'arrêt du défilement, si l'on arrive à moins de 20 % d'un
+       écran (dans le sens où l'on avance), on le pose. On ne ramène jamais vers
+       l'écran qu'on vient de quitter : chaque cran de molette fait avancer. */
+    let settleTimer = 0;
+    let lastY = window.scrollY;
+    let heading = 0;
+    const settle = () => {
+      const length = stopLength();
+      const position = window.scrollY / length;
+      const ahead = heading > 0 ? Math.ceil(position - 0.002) : Math.floor(position + 0.002);
+      const target = clamp(ahead);
+      const gap = Math.abs(position - target);
+      if (heading !== 0 && gap > 0.002 && gap < 0.2) window.scrollTo({ top: target * length, behavior: 'smooth' });
+    };
     const request = () => {
       if (!raf) raf = requestAnimationFrame(frame);
+      const y = window.scrollY;
+      if (y !== lastY) heading = Math.sign(y - lastY);
+      lastY = y;
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(settle, 180);
     };
 
-    /* Le cran (scroll-snap) fait le travail : molette, flèches, Page suivante,
-       espace, Début et Fin avancent d'un écran sans script. */
+    /* Le défilement natif fait avancer petit à petit dans les cercles. */
     const go = (index: number, smooth: boolean) => {
-      window.scrollTo({ top: clamp(index) * window.innerHeight, behavior: smooth ? 'smooth' : 'auto' });
+      window.scrollTo({ top: clamp(index) * stopLength(), behavior: smooth ? 'smooth' : 'auto' });
       if (menu) menu.open = false;
     };
 
