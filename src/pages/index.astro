@@ -11,6 +11,25 @@ import Base from '../layouts/Base.astro';
 import '../styles/souffle.css';
 
 const mailto = `mailto:${association.email}`;
+const home = new URL(import.meta.env.BASE_URL, Astro.site).href;
+/* Données structurées pour les moteurs de recherche (bloc de données, non exécuté : compatible avec la CSP). */
+const structuredData = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'SportsActivityLocation',
+  name: `${association.name} — Yoga Perrigny`,
+  description: 'Association de yoga à Perrigny (Jura) : cours hebdomadaires, yoga adapté et stages.',
+  url: home,
+  image: new URL('og.jpg', home).href,
+  email: association.email,
+  telephone: association.phoneTel,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: association.street,
+    postalCode: '39570',
+    addressLocality: 'Perrigny',
+    addressCountry: 'FR',
+  },
+}).replace(/</g, '\\u003c');
 const voices = [
   {
     name: 'Claudette',
@@ -51,6 +70,7 @@ const voices = [
   title="Cours de yoga à Perrigny — Chemins d’Éveil"
   description="Cours de yoga à Perrigny. Association Chemins d’Éveil, salle de sports, 76 rue du moulin, 39570 Perrigny."
 >
+  <script slot="head" type="application/ld+json" is:inline set:html={structuredData} />
   <div class="souffle">
     <header class="s-nav" data-header>
       <a class="s-mark" href="#accueil" aria-label="Yoga Perrigny, accueil"><Logo /></a>
@@ -585,7 +605,7 @@ const voices = [
               widths={[480, 768, 1024]}
               sizes="(min-width: 62rem) 40rem, 100vw"
               alt="Extérieur du bâtiment des cours, à Perrigny : façade en pierre claire, jardinières fleuries et rue ensoleillée."
-              quality={72}
+              quality={62}
             />
             <figcaption>
               Le bâtiment, rue du moulin.

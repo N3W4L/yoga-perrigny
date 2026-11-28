@@ -217,13 +217,6 @@ a:hover {
   font-size: 0.95em;
 }
 
-.caption {
-  margin-top: 0.65rem;
-  color: var(--greige);
-  font-size: 0.84rem;
-  letter-spacing: 0.01em;
-}
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -257,16 +250,6 @@ a:hover {
   background: transparent;
   color: var(--sage-deep);
   border-color: var(--sage-deep);
-}
-
-.btn-on-dark {
-  background: var(--sand);
-  color: var(--ink);
-}
-
-.btn-on-dark:hover {
-  background: var(--paper);
-  color: var(--ink);
 }
 
 .frame {
@@ -498,96 +481,7 @@ a:hover {
   }
 }
 
-/* Hero */
-
-.hero-media {
-  background: var(--sand-2);
-}
-
-.hero-copy {
-  position: relative;
-  width: min(46rem, calc(100% - 2rem));
-  margin: -2.4rem auto 0;
-  padding: 1.35rem 0 0;
-  background: var(--sand);
-}
-
-.hero h1 {
-  font-size: var(--step-h);
-  font-weight: 400;
-  line-height: 0.92;
-  margin-bottom: 1.15rem;
-}
-
-.hero h1 em {
-  font-style: italic;
-  font-weight: 400;
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-top: 1.6rem;
-}
-
-.where {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  margin-top: 1.75rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--linen);
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-@media (min-width: 48rem) {
-  .hero-copy {
-    margin-left: max(1rem, calc((100% - var(--wrap)) / 2));
-    margin-right: auto;
-    margin-top: -4.5rem;
-    padding-right: 1.5rem;
-  }
-}
-
-@media (min-width: 62rem) {
-  .hero-copy {
-    margin-top: -7.5rem;
-  }
-}
-
 /* Actualités */
-
-.news {
-  background: var(--sand-2);
-  padding-block: clamp(1.75rem, 4vw, 2.75rem);
-}
-
-.news h2 {
-  font-family: var(--sans);
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--sage-deep);
-  margin-bottom: 1rem;
-}
-
-.news-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.85rem;
-}
-
-.news-list a {
-  font-weight: 500;
-}
 
 .absences {
   margin-top: 1.15rem;
@@ -608,18 +502,6 @@ a:hover {
   color: var(--ink);
 }
 
-.absence-block + .absence-block {
-  margin-top: 1.1rem;
-}
-
-.absence-block h3 {
-  font-family: var(--sans);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  margin-bottom: 0.35rem;
-}
-
 .absences ul {
   margin: 0.2rem 0 0;
   padding-left: 1.1rem;
@@ -637,15 +519,9 @@ a:hover {
   background: var(--paper);
 }
 
-.club-grid,
-.split,
-.stage-grid {
+.club-grid {
   display: grid;
   gap: 2rem;
-}
-
-.prose-block p + p {
-  margin-top: 1rem;
 }
 
 .pull {
@@ -658,15 +534,8 @@ a:hover {
   color: var(--sage-deep);
 }
 
-.note {
-  margin-top: 1.5rem;
-  max-width: 40rem;
-}
-
 @container wrap (min-width: 46rem) {
-  .club-grid,
-  .split,
-  .stage-grid {
+  .club-grid {
     grid-template-columns: 1.05fr 0.95fr;
     gap: clamp(2rem, 4vw, 4.5rem);
     align-items: start;
@@ -677,17 +546,11 @@ a:hover {
 
 /* Les grilles répondent à la largeur du `.wrap` (container queries), pas au viewport. */
 
-.offer-grid,
-.price-grid,
-.week,
-.teacher-grid,
-.quote-grid {
+.week {
   display: grid;
   gap: 1rem;
 }
 
-.offer,
-.price,
 .day {
   background: var(--paper);
   padding: 1.35rem 1.3rem 1.4rem;
@@ -699,32 +562,14 @@ a[href^='tel:'] {
   white-space: nowrap;
 }
 
-.offer h3,
-.price h3,
 .day h3,
 .teacher h3 {
   font-size: 1.55rem;
   margin-bottom: 0.75rem;
 }
 
-.offer p + p,
-.price p + p {
-  margin-top: 0.75rem;
-}
-
-.offer:hover,
-.price:hover,
 .day:hover {
   border-top-color: var(--sage);
-}
-
-.kicker {
-  margin: 0 0 0.35rem;
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--sage-deep);
 }
 
 .voices {
@@ -736,66 +581,11 @@ a[href^='tel:'] {
   margin-bottom: 1.25rem;
 }
 
-.quote {
-  margin: 0;
-  padding: 0.25rem 0 0.5rem;
-  border-top: 1px solid var(--linen);
-}
-
-.quote blockquote {
-  margin: 0;
-}
-
-.quote p {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 1.2rem;
-  line-height: 1.4;
-  letter-spacing: -0.015em;
-}
-
-.quote p + p {
-  margin-top: 0.7rem;
-}
-
-.quote figcaption {
-  margin-top: 0.85rem;
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.quote-feature {
-  background: var(--paper);
-  padding: 1.5rem 1.3rem 1.4rem;
-  border-top: none;
-}
-
-.quote-feature p {
-  font-size: clamp(1.55rem, 3vw, 2.15rem);
-  line-height: 1.28;
-}
-
 @container wrap (min-width: 40rem) {
-  .offer-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-  }
 
   .week {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
-  }
-
-  .quote-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem 2rem;
-  }
-
-  .quote-feature {
-    grid-column: 1 / -1;
   }
 }
 
@@ -803,31 +593,10 @@ a[href^='tel:'] {
    which on a phone in a full-width wrap is still one column because the
    container is the grid itself (inline size ≈ viewport). Good. */
 
-.reprise {
-  margin-top: 1.25rem;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-
 /* Tarifs */
 
 .tarifs {
   background: var(--paper);
-}
-
-.price-value {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(3rem, 6vw, 4.1rem);
-  letter-spacing: -0.03em;
-  line-height: 0.9;
-  margin: 0.4rem 0 0.85rem;
-}
-
-.price-value span {
-  font-size: 0.42em;
-  letter-spacing: 0;
-  margin-left: 0.15rem;
 }
 
 .fine {
@@ -841,71 +610,6 @@ a[href^='tel:'] {
   margin-bottom: 0.45rem;
 }
 
-.contacts {
-  list-style: none;
-  margin: 0.4rem 0 0;
-  padding: 0;
-}
-
-.contacts li + li {
-  margin-top: 0.85rem;
-}
-
-.contacts a {
-  font-weight: 500;
-}
-
-@container wrap (min-width: 42rem) {
-  .price-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.15rem;
-  }
-}
-
-@container wrap (min-width: 64rem) {
-  .price-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .price-grid.cols-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Première séance */
-
-.point-list {
-  list-style: none;
-  margin: 1.75rem 0 0;
-  padding: 0;
-  display: grid;
-  gap: 1.15rem;
-}
-
-.point-list li {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.9rem;
-  align-items: baseline;
-  padding-top: 0.9rem;
-  border-top: 1px solid var(--linen);
-}
-
-.point-list .num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 1.35rem;
-  color: var(--sage-deep);
-  line-height: 1;
-}
-
-@container wrap (min-width: 46rem) {
-  .point-list {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem 2.5rem;
-  }
-}
-
 /* Stage */
 
 .stage {
@@ -913,8 +617,7 @@ a[href^='tel:'] {
   color: var(--sand);
 }
 
-.stage .eyebrow,
-.stage .kicker {
+.stage .eyebrow {
   color: var(--linen);
 }
 
@@ -935,14 +638,6 @@ a[href^='tel:'] {
   color: var(--linen);
 }
 
-.stage-kicker {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
-  line-height: 1.3;
-  margin: -0.4rem 0 1.1rem;
-}
-
 .stage p + p,
 .stage ul + p,
 .stage p + ul {
@@ -954,34 +649,7 @@ a[href^='tel:'] {
   padding-left: 1.1rem;
 }
 
-.stage-card {
-  background: color-mix(in srgb, var(--sand) 8%, transparent);
-  border-top: 1px solid var(--linen);
-  padding: 1.35rem 1.25rem 1.5rem;
-}
-
-.stage-card .price-value {
-  font-size: clamp(2.4rem, 4vw, 3.2rem);
-  margin-bottom: 0.2rem;
-}
-
-.stage-card .row + .row {
-  margin-top: 1.15rem;
-  padding-top: 1.15rem;
-  border-top: 1px solid color-mix(in srgb, var(--linen) 45%, transparent);
-}
-
-.limited {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 1.25rem;
-}
-
 /* Professeurs */
-
-.teacher-grid {
-  gap: 1.75rem 1.5rem;
-}
 
 .teacher {
   display: grid;
@@ -990,47 +658,13 @@ a[href^='tel:'] {
   align-items: start;
 }
 
-.avatar,
-.monogram {
-  width: 5.5rem;
-  height: 5.5rem;
-  border-radius: 50%;
-}
-
-.avatar {
-  object-fit: cover;
-  background: var(--sand-2);
-}
-
-.monogram {
-  display: grid;
-  place-items: center;
-  background: var(--sand-2);
-  color: var(--sage-deep);
-  font-family: var(--serif);
-  font-size: 1.35rem;
-  letter-spacing: 0.04em;
-}
-
 .teacher h3 {
   font-size: 1.65rem;
   margin-bottom: 0.3rem;
 }
 
-.teacher .when {
-  margin: 0 0 0.65rem;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
 .teacher p + p {
   margin-top: 0.55rem;
-}
-
-@container wrap (min-width: 46rem) {
-  .teacher-grid {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 /* Lieu */
@@ -1049,52 +683,6 @@ a[href^='tel:'] {
 
 .address span {
   display: block;
-}
-
-/* Ressources */
-
-.ressources {
-  background: var(--sand-2);
-  padding-block: clamp(3rem, 6vw, 4.5rem);
-}
-
-/* Contact */
-
-.contact-mail {
-  display: inline-block;
-  margin-top: 0.35rem;
-  font-family: var(--serif);
-  font-size: clamp(1.7rem, 4vw, 2.7rem);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  color: var(--ink);
-  text-decoration-thickness: 1px;
-  overflow-wrap: anywhere;
-}
-
-.contact-grid {
-  display: grid;
-  gap: 1.75rem;
-  margin-top: 2rem;
-}
-
-.contact-grid h3 {
-  font-size: 1.35rem;
-  margin-bottom: 0.4rem;
-}
-
-@container wrap (min-width: 42rem) {
-  .contact-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem 3rem;
-  }
-}
-
-@container wrap (min-width: 60rem) {
-  .contact-grid {
-    grid-template-columns: 1.1fr 0.9fr 1.3fr;
-  }
 }
 
 /* Footer */
@@ -1224,10 +812,6 @@ a[href^='tel:'] {
   width: 42%;
 }
 
-.stack {
-  margin-top: 1.75rem;
-}
-
 .stack-top {
   margin-top: 1rem;
 }
@@ -1304,14 +888,6 @@ strong {
 /* Reveal — only where scroll-driven animations exist, and never if reduced motion. */
 
 @supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      animation: rise linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 28%;
-      animation-duration: auto;
-    }
-  }
 }
 
 @keyframes rise {
@@ -1344,12 +920,6 @@ strong {
     width: min(var(--wrap), calc(100% - 3rem));
   }
 
-  .news-list {
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem 2rem;
-  }
-
-  .news-list .span-2,
   .absences {
     grid-column: 1 / -1;
   }
@@ -1359,7 +929,6 @@ strong {
   .header,
   .to-top,
   .nav-mobile,
-  .hero-actions,
   .btn {
     display: none !important;
   }
