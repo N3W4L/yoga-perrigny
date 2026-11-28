@@ -1,0 +1,68 @@
+{
+  "menu": "Stage",
+  "chapitre": "4 au 6 décembre 2026",
+  "titre": "*Passages*",
+  "accroche": "Au seuil de l’hiver, un voyage intérieur.",
+  "paragraphes": [
+    "Une invitation à ralentir, à écouter ce qui bat au cœur de soi : postures lentes, souffle, yoga nidra, méditation.",
+    "22 places, réservations auprès des professeures."
+  ],
+  "rendez_vous": [
+    {
+      "titre": "Soirée mantras · vendredi 4",
+      "prix": "25 €",
+      "paragraphes": [
+        "18 h 30 – 21 h 30. Chants du monde et mantras, ouverte à tous. Chèque à l’ordre de « S. Schatz-Botti et F. Botti »."
+      ]
+    },
+    {
+      "titre": "Stage · samedi 5 et dimanche 6",
+      "prix": "80 €",
+      "paragraphes": [
+        "Samedi 9 h – 17 h, dimanche 9 h – 12 h. 60 € le samedi seul. Chèque à l’ordre de « Association Chemins d’Éveil »."
+      ]
+    },
+    {
+      "titre": "Où et quand",
+      "prix": "",
+      "paragraphes": [
+        "[Salle de sports de Perrigny](#lieu)",
+        "Inscription avant le 25 novembre."
+      ]
+    }
+  ],
+  "document": {
+    "texte": "Télécharger la plaquette",
+    "fichier": "/documents/stage-passages-decembre-2026.pdf"
+  },
+  "programme": {
+    "chapitre": "Le stage en pratique",
+    "titre": "Programme et *intervenants*",
+    "colonnes": [
+      {
+        "titre": "Déroulement",
+        "paragraphes": [
+          "**Samedi** : accueil dès 9 h ; pratique de 9 h 30 à 12 h 30 ; repas de 12 h 30 à 13 h 45 (prévoir un repas léger) ; échange et pratique de 13 h 45 à 17 h.",
+          "**Dimanche** : pratique de 9 h à 12 h.",
+          "**À apporter** : couverture, tenue chaude et confortable, support pour l’assise. Pour la soirée : votre tasse marquée à votre nom ; tisanes et eau chaude sur place, collation à partager."
+        ]
+      },
+      {
+        "titre": "Sibylle Schatz-Botti et François Botti",
+        "paragraphes": [
+          "Née en Allemagne, Sibylle découvre le yoga en 1996 et devient professeure (BDY/EYU) en 2001 ; elle enseigne en France depuis 2005, en cours collectifs et en soirées « mantra et méditation ». François découvre le yoga en Inde en 1985 ; diplômé de l’École Française de Yoga de Lyon en 2005 (Yoga de l’énergie), il enseigne depuis 2003.",
+          "Depuis 2019, tous deux suivent l’enseignement de Bernard Bouanchaud (Viniyoga Fondation France) ; ils sont certifiés en yogathérapie depuis février 2025."
+        ]
+      },
+      {
+        "titre": "Inscription",
+        "paragraphes": [
+          "Ouvert à tous, priorité aux adhérents. Le week-end complet est conseillé et prioritaire.",
+          "Bulletin et règlement à Françoise Bataillard, 130 rue du presbytère, 39570 Revigny.",
+          "Aucun remboursement en cas de désistement moins d’une semaine avant le stage.",
+          "Renseignements : Anne-Marie Meudre, [07 86 82 05 45](tel:+33786820545) ; Françoise Bataillard, [06 26 25 65 88](tel:+33626256588)."
+        ]
+      }
+    ]
+  }
+}

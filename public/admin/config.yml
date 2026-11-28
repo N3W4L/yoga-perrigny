@@ -1,0 +1,414 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+#
+# Interface d'administration (Sveltia CMS) : https://n3w4l.github.io/yoga-perrigny/admin/
+# Chaque enregistrement crée un commit sur la branche main ; GitHub Actions
+# republie le site en une à deux minutes. Mode d'emploi : ADMIN.md.
+
+backend:
+  name: github
+  repo: N3W4L/yoga-perrigny
+  branch: main
+  auth_methods: [token]
+  commit_messages:
+    create: 'Contenu : créer {{collection}} « {{slug}} »'
+    update: 'Contenu : modifier « {{slug}} »'
+    delete: 'Contenu : supprimer « {{slug}} »'
+    uploadMedia: 'Contenu : ajouter le fichier « {{path}} »'
+    deleteMedia: 'Contenu : supprimer le fichier « {{path}} »'
+
+app_title: Chemins d’Éveil · administration
+site_url: https://n3w4l.github.io/yoga-perrigny/
+logo:
+  src: /yoga-perrigny/apple-touch-icon.png
+show_preview_links: false
+
+# Photos : rangées dans src/assets/photos/ puis optimisées par le site.
+media_folder: src/assets/photos
+public_folder: /photos
+
+editor:
+  preview: false
+
+collections:
+  - name: contenu
+    label: Contenu du site
+    label_singular: section
+    icon: web
+    description: Les écrans de la page d’accueil, dans l’ordre du trajet.
+    format: json
+    files:
+      - name: reglages
+        label: Réglages et coordonnées
+        icon: settings
+        file: src/contenu/reglages.json
+        fields:
+          - name: afficher
+            label: Afficher
+            widget: object
+            fields:
+              - name: stage
+                label: Le stage (écrans Stage et Programme)
+                widget: boolean
+                hint: Décochez après la date du stage pour le retirer du site.
+              - name: actualites
+                label: Le bloc « À la une » de l’accueil
+                widget: boolean
+          - name: association
+            label: Association
+            widget: object
+            fields:
+              - { name: nom, label: Nom, widget: string }
+              - { name: email, label: E-mail principal, widget: string, type: email }
+              - { name: contact_nom, label: Personne à contacter, widget: string }
+              - { name: telephone_affiche, label: Téléphone (affiché), widget: string, hint: 'Ex. : 06 01 86 51 07' }
+              - { name: telephone, label: Téléphone (format international), widget: string, hint: 'Ex. : +33601865107 (sert au lien d’appel)' }
+              - { name: contact_email, label: E-mail de la personne à contacter, widget: string, type: email }
+              - { name: rue, label: Adresse (rue), widget: string }
+              - { name: code_postal, label: Code postal, widget: string }
+              - { name: ville, label: Ville, widget: string }
+              - { name: salle, label: Salle, widget: string }
+          - { name: itineraire, label: Lien de l’itinéraire (carte), widget: string, type: url }
+          - name: seo
+            label: Moteurs de recherche et partage
+            widget: object
+            collapsed: true
+            fields:
+              - { name: titre, label: Titre de l’onglet, widget: string }
+              - { name: description, label: Description, widget: text }
+
+      - name: accueil
+        label: Accueil
+        icon: home
+        file: src/contenu/accueil.json
+        fields:
+          - { name: surtitre, label: Surtitre, widget: string }
+          - &titre
+            name: titre
+            label: Titre
+            widget: string
+            hint: Entourez un mot d’astérisques pour l’écrire en italique, par exemple « Les *séances* ».
+          - { name: texte, label: Texte d’introduction, widget: text }
+          - { name: bouton_seances, label: Bouton vers les séances, widget: string }
+          - { name: bouton_ecrire, label: Bouton « écrire », widget: string }
+          - { name: a_la_une_titre, label: Titre du bloc d’actualités, widget: string }
+          - name: a_la_une
+            label: À la une
+            label_singular: actualité
+            widget: list
+            summary: '{{fields.texte}}'
+            fields:
+              - { name: texte, label: Texte, widget: string }
+              - name: cible
+                label: Mène à l’écran
+                widget: select
+                options:
+                  - { label: Le club, value: club }
+                  - { label: Séances, value: seances }
+                  - { label: Yoga adapté, value: adapte }
+                  - { label: Professeures, value: professeurs }
+                  - { label: Tarifs, value: tarifs }
+                  - { label: Inscriptions, value: inscriptions }
+                  - { label: Stage, value: stage }
+                  - { label: Témoignages, value: paroles }
+                  - { label: Lieu, value: lieu }
+                  - { label: Contact, value: contact }
+
+      - name: club
+        label: 01 · Le club
+        icon: groups
+        file: src/contenu/club.json
+        fields:
+          - &menu
+            name: menu
+            label: Libellé dans le menu du haut
+            widget: string
+          - &chapitre
+            name: chapitre
+            label: Surtitre
+            widget: string
+            hint: Petit texte en capitales au-dessus du titre. Le numéro de l’écran (01, 02…) est ajouté automatiquement.
+          - *titre
+          - &paragraphes
+            name: paragraphes
+            label: Paragraphes
+            label_singular: paragraphe
+            widget: list
+            field: { name: texte, label: Paragraphe, widget: text }
+            hint: 'Mise en forme : *italique*, **gras**, [texte du lien](adresse). Une adresse qui commence par « / » pointe vers le site.'
+          - &document
+            name: document
+            label: Document (PDF)
+            widget: object
+            fields:
+              - { name: texte, label: Texte du lien ou du bouton, widget: string }
+              - name: fichier
+                label: Fichier PDF
+                widget: file
+                accept: application/pdf
+                media_folder: /public/documents
+                public_folder: /documents
+                choose_url: false
+          - &photo
+            name: photo
+            label: Photo
+            widget: image
+            accept: image/jpeg,image/png,image/webp
+            choose_url: false
+            hint: Photo horizontale de bonne qualité (au moins 1 200 pixels de large), cadrée au format 3:2. Le site l’optimise automatiquement (formats modernes, plusieurs tailles).
+          - { name: photo_description, label: Description de la photo, widget: text, hint: Pour les personnes aveugles et les moteurs de recherche ; décrivez ce que l’on voit. }
+          - { name: legende, label: Légende sous la photo, widget: string, required: false }
+
+      - name: seances
+        label: 02 · Séances
+        icon: calendar_month
+        file: src/contenu/seances.json
+        fields:
+          - *menu
+          - *chapitre
+          - *titre
+          - { name: accroche, label: Phrase d’accroche, widget: string }
+          - { name: texte, label: Texte, widget: text }
+          - name: jours
+            label: Jours de cours
+            label_singular: jour
+            widget: list
+            summary: '{{fields.jour}}'
+            hint: Les créneaux apparaissent aussi automatiquement sur la fiche de chaque professeure et sur l’écran Yoga adapté.
+            fields:
+              - { name: jour, label: Jour, widget: string }
+              - name: seances
+                label: Séances
+                label_singular: séance
+                widget: list
+                summary: '{{fields.horaire}} · {{fields.professeure}}'
+                fields:
+                  - { name: horaire, label: Horaire, widget: string, hint: 'Ex. : 18 h 45 à 20 h 15' }
+                  - { name: professeure, label: Professeure, widget: string, hint: Même orthographe que sur l’écran Professeures. }
+                  - { name: type, label: Type, widget: select, options: [Yoga classique, Yoga adapté], default: Yoga classique }
+          - name: interruptions
+            label: Interruptions des cours
+            widget: object
+            fields:
+              - { name: titre, label: Titre, widget: string }
+              - name: periodes
+                label: Périodes
+                label_singular: période
+                widget: list
+                summary: '{{fields.titre}}'
+                fields:
+                  - { name: titre, label: Période, widget: string }
+                  - { name: lignes, label: Lignes, label_singular: ligne, widget: list, field: { name: ligne, label: Ligne, widget: string } }
+              - { <<: *document, label: Calendrier (PDF) }
+
+      - name: adapte
+        label: 03 · Yoga adapté
+        icon: accessibility_new
+        file: src/contenu/adapte.json
+        fields:
+          - *menu
+          - *chapitre
+          - *titre
+          - { name: accroche, label: Phrase d’accroche, widget: string }
+          - *paragraphes
+          - { name: intitule_seance, label: Intitulé de la ligne « séance », widget: string, hint: Le créneau est repris automatiquement de la grille des séances. }
+          - name: infos
+            label: Informations pratiques
+            label_singular: information
+            widget: list
+            summary: '{{fields.intitule}}'
+            fields:
+              - { name: intitule, label: Intitulé, widget: string }
+              - { name: texte, label: Texte, widget: text, hint: 'Lien : [texte](adresse) ; téléphone : [06 01 86 51 07](tel:+33601865107)' }
+
+      - name: professeures
+        label: 04 · Professeures
+        icon: school
+        file: src/contenu/professeures.json
+        fields:
+          - *menu
+          - *chapitre
+          - *titre
+          - name: liste
+            label: Professeures
+            label_singular: professeure
+            widget: list
+            summary: '{{fields.nom}}'
+            thumbnail: photo
+            hint: Les horaires de chacune sont repris automatiquement de la grille des séances (même nom).
+            fields:
+              - { name: nom, label: Nom, widget: string }
+              - { name: initiales, label: Initiales (si pas de photo), widget: string, maxlength: 3 }
+              - { name: type, label: Type de cours, widget: string }
+              - { <<: *photo, label: Portrait, required: false, hint: Photo carrée ou centrée sur le visage. }
+              - { <<: *paragraphes, label: Présentation }
+              - name: fiche
+                label: Fiche de présentation (PDF)
+                widget: file
+                required: false
+                accept: application/pdf
+                media_folder: /public/documents
+                public_folder: /documents
+                choose_url: false
+
+      - name: tarifs
+        label: 05 · Tarifs
+        icon: euro
+        file: src/contenu/tarifs.json
+        fields:
+          - *menu
+          - *chapitre
+          - *titre
+          - { name: texte, label: Texte, widget: text }
+          - name: prix
+            label: Tarifs
+            label_singular: tarif
+            widget: list
+            summary: '{{fields.intitule}} · {{fields.montant}}'
+            hint: Trois ou quatre tarifs pour une mise en page équilibrée.
+            fields:
+              - { name: intitule, label: Intitulé, widget: string }
+              - { name: montant, label: Montant, widget: string, hint: 'Ex. : 175 €' }
+              - { name: mentions, label: Mentions, label_singular: mention, widget: list, field: { name: mention, label: Mention, widget: string }, hint: Une mention courte par ligne. }
+          - { name: premiere_fois_titre, label: Titre « venir la première fois », widget: string }
+          - { name: premiere_fois, label: Conseils, label_singular: conseil, widget: list, field: { name: conseil, label: Conseil, widget: string } }
+
+      - name: inscriptions
+        label: 06 · Inscriptions
+        icon: edit_document
+        file: src/contenu/inscriptions.json
+        fields:
+          - *menu
+          - *chapitre
+          - *titre
+          - { <<: *document, label: Formulaire d’inscription (PDF) }
+          - *paragraphes
+          - { name: envoi_titre, label: Titre des adresses d’envoi, widget: string }
+          - name: contacts
+            label: Adresses d’envoi
+            label_singular: adresse
+            widget: list
+            summary: '{{fields.nom}}'
+            fields:
+              - { name: nom, label: Nom, widget: string }
+              - { name: adresse, label: Adresse, label_singular: ligne, widget: list, required: false, field: { name: ligne, label: Ligne, widget: string } }
+              - { name: telephone_affiche, label: Téléphone (affiché), widget: string, required: false }
+              - { name: telephone, label: Téléphone (format international), widget: string, required: false, hint: 'Ex. : +33786820545' }
+              - { name: email, label: E-mail, widget: string, required: false }
+
+      - name: stage
+        label: 07 · Stage et programme
+        icon: event
+        file: src/contenu/stage.json
+        fields:
+          - *menu
+          - *chapitre
+          - *titre
+          - { name: accroche, label: Phrase d’accroche, widget: string }
+          - *paragraphes
+          - name: rendez_vous
+            label: Rendez-vous
+            label_singular: rendez-vous
+            widget: list
+            summary: '{{fields.titre}}'
+            fields:
+              - { name: titre, label: Titre, widget: string }
+              - { name: prix, label: Prix, widget: string, required: false }
+              - *paragraphes
+          - { <<: *document, label: Plaquette (PDF) }
+          - name: programme
+            label: Écran « Programme »
+            widget: object
+            fields:
+              - *chapitre
+              - *titre
+              - name: colonnes
+                label: Colonnes
+                label_singular: colonne
+                widget: list
+                summary: '{{fields.titre}}'
+                fields:
+                  - { name: titre, label: Titre, widget: string }
+                  - *paragraphes
+
+      - name: temoignages
+        label: 08 · Témoignages
+        icon: format_quote
+        file: src/contenu/temoignages.json
+        fields:
+          - *menu
+          - *chapitre
+          - *titre
+          - name: citation
+            label: Citation mise en avant
+            widget: object
+            fields:
+              - { name: texte, label: Citation (sans guillemets), widget: text }
+              - { name: auteur, label: Auteur, widget: string }
+          - name: voix
+            label: Témoignages
+            label_singular: témoignage
+            widget: list
+            summary: '{{fields.auteur}}'
+            fields:
+              - { name: auteur, label: Auteur, widget: string }
+              - { name: phrases, label: Phrases (sans guillemets), label_singular: phrase, widget: list, field: { name: phrase, label: Phrase, widget: text } }
+
+      - name: lieu
+        label: 09 · Lieu
+        icon: location_on
+        file: src/contenu/lieu.json
+        fields:
+          - *menu
+          - *chapitre
+          - *titre
+          - { name: texte_acces, label: Accessibilité, widget: string, hint: L’adresse et la salle se modifient dans « Réglages et coordonnées ». }
+          - { name: texte_itineraire, label: Texte du lien d’itinéraire, widget: string }
+          - { name: ressources, label: Ressources, label_singular: ressource, widget: list, required: false, field: { name: ressource, label: Ressource, widget: string }, hint: 'Lien : [texte](adresse)' }
+          - { <<: *photo, hint: Photo verticale de bonne qualité (format 4:5 conseillé). }
+          - { name: photo_description, label: Description de la photo, widget: text }
+          - { name: legende, label: Légende sous la photo, widget: string, required: false }
+
+      - name: contact
+        label: 10 · Contact
+        icon: mail
+        file: src/contenu/contact.json
+        fields:
+          - *menu
+          - *chapitre
+          - *titre
+          - { name: texte, label: Texte, widget: string }
+          - { name: lien_envoi, label: Lien vers les adresses d’envoi, widget: string }
+          - { name: pied_de_page, label: Mention en pied de page, widget: string }
+
+  - name: pages
+    label: Pages légales
+    label_singular: page
+    icon: gavel
+    files:
+      - name: mentions-legales
+        label: Mentions légales
+        file: src/contenu/pages/mentions-legales.md
+        format: frontmatter
+        fields: &page
+          - { name: titre, label: Titre, widget: string }
+          - { name: surtitre, label: Surtitre, widget: string, required: false }
+          - { name: titre_onglet, label: Titre de l’onglet, widget: string }
+          - { name: description, label: Description (moteurs de recherche), widget: text }
+          - { name: body, label: Texte, widget: markdown, buttons: [bold, italic, link, heading-two, heading-three, bulleted-list, numbered-list] }
+      - name: confidentialite
+        label: Politique de confidentialité
+        file: src/contenu/pages/confidentialite.md
+        format: frontmatter
+        fields: *page
+
+asset_collections:
+  - name: documents
+    label: Documents PDF
+    icon: picture_as_pdf
+    media_folder: public/documents
+    public_folder: /documents
+  - name: photos
+    label: Photos
+    icon: photo_library
+    media_folder: src/assets/photos
+    public_folder: /photos

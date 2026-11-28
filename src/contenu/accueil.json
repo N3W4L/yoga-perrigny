@@ -1,0 +1,22 @@
+{
+  "surtitre": "Perrigny · Jura",
+  "titre": "Chemins *d’Éveil*",
+  "texte": "Yoga à Perrigny, dans le Jura. L’association propose des cours et des stages, pour pratiquer à tout âge, sans recherche de performance.",
+  "bouton_seances": "Voir les séances",
+  "bouton_ecrire": "Nous écrire",
+  "a_la_une_titre": "À la une",
+  "a_la_une": [
+    {
+      "texte": "Stage « Passages », 4–6 décembre",
+      "cible": "stage"
+    },
+    {
+      "texte": "Interruptions des cours",
+      "cible": "seances"
+    },
+    {
+      "texte": "Adhérer à l’association",
+      "cible": "inscriptions"
+    }
+  ]
+}

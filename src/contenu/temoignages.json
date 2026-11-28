@@ -1,0 +1,48 @@
+{
+  "menu": "Témoignages",
+  "chapitre": "Témoignages",
+  "titre": "Les élèves ont *la parole*",
+  "citation": {
+    "texte": "Le yoga, c’est comme le goût des fraises, on ne peut pas l’expliquer. Et en plus, à Perrigny, c’est avec de la chantilly !",
+    "auteur": "Marie-Annick"
+  },
+  "voix": [
+    {
+      "auteur": "Claudette",
+      "phrases": [
+        "C’est incroyable ce qu’elle nous fait faire.",
+        "Pendant les exercices, on sent que ça travaille dans le corps. Après la séance, je suis bien détendue.",
+        "En cours de yoga adapté on pratique sur chaise ou debout avec un appui.",
+        "La prof est formidable. Elle connaît nos limites et prend en compte les difficultés de chacun-e.",
+        "En plus on est content de se retrouver. On forme un bon groupe et c’est très important."
+      ]
+    },
+    {
+      "auteur": "Geneviève",
+      "phrases": [
+        "Je suis mieux en partant qu’en arrivant.",
+        "Notre prof est attentive à chacun-e."
+      ]
+    },
+    {
+      "auteur": "Claude, élève depuis un an",
+      "phrases": [
+        "J’apprécie cette discipline qui m’apporte respiration et relaxation intérieures.",
+        "Notre animatrice véritable maître yogi est très investie, passionnée."
+      ]
+    },
+    {
+      "auteur": "Jacqueline, 18 ans de pratique",
+      "phrases": [
+        "Un espace-temps, rien que pour soi où la bienveillance est d’actualité et les bénéfices psychiques et physiques sont nombreux.",
+        "Des séances toujours différentes au fil des ans et adaptées avec des professeures de qualité."
+      ]
+    },
+    {
+      "auteur": "Sylvie",
+      "phrases": [
+        "Nouvelle expérience pour moi, avec un groupe de personnes sympas."
+      ]
+    }
+  ]
+}

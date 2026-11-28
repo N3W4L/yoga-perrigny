@@ -7,8 +7,8 @@ sont reprises, sauf les écarts listés ci-dessous. Les PDF sont désormais serv
 le site (public/documents/) ; à remplacer par les nouvelles éditions quand il y en aura.
 
 Informations absentes ou à confirmer. Elles ne sont plus écrites sur le site
-(pas d'annotation visible) : les ajouter dans `src/pages/index.astro` ou
-`src/data/site.ts` quand elles sont connues, puis retirer la ligne d'ici.
+(pas d'annotation visible) : les ajouter depuis l'interface /admin (ou dans
+`src/contenu/`) quand elles sont connues, puis retirer la ligne d'ici.
 
 ## Association
 - Nom du président (mentionné pour le tarif réduit du yoga adapté).
@@ -46,7 +46,7 @@ Informations absentes ou à confirmer. Elles ne sont plus écrites sur le site
 
 ## Lieu
 - Stationnement, entrée, accès détaillé.
-- Bibliothèque : la liste date de 2022, à rééditer ou à retirer (`showRessources` dans `src/config.ts`).
+- Bibliothèque : la liste date de 2022, à rééditer ou à retirer (écran Lieu › Ressources, dans /admin).
 
 ## Mentions légales et confidentialité
 - Nom du président ou de la présidente (directeur de la publication ; la page dit

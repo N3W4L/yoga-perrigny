@@ -38,19 +38,13 @@ Le fichier `.github/workflows/pages.yml` construit le site à chaque pull reques
 
 Ne pas modifier ici le domaine, le DNS, ni les réglages du dépôt.
 
-## Retirer ou garder une section
+## Modifier le contenu
 
-Tout se règle dans `src/config.ts`. Passer une valeur à `false`, puis relancer `npm run dev` ou `npm run build`.
+Tout le contenu se modifie depuis l’interface d’administration, **https://n3w4l.github.io/yoga-perrigny/admin/** : textes, horaires, tarifs, professeures, stage, témoignages, photos, PDF, pages légales. Chaque enregistrement est publié automatiquement. Mode d’emploi : [`ADMIN.md`](ADMIN.md).
 
-| Réglage | Effet quand il vaut `false` |
-| --- | --- |
-| `showActualites` | Retire le bandeau Actualités. Le calendrier d’absences passe sous les horaires. |
-| `showRessources` | Retire la bibliothèque (liste de 2022). |
-| `showTarifReduit` | Retire la carte 85 €. Cette mention est sur la page actuelle, pas sur le formulaire PDF. |
-| `showReinscriptions` | Retire le bloc réinscriptions. La page HTML et le PDF ne disent pas la même chose : les deux textes sont montrés, sans trancher. |
-| `showStage` | Retire la soirée et le stage des 4-6 décembre 2026, y compris le lien du menu et la ligne d’actualité. |
+Les données sont dans `src/contenu/` (un fichier JSON par écran, et `pages/*.md` pour les pages légales), vérifiées à chaque build par `src/contenu/index.ts` : un champ manquant arrête la publication avec un message clair, sans toucher au site en ligne.
 
-**Après le 6 décembre 2026**, mettre `showStage` à `false`. Le stage est dans la page d’accueil, `src/pages/index.astro`.
+Dans **Réglages et coordonnées**, deux cases affichent ou masquent le stage (écrans Stage et Programme, entrée du menu, ligne « À la une ») et le bloc « À la une ». **Après le 6 décembre 2026**, décocher « Le stage ».
 
 Les informations encore inconnues (président, bios, photos, crédits…) ne sont pas inventées ni annotées sur la page d’accueil : elles sont listées dans `A-COMPLETER.md`.
 

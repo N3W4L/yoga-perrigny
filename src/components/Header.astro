@@ -1,10 +1,9 @@
 ---
 import { Picture } from 'astro:assets';
 import logo from '../assets/logo-yoga.png';
-import { flags } from '../config';
-import { association, nav } from '../data/site';
+import { association, menu } from '../contenu';
 
-const items = nav.filter((item) => !('flag' in item) || flags[item.flag]);
+const items = menu;
 const base = import.meta.env.BASE_URL;
 const onHome = Astro.url.pathname === base;
 const hrefFor = (id: string) => (onHome ? `#${id}` : `${base}#${id}`);

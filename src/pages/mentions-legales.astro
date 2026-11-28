@@ -3,66 +3,19 @@ import BackToTop from '../components/BackToTop.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Base from '../layouts/Base.astro';
+import { textPage } from '../lib/page';
+
+/* Texte modifiable depuis /admin : src/contenu/pages/mentions-legales.md */
+const page = textPage('mentions-legales');
 ---
 
-<Base
-  title="Mentions légales — Chemins d’Éveil"
-  description="Mentions légales du site de l’association Chemins d’Éveil, cours de yoga à Perrigny."
->
+<Base title={page.titre_onglet} description={page.description}>
   <Header />
   <main id="contenu" class="page-main">
     <article class="wrap prose">
-      <p class="eyebrow">Association loi 1901</p>
-      <h1>Mentions légales</h1>
-
-      <h2>Éditeur du site</h2>
-      <p>Ce site est édité par :</p>
-      <p>
-        <strong>Association Chemins d’Éveil</strong><br />
-        Association déclarée conformément à la loi du 1er juillet 1901<br />
-        Lieu des cours : 76 rue du Moulin, 39570 Perrigny<br />
-        E-mail : <a href="mailto:yogaperrigny@orange.fr">yogaperrigny@orange.fr</a><br />
-        Téléphone : <a href="tel:+33601865107">06 01 86 51 07</a> (Marc Comment)
-      </p>
-
-      <h2>Directeur de la publication</h2>
-      <p>
-        Le directeur ou la directrice de la publication est le président ou la présidente de l’association Chemins d’Éveil, conformément à l’article 6 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique (LCEN).
-      </p>
-
-      <h2>Hébergeur</h2>
-      <p>Le site est hébergé par :</p>
-      <p>
-        GitHub, Inc. (service GitHub Pages)<br />
-        88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis<br />
-        <a href="https://github.com">github.com</a>
-      </p>
-
-      <h2>Propriété intellectuelle</h2>
-      <p>
-        L’ensemble des contenus de ce site (textes, visuels, logo, documents téléchargeables, structure des pages), sauf mention contraire, est la propriété de l’association Chemins d’Éveil ou est utilisé avec l’autorisation de ses titulaires.
-      </p>
-      <p>
-        Toute reproduction, représentation, modification ou diffusion, totale ou partielle, sans autorisation préalable écrite de l’association, est interdite, hors les exceptions prévues par le Code de la propriété intellectuelle (notamment la copie privée et le droit de citation).
-      </p>
-      <p>
-        Le logo « Yoga Perrigny » et la dénomination Chemins d’Éveil sont utilisés par l’association pour identifier ses activités. Les noms des méthodes, écoles ou enseignants cités restent la propriété de leurs titulaires.
-      </p>
-
-      <h2>Crédits photographiques et visuels</h2>
-      <p>
-        Logo et photographies : association Chemins d’Éveil et leurs auteurs. Toute reproduction nécessite l’autorisation de l’association.
-      </p>
-
-      <h2>Données personnelles</h2>
-      <p>
-        Le traitement des données personnelles est décrit dans la <a href={`${import.meta.env.BASE_URL}confidentialite/`}>politique de confidentialité</a>.
-      </p>
-
-      <h2>Droit applicable</h2>
-      <p>
-        Le présent site est soumis au droit français. En cas de litige, et après tentative de règlement amiable, les tribunaux français compétents seront saisis.
-      </p>
+      {page.surtitre && <p class="eyebrow">{page.surtitre}</p>}
+      <h1>{page.titre}</h1>
+      <Fragment set:html={page.html} />
     </article>
   </main>
   <Footer />

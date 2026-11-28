@@ -1,4 +1,7 @@
 # En-têtes pour Netlify et Cloudflare Pages.
+# Attention : la CSP ci-dessous bloquerait l'interface /admin (Sveltia CMS appelle
+# api.github.com et charge des ressources sur unpkg.com). En cas de passage sur
+# ces hébergeurs, prévoir une règle /admin/* avec sa propre politique.
 # GitHub Pages ne les applique pas : la politique de contenu est aussi
 # déclarée dans une balise meta (src/layouts/Base.astro), sans frame-ancestors
 # que les balises meta ne prennent pas en charge.

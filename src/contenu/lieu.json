@@ -1,0 +1,14 @@
+{
+  "menu": "Lieu",
+  "chapitre": "Perrigny",
+  "titre": "Le lieu",
+  "texte_acces": "Salle équipée d’un ascenseur",
+  "texte_itineraire": "Itinéraire",
+  "ressources": [
+    "Bibliothèque de l’association : [liste des ouvrages](/documents/bibliotheque-2022.pdf)",
+    "[Lectures conseillées](https://ujbeyoga.wixsite.com/ujbey/lectures) par l’<abbr title=\"Union Jura-Bresse des Enseignants de Yoga\">UJ-BEY</abbr>"
+  ],
+  "photo": "/photos/salle-exterieur-cadre.jpg",
+  "photo_description": "Extérieur du bâtiment des cours, à Perrigny : façade en pierre claire, jardinières fleuries et rue ensoleillée.",
+  "legende": "Le bâtiment, rue du moulin."
+}
