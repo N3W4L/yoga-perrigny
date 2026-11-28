@@ -32,7 +32,11 @@ export const ujbeyReadings = 'https://ujbeyoga.wixsite.com/ujbey/lectures';
 export const itinerary =
   'https://www.openstreetmap.org/search?query=76%20rue%20du%20moulin%2C%2039570%20Perrigny%2C%20France';
 
-/** Grille retenue : formulaire d'inscription 2026-2027 (yoga adapté le mardi, Odile Sappez). */
+/**
+ * Grille retenue : formulaire d'inscription 2026-2027 (édition juin 2026).
+ * Yoga adapté : mardi 15 h 00 – 16 h 15 avec Odile Sappez, confirmé par l'association.
+ * L'ancienne page « Horaires » de yoga-perrigny.com (jeudi, Françoise Bataillard) est périmée.
+ */
 export const days = [
   {
     id: 'lundi',
