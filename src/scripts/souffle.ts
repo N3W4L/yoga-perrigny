@@ -116,7 +116,8 @@ if (root) {
     const frame = () => {
       raf = 0;
       const position = clamp(window.scrollY / stopLength());
-      markNav(clamp(Math.round(position)));
+      // Pendant un saut, le menu et le numéro d'écran indiquent déjà la destination.
+      markNav(html.classList.contains('is-jumping') ? anchor : clamp(Math.round(position)));
       paintProgress(last > 0 ? position / last : 0);
 
       for (let i = 0; i < planes.length; i++) {
@@ -160,10 +161,22 @@ if (root) {
       const velocity = ((6 * t2 - 6 * t) * g.from + (3 * t2 - 4 * t + 1) * d * g.v0 + (-6 * t2 + 6 * t) * g.to) / d;
       return { position, velocity };
     };
+    /* Saut (menu, liens) au-delà de l'écran voisin : seuls l'écran de départ et
+       celui d'arrivée restent visibles, le décor défile seul entre les deux. */
+    const endJump = () => {
+      if (!html.classList.contains('is-jumping')) return;
+      html.classList.remove('is-jumping');
+      planes.forEach((plane) => plane.removeAttribute('data-jump-keep'));
+    };
+    const startJump = (from: number, to: number) => {
+      planes.forEach((plane, i) => plane.toggleAttribute('data-jump-keep', i === from || i === to));
+      html.classList.add('is-jumping');
+    };
     const stopGlide = () => {
       if (glideFrame) cancelAnimationFrame(glideFrame);
       glideFrame = 0;
       glide = null;
+      endJump();
     };
     const glideStep = (now: number) => {
       if (!glide) return;
@@ -232,8 +245,18 @@ if (root) {
 
     /* Le défilement natif fait avancer petit à petit dans les cercles. */
     const go = (index: number, smooth: boolean) => {
-      anchor = clamp(index);
-      const top = clamp(index) * stopLength();
+      const target = clamp(index);
+      const here = clamp(Math.round(window.scrollY / stopLength()));
+      anchor = target;
+      const top = target * stopLength();
+      if (smooth && Math.abs(target - here) > 1) {
+        // Départ : l'écran affiché ; en cas de nouveau saut en plein vol, on garde
+        // celui du premier saut (déjà effacé) et l'on change seulement l'arrivée.
+        const from = html.classList.contains('is-jumping')
+          ? planes.findIndex((plane) => plane.hasAttribute('data-jump-keep') && planes.indexOf(plane) !== target)
+          : here;
+        startJump(from < 0 ? here : from, target);
+      } else if (smooth) endJump();
       if (smooth) glideTo(top);
       else {
         stopGlide();

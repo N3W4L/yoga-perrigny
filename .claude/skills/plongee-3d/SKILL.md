@@ -24,6 +24,13 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
   en plein vol (deux clics de menu rapprochés) garde la vitesse : pas d'à-coup.
   Durée : ≈ 0,7 s pour un écran, 1,7 s au plus. Molette ou toucher pendant le
   glissement : l'utilisateur reprend la main.
+- **Saut par le menu** (au-delà de l'écran voisin) : classe `is-jumping` sur
+  `<html>` ; seuls l'écran de départ et celui d'arrivée (`data-jump-keep`)
+  restent visibles, le décor défile seul entre les deux ; le menu et le numéro
+  d'écran indiquent déjà la destination.
+- Pour juger une animation de défilement, ne pas se fier aux captures
+  Playwright prises en plein mouvement (elles montrent un faux décalage de la
+  page) : enregistrer les images réelles avec `Page.startScreencast` (CDP).
 - Les `.snap-stop` ne servent plus que de repères : souffle.ts y lit l'écart
   entre deux stations.
 - `.tunnel` reste collé à l'écran. Dedans, chaque section `.plane` est un
