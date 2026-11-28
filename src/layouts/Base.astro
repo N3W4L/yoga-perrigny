@@ -6,9 +6,11 @@ import dmSans from '../fonts/dm-sans-latin-400-normal.woff2?url';
 interface Props {
   title: string;
   description: string;
+  /** Page à ne pas indexer (404) : pas d'adresse canonique, noindex. */
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const image = new URL(`${import.meta.env.BASE_URL}og.jpg`, Astro.site);
 const icon = `${import.meta.env.BASE_URL}favicon.png`;
@@ -39,7 +41,7 @@ const csp = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical.href} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical.href} />}
     <meta name="theme-color" content="#F4EEE3" />
     <meta name="author" content="Association Chemins d’Éveil" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />

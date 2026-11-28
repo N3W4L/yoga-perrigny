@@ -171,8 +171,8 @@ const structuredData = JSON.stringify({
               src={clubPhoto}
               formats={['avif', 'webp']}
               fallbackFormat="jpeg"
-              widths={[560, 840, 1100]}
-              sizes="(min-width: 62rem) 34rem, 100vw"
+              widths={[400, 560, 840, 1100]}
+              sizes="(min-width: 62rem) 34rem, calc(100vw - 2rem)"
               alt={club.photo_description}
               quality={74}
             />
@@ -503,8 +503,8 @@ const structuredData = JSON.stringify({
               src={lieuPhoto}
               formats={['avif', 'webp']}
               fallbackFormat="jpeg"
-              widths={[400, 640, 900]}
-              sizes="(min-width: 62rem) 22rem, 100vw"
+              widths={[360, 540, 720, 900]}
+              sizes="(min-width: 62rem) 22rem, min(22rem, calc(100vw - 2rem))"
               alt={lieu.photo_description}
               quality={70}
             />

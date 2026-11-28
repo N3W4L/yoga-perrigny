@@ -211,12 +211,6 @@ a:hover {
   max-width: var(--measure);
 }
 
-.pending {
-  color: var(--muted);
-  font-style: italic;
-  font-size: 0.95em;
-}
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -483,36 +477,6 @@ a:hover {
 
 /* Actualités */
 
-.absences {
-  margin-top: 1.15rem;
-  border-top: 1px solid color-mix(in srgb, var(--linen) 80%, var(--ink));
-  padding-top: 0.85rem;
-}
-
-.absences summary {
-  cursor: pointer;
-  font-weight: 500;
-  color: var(--sage-deep);
-  min-height: 2.75rem;
-  display: flex;
-  align-items: center;
-}
-
-.absences summary:hover {
-  color: var(--ink);
-}
-
-.absences ul {
-  margin: 0.2rem 0 0;
-  padding-left: 1.1rem;
-}
-
-.absences .sign {
-  margin-top: 1rem;
-  font-family: var(--serif);
-  font-style: italic;
-}
-
 /* Club */
 
 .club {
@@ -551,25 +515,13 @@ a:hover {
   gap: 1rem;
 }
 
-.day {
-  background: var(--paper);
-  padding: 1.35rem 1.3rem 1.4rem;
-  border-top: 1px solid var(--sage-deep);
-  height: 100%;
-}
-
 a[href^='tel:'] {
   white-space: nowrap;
 }
 
-.day h3,
 .teacher h3 {
   font-size: 1.55rem;
   margin-bottom: 0.75rem;
-}
-
-.day:hover {
-  border-top-color: var(--sage);
 }
 
 .voices {
@@ -632,10 +584,6 @@ a[href^='tel:'] {
 
 .stage a:hover {
   color: var(--paper);
-}
-
-.stage .pending {
-  color: var(--linen);
 }
 
 .stage p + p,
@@ -748,18 +696,18 @@ a[href^='tel:'] {
 
 .page-main {
   padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section);
+  flex: 1 0 auto;
+}
+
+/* Pages courtes (404) : le pied de page reste en bas de l'écran. */
+body:has(.page-main) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
 }
 
 .prose {
   width: min(40rem, 100%);
-}
-
-.draft-note {
-  margin: 1.25rem 0 2rem;
-  padding-top: 0.9rem;
-  border-top: 1px solid var(--linen);
-  color: var(--muted);
-  font-style: italic;
 }
 
 .prose h1 {
@@ -814,18 +762,6 @@ a[href^='tel:'] {
 
 .stack-top {
   margin-top: 1rem;
-}
-
-.session + .session {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--sand-2);
-}
-
-.time {
-  margin: 0.15rem 0 0.1rem;
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
 }
 
 .stage h3 {
@@ -887,9 +823,6 @@ strong {
 
 /* Reveal — only where scroll-driven animations exist, and never if reduced motion. */
 
-@supports (animation-timeline: view()) {
-}
-
 @keyframes rise {
   from {
     opacity: 0;
@@ -918,10 +851,6 @@ strong {
 @media (min-width: 48rem) {
   .wrap {
     width: min(var(--wrap), calc(100% - 3rem));
-  }
-
-  .absences {
-    grid-column: 1 / -1;
   }
 }
 

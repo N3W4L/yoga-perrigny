@@ -9,9 +9,16 @@ const DECOR: 'logo' | 'anneaux' = 'logo';
 
 const root = document.querySelector<HTMLElement>('.souffle');
 
+/** Indices d'appareil modeste (API non standard, absentes de certains navigateurs). */
+type NavigatorHints = Navigator & {
+  connection?: { saveData?: boolean; effectiveType?: string };
+  deviceMemory?: number;
+};
+
 function lowPower() {
-  const connection = navigator.connection as { saveData?: boolean; effectiveType?: string } | undefined;
-  const memory = navigator.deviceMemory;
+  const hints = navigator as NavigatorHints;
+  const connection = hints.connection;
+  const memory = hints.deviceMemory;
   const cores = navigator.hardwareConcurrency;
   const slow = connection?.effectiveType === 'slow-2g' || connection?.effectiveType === '2g';
   return Boolean(connection?.saveData) || Boolean(slow) || (typeof memory === 'number' && memory <= 2) || (typeof cores === 'number' && cores <= 2);
@@ -19,8 +26,13 @@ function lowPower() {
 
 if (root) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const narrow = window.matchMedia('(max-width: 720px)').matches;
-  const canFly = !reduce && !narrow && !lowPower();
+  /* Trajet 3D seulement si chaque écran tient : au moins 768 px de large et
+     640 px de haut. En dessous (téléphone en paysage, petit écran), lecture à plat. */
+  const tooSmall = window.matchMedia('(max-width: 767px), (max-height: 639px)');
+  const canFly = !reduce && !tooSmall.matches && !lowPower();
+  // Rotation de l'appareil ou fenêtre redimensionnée au-delà du seuil : on recharge
+  // pour passer proprement d'un mode à l'autre.
+  tooSmall.addEventListener('change', () => window.location.reload());
   const planes = [...root.querySelectorAll<HTMLElement>('.plane')];
   const progress = root.querySelector<SVGCircleElement>('[data-progress]');
 
@@ -214,16 +226,6 @@ if (root) {
       if (raf) return;
       raf = requestAnimationFrame(frame);
     };
-    /* Flèches ↑ ↓ : un écran entier (leur pas natif, 40 px, resterait sous le seuil d'ancrage). */
-    window.addEventListener('keydown', (event) => {
-      if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
-      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-      const target = event.target as HTMLElement | null;
-      if (target?.closest('input, textarea, select, [contenteditable="true"], details[open] .s-panel')) return;
-      event.preventDefault();
-      go(anchor + (event.key === 'ArrowDown' ? 1 : -1), !reduce);
-    });
-
     frame();
     window.addEventListener('scroll', request, { passive: true });
     window.addEventListener('resize', request);

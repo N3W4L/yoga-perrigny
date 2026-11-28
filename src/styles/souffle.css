@@ -2246,7 +2246,12 @@ html.journey-3d .souffle .frame-photo figcaption {
   text-align: left;
   font-size: var(--t-label);
   letter-spacing: 0.06em;
-  opacity: 0.8;
+}
+
+/* Légende atténuée seulement sur fond sombre (contraste vérifié) ; à plat, sur
+   fond sable, la couleur discrète suffit sans transparence. */
+html.journey-3d .souffle .frame-photo figcaption {
+  opacity: 0.85;
 }
 
 .souffle .frame-photo-place figcaption,
