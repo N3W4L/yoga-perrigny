@@ -1,3 +1,5 @@
+import { mountTunnel } from './tunnel';
+
 const root = document.querySelector<HTMLElement>('.souffle');
 
 function lowPower() {
@@ -30,6 +32,8 @@ if (root) {
 
   if (canFly && planes.length > 1) {
     document.documentElement.classList.add('journey-3d');
+    const tunnel = mountTunnel(root.querySelector('canvas.scene'));
+    if (!tunnel) document.documentElement.classList.add('no-gl');
     const world = root.querySelector<HTMLElement>('.world');
     const last = planes.length - 1;
     const duration = 640;
@@ -69,7 +73,9 @@ if (root) {
     const paint = (position: number) => {
       const near = clamp(Math.round(position));
       markNav(near);
-      world?.classList.toggle('is-moving', Math.abs(position - toPos) > 0.004 && raf !== 0);
+      const moving = Math.abs(position - toPos) > 0.004 && raf !== 0;
+      world?.classList.toggle('is-moving', moving);
+      tunnel?.setCamera(position, moving);
       for (let index = 0; index < planes.length; index++) {
         const distance = Math.abs(index - position);
         const live = distance < 0.985;
@@ -107,21 +113,20 @@ if (root) {
 
     const travelTo = (index: number, immediate = false) => {
       const next = clamp(index);
-      if (immediate) {
-        if (raf) cancelAnimationFrame(raf);
-        raf = 0;
+      if (!immediate && Math.abs(camera - next) < 0.001 && Math.abs(toPos - next) < 0.001) return;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      if (immediate || Math.abs(camera - next) < 0.001) {
         fromPos = next;
         toPos = next;
         camera = next;
         paint(camera);
         return;
       }
-      if (next === toPos && raf) return;
-      if (next === toPos && !raf && Math.abs(camera - next) < 0.001) return;
       fromPos = camera;
       toPos = next;
       started = performance.now();
-      if (!raf) raf = requestAnimationFrame(tick);
+      raf = requestAnimationFrame(tick);
     };
 
     const scrollToIndex = (index: number) => {

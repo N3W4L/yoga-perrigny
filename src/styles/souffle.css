@@ -1958,6 +1958,231 @@ html.journey-3d .fold[open] .envoi {
   }
 }
 
+html.journey-3d {
+  --t-label: 0.75rem;
+  --t-body: 1.0625rem;
+  --t-lead: 1.3rem;
+  --t-title: clamp(2.15rem, 2.8vw, 2.85rem);
+  --t-display: clamp(3.5rem, 5.2vw, 4.7rem);
+  --grid-gap: 1.25rem;
+}
+
+html.journey-3d .scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+html.journey-3d.gl-scene .scene {
+  display: block;
+}
+
+html.journey-3d .scene-still {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+html.journey-3d .scene-still img,
+.hero-still img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+html.journey-3d.gl-scene .scene-still {
+  display: none;
+}
+
+.hero-still {
+  display: none;
+}
+
+html:not(.journey-3d) .hero-still {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+}
+
+html:not(.journey-3d) .orb,
+html:not(.journey-3d) .s-hero::before {
+  display: none;
+}
+
+html.journey-3d .orb,
+html.journey-3d .night-orb,
+html.journey-3d .tunnel::before,
+html.journey-3d .tunnel::after {
+  display: none;
+}
+
+html.journey-3d .plane.is-live::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(7, 10, 8, 0.72) 0%, rgba(7, 10, 8, 0.38) 46%, rgba(7, 10, 8, 0.08) 78%);
+}
+
+html.journey-3d .plane > * {
+  position: relative;
+  z-index: 1;
+}
+
+html.journey-3d .chap,
+html.journey-3d .s-kicker,
+html.journey-3d .day-group h3,
+html.journey-3d .prices .label,
+html.journey-3d .stage-facts h3,
+html.journey-3d .feature-quote figcaption {
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+}
+
+html.journey-3d .plane,
+html.journey-3d .prose,
+html.journey-3d .points,
+html.journey-3d .who,
+html.journey-3d .prices .fine,
+html.journey-3d .stage-facts p {
+  font-size: var(--t-body);
+}
+
+html.journey-3d .pull,
+html.journey-3d .lede,
+html.journey-3d .seance-intro .pull {
+  font-size: var(--t-lead);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+html.journey-3d .sheet h2,
+html.journey-3d .night h2,
+html.journey-3d .prices strong,
+html.journey-3d .address,
+html.journey-3d .mail {
+  font-size: var(--t-title);
+  text-wrap: balance;
+}
+
+html.journey-3d .hours,
+html.journey-3d .sum {
+  font-size: var(--t-lead);
+  text-wrap: balance;
+}
+
+html.journey-3d .s-hero h1 {
+  font-size: var(--t-display);
+  text-align: left;
+  text-wrap: balance;
+}
+
+html.journey-3d .s-hero {
+  align-items: end;
+  justify-items: start;
+  padding: 0 0 6.5rem;
+}
+
+html.journey-3d .s-hero-copy {
+  text-align: left;
+  width: min(76rem, calc(100% - 8vw));
+  margin-inline: auto;
+}
+
+html.journey-3d .s-hero .lede {
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 62ch;
+}
+
+html.journey-3d .s-actions {
+  justify-content: flex-start;
+}
+
+html.journey-3d .s-hero-foot {
+  left: max(4vw, calc(50% - 38rem));
+  right: max(4vw, calc(50% - 38rem));
+}
+
+html.journey-3d .plane:not(.s-hero) > .s-wrap,
+html.journey-3d #contact > .s-foot {
+  width: min(76rem, calc(100% - 8vw));
+}
+
+html.journey-3d .club-grid,
+html.journey-3d .lieu-grid,
+html.journey-3d .seance-top,
+html.journey-3d .stage-top,
+html.journey-3d .tarif-split {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  align-items: start;
+}
+
+html.journey-3d .club-grid > div,
+html.journey-3d .lieu-grid > div,
+html.journey-3d .seance-top > :first-child,
+html.journey-3d .stage-top > :first-child {
+  grid-column: 1 / span 6;
+}
+
+html.journey-3d .club-grid > figure,
+html.journey-3d .lieu-grid > figure,
+html.journey-3d .seance-top > :last-child,
+html.journey-3d .stage-top > :last-child {
+  grid-column: 7 / span 6;
+}
+
+html.journey-3d .tarif-split > :first-child {
+  grid-column: 1 / span 6;
+}
+
+html.journey-3d .tarif-split > :last-child {
+  grid-column: 7 / span 6;
+}
+
+html.journey-3d .prose,
+html.journey-3d .stage-top > div > p:not(.pull),
+html.journey-3d .feature-quote p,
+html.journey-3d #contact > .s-wrap p {
+  max-width: 65ch;
+}
+
+html.journey-3d .feature-quote {
+  max-width: 68ch;
+}
+
+html.journey-3d .sheet .sbtn,
+html.journey-3d .night .sbtn {
+  background: var(--sand);
+  color: var(--night);
+  border-color: transparent;
+}
+
+html.journey-3d .plane a:not(.sbtn):not(.s-mark) {
+  text-underline-offset: 0.16em;
+}
+
+html.journey-3d .fold summary {
+  font-size: var(--t-body);
+}
+
+html.journey-3d .person .fold summary {
+  justify-content: flex-start;
+  gap: 0.85rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .progress {
     display: none;
