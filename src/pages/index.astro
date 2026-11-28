@@ -164,9 +164,7 @@ const voices = [
       <a class="s-mark" href="#accueil" aria-label="Yoga Perrigny, accueil"><Logo /></a>
       <nav class="s-links" aria-label="Sections">
         {menu.map((item) => (
-          <a href={`#${item.id}`} data-nav-link>
-            {item.label}
-          </a>
+          <a href={`#${item.id}`} data-nav-link>{item.label}</a>
         ))}
       </nav>
       <a class="s-write" href={mailto}>Écrire</a>
@@ -178,9 +176,7 @@ const voices = [
         <div class="s-panel">
           <nav aria-label="Sections">
             {menu.map((item) => (
-              <a href={`#${item.id}`} data-nav-link>
-                {item.label}
-              </a>
+              <a href={`#${item.id}`} data-nav-link>{item.label}</a>
             ))}
           </nav>
           <a class="sbtn" href={mailto}>Nous écrire</a>
