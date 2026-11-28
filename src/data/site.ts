@@ -12,14 +12,22 @@ export const association = {
   place: 'Salle de sports (au-dessus de la salle des fêtes)',
 } as const;
 
+/** Documents de l'association, servis par le site lui-même (public/documents/) :
+    ils restent disponibles quand l'ancien site yoga-perrigny.com sera fermé. */
+const documents = `${import.meta.env.BASE_URL}documents/`;
+
 export const pdfs = {
-  inscription: 'https://yoga-perrigny.com/wafx_res/Files/inscription%202026-2027.pdf',
-  absences: 'https://yoga-perrigny.com/wafx_res/Files/Absence%20vac%20toussaint%20noel%20yoga%202026.pdf',
-  stage:
-    'https://yoga-perrigny.com/wafx_res/Files/Stage%20et%20soiree%205%20et%206%20dec%2026%20avec%20Sybille%20et%20Fran%C3%A7ois.pdf',
-  bibliotheque: 'https://yoga-perrigny.com/wafx_res/Files/livres%20bibli%202022.pdf',
-  article: 'https://yoga-perrigny.com/wafx_res/Files/article%20Yoga%202025%20V2.PDF',
+  inscription: `${documents}inscription-2026-2027.pdf`,
+  absences: `${documents}interruptions-2026-2027.pdf`,
+  stage: `${documents}stage-passages-decembre-2026.pdf`,
+  bibliotheque: `${documents}bibliotheque-2022.pdf`,
+  article: `${documents}article-2025.pdf`,
+  ficheOdile: `${documents}fiche-odile-sappez.pdf`,
+  ficheAnneMarie: `${documents}presentation-anne-marie-meudre.pdf`,
 } as const;
+
+/** Lectures conseillées par l'UJ-BEY (Union Jura-Bresse des Enseignants de Yoga). */
+export const ujbeyReadings = 'https://ujbeyoga.wixsite.com/ujbey/lectures';
 
 export const itinerary =
   'https://www.openstreetmap.org/search?query=76%20rue%20du%20moulin%2C%2039570%20Perrigny%2C%20France';

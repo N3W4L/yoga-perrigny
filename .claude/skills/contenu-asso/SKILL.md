@@ -20,7 +20,11 @@ description: Règles de contenu du site de l'association Chemins d'Éveil (yoga 
 
 ## Où se trouve quoi
 
-- `src/data/site.ts` : coordonnées de l'association, liens PDF, **grille des
+- `public/documents/` : les PDF de l'association (formulaire, interruptions,
+  plaquette du stage, bibliothèque, article, fiches des professeures). Pour une
+  nouvelle édition, remplacer le fichier en gardant son nom, ou changer le chemin
+  dans `pdfs` (src/data/site.ts).
+- `src/data/site.ts` : coordonnées de l'association, chemins des PDF, **grille des
   séances** (`days`). Les créneaux affichés sur les cartes des professeures en
   sont tirés automatiquement (`slotsOf` dans index.astro), comme le créneau
   du yoga adapté : ne modifier qu'à un seul endroit.

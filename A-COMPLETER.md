@@ -1,5 +1,11 @@
 # À compléter
 
+Comparaison faite le 28 novembre 2026 avec l'ancien site yoga-perrigny.com
+(8 pages : Accueil, Actualités, Inscriptions, Stages, Bibliothèque, Le coin des
+profs, Horaires des séances, Le yoga adapté) et ses PDF : toutes leurs informations
+sont reprises, sauf les écarts listés ci-dessous. Les PDF sont désormais servis par
+le site (public/documents/) ; à remplacer par les nouvelles éditions quand il y en aura.
+
 Informations absentes ou à confirmer. Elles ne sont plus écrites sur le site
 (pas d'annotation visible) : les ajouter dans `src/pages/index.astro` ou
 `src/data/site.ts` quand elles sont connues, puis retirer la ligne d'ici.
@@ -15,12 +21,19 @@ Informations absentes ou à confirmer. Elles ne sont plus écrites sur le site
   le document disponible s'arrête en janvier 2027. Dates de Françoise : à préciser.
 - Tarif réduit 85 € : présent sur la page Inscriptions du site actuel, absent du formulaire PDF.
 - Venir la première fois : autre accessoire éventuel.
-- **Réinscriptions : deux textes divergent.** Le site affiche celui de la page web
-  (« avant le 1er septembre, par courrier ou lors d'une séance ») ; le formulaire PDF
-  dit « à redonner au plus tard à la première séance ». Règle à arbitrer.
+- **Réinscriptions : deux textes divergent.** Le site affiche celui de la page
+  Inscriptions de l'ancien site (« avant le 1er septembre, par courrier ou lors d'une
+  séance ») ; le formulaire PDF (édition juin 2026) dit « par courrier ou lors de la
+  1ère séance » et « à redonner au plus tard à la première séance ». Règle à arbitrer.
+- **Yoga adapté : l'ancienne page « Horaires des séances » est périmée.** Elle indique
+  le jeudi 14 h 30 – 15 h 45 avec Françoise Bataillard ; le formulaire 2026-2027 et
+  « Le coin des profs » donnent le mardi 15 h – 16 h 15 avec Odile Sappez. Le site
+  suit le formulaire.
 
 ## Envoi des fiches
 - Téléphone de Sandrine Peyronel.
+- Françoise Bataillard figure dans les adresses du formulaire PDF, pas sur l'ancienne
+  page Inscriptions : le site suit le formulaire.
 
 ## Stage « Passages »
 - Tarifs adhérents.

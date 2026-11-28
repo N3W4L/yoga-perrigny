@@ -5,7 +5,7 @@ import hall from '../assets/salle-2025.jpg';
 import exterior from '../assets/salle-exterieur.jpg';
 import Logo from '../components/Logo.astro';
 import { flags } from '../config';
-import { association, days, itinerary, pdfs } from '../data/site';
+import { association, days, itinerary, pdfs, ujbeyReadings } from '../data/site';
 import Base from '../layouts/Base.astro';
 import '../styles/souffle.css';
 
@@ -54,6 +54,7 @@ const teachers = [
     initials: 'AM',
     type: 'Yoga classique',
     portrait: true,
+    fiche: pdfs.ficheAnneMarie,
     bio: [
       'Formée à l’École Française de Yoga Auvergne Rhône-Alpes (2002-2006), diplômée en 2006 : Yoga de l’énergie. Stages notamment avec Ora Josef Hay, Cécile Beaudin, Babacar Khane, Yvette Clouet, Maurice Daubard et Pierre Gariel.',
       'Une séance : intériorisation, enchaînement avec respiration, relaxation, préparation des postures, postures, puis relaxation ou assise avec respiration et méditation.',
@@ -63,6 +64,7 @@ const teachers = [
     name: 'Odile Sappez',
     initials: 'OS',
     type: 'Yoga adapté',
+    fiche: pdfs.ficheOdile,
     bio: [
       'Formée à l’École Française de Yoga Auvergne Rhône-Alpes (2011-2015), diplômée en 2016 : Yoga de l’énergie. Post-formation auprès de Yogi Babacar Khane (2017-2020) : yoga égyptien, yoga chinois, hatha yoga.',
       'Une séance, selon la pédagogie de Maître Babacar Khane : intériorisation, yoga égyptien, yoga de la tradition chinoise, postures de yoga indien, relaxation et approche de la méditation.',
@@ -205,6 +207,26 @@ const voices = [
             <a class="sbtn" href="#seances">Voir les séances</a>
             <a class="sbtn-ghost" href={mailto}>Nous écrire</a>
           </div>
+          {
+            flags.showActualites && (
+              <nav class="s-news" aria-label="Actualités">
+                <span class="s-news-label">À la une</span>
+                <ul>
+                  {flags.showStage && (
+                    <li>
+                      <a href="#stage">Stage « Passages », 4–6 décembre</a>
+                    </li>
+                  )}
+                  <li>
+                    <a href="#seances">Interruptions des cours</a>
+                  </li>
+                  <li>
+                    <a href="#inscriptions">Adhérer à l’association</a>
+                  </li>
+                </ul>
+              </nav>
+            )
+          }
         </div>
         <p class="s-hero-foot">
           <span>{association.street} · {association.postal}</span>
@@ -489,7 +511,7 @@ const voices = [
                   <div>
                     <p class="pull">Au seuil de l’hiver, un voyage intérieur.</p>
                     <p>
-                      Une invitation à ralentir, à écouter ce qui bat au cœur de soi : postures lentes, souffle, yoga nidra, méditation. 22 participants ; réservations auprès des professeures.
+                      Une invitation à ralentir, à écouter ce qui bat au cœur de soi : postures lentes, souffle, yoga nidra, méditation. Places limitées à 22 participants ; réservations auprès des professeures.
                     </p>
                   </div>
                 </div>
@@ -587,6 +609,13 @@ const voices = [
                     {teacher.bio.map((paragraph) => (
                       <p>{paragraph}</p>
                     ))}
+                    {teacher.fiche && (
+                      <p>
+                        <a href={teacher.fiche}>
+                          Fiche de présentation <span class="sr-only">de {teacher.name} (PDF)</span>
+                        </a>
+                      </p>
+                    )}
                   </div>
                 </li>
               ))
@@ -610,8 +639,10 @@ const voices = [
             </p>
             {
               flags.showRessources && (
-                <p>
-                  <a href={pdfs.bibliotheque}>Bibliothèque de l’association <span class="sr-only">(PDF)</span></a>
+                <p class="library">
+                  <strong>Bibliothèque</strong> : l’association dispose d’une bibliothèque —
+                  <a href={pdfs.bibliotheque}>liste des ouvrages<span class="sr-only"> (PDF)</span></a>. Voir aussi les
+                  <a href={ujbeyReadings}>lectures conseillées par l’UJ-BEY</a>, Union Jura-Bresse des Enseignants de Yoga.
                 </p>
               )
             }
