@@ -280,7 +280,22 @@ if (root) {
     });
 
     const hashIndex = planes.findIndex((plane) => `#${plane.id}` === window.location.hash);
-    if (hashIndex > 0) go(hashIndex, false);
+    if (hashIndex > 0) {
+      // Lien direct vers une section (#inscriptions…) : le navigateur fait aussi son
+      // propre saut vers l'ancre, une fois la page chargée. On se repose ensuite sur
+      // le bon écran, sans laisser l'ancrage interpréter ce saut comme un défilement.
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      go(hashIndex, false);
+      const land = () => requestAnimationFrame(() => requestAnimationFrame(() => go(hashIndex, false)));
+      if (document.readyState === 'complete') land();
+      else window.addEventListener('load', land, { once: true });
+    }
+    // Ancre modifiée sans rechargement (barre d'adresse, lien externe vers la page) :
+    // même traitement, après le saut natif du navigateur.
+    window.addEventListener('hashchange', () => {
+      const index = planes.findIndex((plane) => `#${plane.id}` === window.location.hash);
+      if (index >= 0) requestAnimationFrame(() => go(index, false));
+    });
   } else if (!reduce && progress) {
     let raf = 0;
     const frame = () => {
