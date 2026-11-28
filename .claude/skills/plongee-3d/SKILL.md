@@ -16,19 +16,26 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
   avance** quand on s'arrête à moins de 20 % de lui (jamais celui qu'on quitte).
 - Les `.snap-stop` ne servent plus que de repères : souffle.ts y lit l'écart
   entre deux stations.
-- `.tunnel` reste collé à l'écran. Dedans, chaque section `.plane` et chaque
-  anneau `.gate` est un **calque plat** dont seules l'**échelle** et
-  l'**opacité** changent. Pour des plans face à la caméra, c'est la même
-  projection qu'une perspective : échelle = 1 / (1 + 0,6 × distance).
-- Les animations sont liées au défilement en CSS (`animation-timeline: scroll()`,
-  `@keyframes dive` et `pass` à la fin de `src/styles/souffle.css`). Le
-  navigateur les calcule hors du fil principal.
+- `.tunnel` reste collé à l'écran. Dedans, chaque section `.plane` est un
+  **calque plat** dont seules l'**échelle** et l'**opacité** changent. Pour des
+  plans face à la caméra, c'est la même projection qu'une perspective.
+  L'animation est liée au défilement en CSS (`animation-timeline: scroll()`,
+  `@keyframes dive` à la fin de `src/styles/souffle.css`) : le navigateur la
+  calcule hors du fil principal.
+- **Le tunnel d'anneaux** (`src/scripts/tunnel.ts`) : des anneaux posés à
+  intervalles réguliers en profondeur sur tout le trajet, et au-delà (il ne
+  finit pas). Ils sont dessinés sur un seul `<canvas class="rings">`, redessiné
+  seulement quand la position change. On les traverse **un par un** et l'on en
+  voit toujours une dizaine s'enfoncer vers le point de fuite. Pas de cercle
+  fixe en fond, pas de groupe d'anneaux qui avance d'un bloc. Les orbes propres
+  à l'accueil et au stage sont masquées en 3D pour la même raison.
 - `src/scripts/souffle.ts` ne fait que :
-  - poser `is-live` sur les 3 ou 4 calques proches (les autres ne sont pas rendus) ;
+  - poser `is-live` sur les 3 écrans proches (les autres ne sont pas rendus) ;
+  - redessiner le tunnel ;
   - marquer le menu actif et l'anneau de progression ;
   - gérer l'aimant doux, les liens d'ancre, le focus clavier et Échap.
 
-  Sans `animation-timeline` (Firefox), il applique lui-même les tables `DIVE` et `PASS`.
+  Sans `animation-timeline` (Firefox), il applique lui-même la table `DIVE`.
 
 ## Régler l'effet
 
@@ -37,11 +44,15 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
 - Écrans : la plage d'un écran va d'une station avant à une station après
   (`animation-range` en multiples de `--stop`). Le palier 47-53 % (opacité 1)
   laisse lire l'écran avant qu'il ne parte.
-- Anneaux : `@keyframes pass`, plage de g-1 à g+0,6 stations. 94 % = moment où
-  l'anneau traverse la caméra. Au repos, l'anneau suivant est à 62,5 % : garder
-  son opacité basse (≈ 0,25) pour la lisibilité du texte.
-- **Toute modification d'un palier se reporte dans `DIVE` ou `PASS` de
+- **Toute modification d'un palier de `dive` se reporte dans `DIVE` de
   souffle.ts** (mêmes valeurs [progression, opacité, échelle]).
+- Tunnel, constantes en tête de `tunnel.ts` :
+  - `RINGS_PER_STATION` : anneaux traversés entre deux sections (3) ;
+  - `DEPTH` : profondeur visible, en anneaux (11) ;
+  - `FOCAL` : force de la perspective (plus petit = plus plongeant) ;
+  - `CENTER_Y` : hauteur du point de fuite (aligné sur `transform-origin` des écrans).
+
+  L'opacité des anneaux (0,5 au maximum) règle leur présence derrière le texte.
 
 ## Règles de performance (ne pas enfreindre)
 
@@ -53,8 +64,9 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
    `[data-station]` et `[data-i]`.
 3. Le script ne travaille qu'à chaque image demandée (requestAnimationFrame)
    et l'aimant seulement 180 ms après l'arrêt du défilement.
-4. Échelle maximale d'un écran : environ 1,3, et d'un anneau : environ 1,6. Au-delà,
-   le navigateur rastérise d'énormes textures.
+4. Échelle maximale d'un écran : environ 1,3. Au-delà, le navigateur
+   rastérise d'énormes textures. Les anneaux restent sur le canevas : ne pas
+   les remettre en calques DOM animés (un calque par anneau coûte cher).
 5. `animation-timeline` doit rester **dans le bloc `@supports` séparé**. Sinon
    le minifieur le fusionne dans le raccourci `animation`, que les navigateurs
    rejettent : l'effet disparaît sans erreur.
@@ -62,11 +74,10 @@ description: Comprendre et régler l'effet de plongée 3D au défilement du site
 
 ## Ajouter ou retirer un écran
 
-1. Dans `src/pages/index.astro` : la section avec `class="plane …"`,
-   `data-station` à la bonne position, puis un `<Gate i={…} />` entre deux écrans.
-   Renuméroter ceux qui suivent.
+1. Dans `src/pages/index.astro` : la section avec `class="plane …"` et
+   `data-station` à la bonne position. Renuméroter celles qui suivent.
 2. Mettre à jour `data-stations` sur `.journey` et un `.snap-stop` de plus dans
-   le rail. La hauteur du trajet se calcule depuis `--n`. Les règles `--n`,
-   `--i` et `--g` de souffle.css vont jusqu'à 8 écrans : en ajouter si besoin.
+   le rail. La hauteur du trajet se calcule depuis `--n`. Les règles `--n` et
+   `--i` de souffle.css vont jusqu'à 8 écrans : en ajouter si besoin.
 3. Ajouter le lien dans les deux menus (`.s-links` et `.s-panel`).
 4. Vérifier qu'aucun écran ne déborde en 1280×720.

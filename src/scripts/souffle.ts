@@ -1,3 +1,5 @@
+import { createTunnel } from './tunnel';
+
 const root = document.querySelector<HTMLElement>('.souffle');
 
 function lowPower() {
@@ -38,7 +40,8 @@ if (root) {
       CSS.supports('animation-range: 0px 100px');
     if (cssDriven) html.classList.add('journey-css');
 
-    const gates = [...root.querySelectorAll<HTMLElement>('.gate')];
+    const ringsCanvas = root.querySelector<HTMLCanvasElement>('.rings');
+    const tunnel = ringsCanvas ? createTunnel(ringsCanvas) : null;
     const links = [...root.querySelectorAll<HTMLAnchorElement>('.s-links a[href^="#"], .s-panel a[href^="#"]')];
     const menu = root.querySelector<HTMLDetailsElement>('[data-menu]');
     const last = planes.length - 1;
@@ -49,14 +52,11 @@ if (root) {
     const stopLength = () =>
       (firstStop && secondStop ? secondStop.offsetTop - firstStop.offsetTop : 0) || window.innerHeight || 1;
 
-    /* Paliers [progression, opacité, échelle] : identiques aux @keyframes dive et pass de souffle.css. */
+    /* Paliers [progression, opacité, échelle] : identiques à @keyframes dive de souffle.css. */
     type Stop = readonly [number, number, number];
     const DIVE: readonly Stop[] = [
       [0, 0, 0.62], [0.2, 0.12, 0.73], [0.325, 0.5, 0.83], [0.425, 0.92, 0.93], [0.47, 1, 0.975],
       [0.5, 1, 1], [0.53, 1, 1.03], [0.575, 0.85, 1.08], [0.65, 0.3, 1.18], [0.71, 0, 1.28], [1, 0, 1.28],
-    ];
-    const PASS: readonly Stop[] = [
-      [0, 0, 0.22], [0.31, 0.18, 0.3], [0.625, 0.25, 0.5], [0.78, 0.45, 0.72], [0.875, 0.6, 1], [0.94, 0.4, 1.3], [1, 0, 1.6],
     ];
     const sample = (stops: readonly Stop[], t: number) => {
       const x = Math.max(0, Math.min(1, t));
@@ -71,10 +71,9 @@ if (root) {
       return [stops[stops.length - 1][1], stops[stops.length - 1][2]] as const;
     };
 
-    /* Un écran est rendu s'il est à une station au plus (les voisins restent
-       atteignables au clavier) ; un anneau, entre son apparition et son passage. */
+    /* Un écran est rendu s'il est à une station au plus : les voisins restent
+       atteignables au clavier. */
     const planeLive = planes.map(() => false);
-    const gateLive = gates.map(() => false);
     let currentIndex = -1;
 
     const markNav = (index: number) => {
@@ -109,19 +108,7 @@ if (root) {
           planes[i].style.transform = `scale(${scale.toFixed(4)})`;
         }
       }
-      for (let g = 0; g < gates.length; g++) {
-        const t = (position - (g - 1)) / 1.6;
-        const live = t > -0.02 && t < 1.02;
-        if (live !== gateLive[g]) {
-          gateLive[g] = live;
-          gates[g].classList.toggle('is-live', live);
-        }
-        if (live && !cssDriven) {
-          const [opacity, scale] = sample(PASS, t);
-          gates[g].style.opacity = opacity.toFixed(3);
-          gates[g].style.transform = `scale(${scale.toFixed(4)})`;
-        }
-      }
+      tunnel?.draw(position);
     };
 
     let raf = 0;
@@ -156,7 +143,10 @@ if (root) {
 
     frame();
     window.addEventListener('scroll', request, { passive: true });
-    window.addEventListener('resize', request);
+    window.addEventListener('resize', () => {
+      tunnel?.resize();
+      request();
+    });
 
     root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (event) => {
